@@ -88,10 +88,16 @@ $menu_item_page_sub = "cso_commission";
                             <span class="mdi mdi-filter"></span> Reset Filter
                         </a>
                         @php
-                            $exportParameter['export_type'] = "xls";
+                            $exportParameter = null;
+                            if (isset($_GET['filter_branch'])) {
+                                $exportParameter['filter_branch'] = $_GET['filter_branch'];
+                            }
+                            if (isset($_GET['filter_month'])) {
+                                $exportParameter['filter_month'] = $_GET['filter_month'];
+                            }
                         @endphp
                         <a href="{{ route('exportCsoCommission', $exportParameter) }}"
-                            class="btn btn-gradient-info m-1">
+                            class="btn btn-gradient-info m-1 {{ $exportParameter != null ? "" : "d-none" }}">
                             <span class="mdi mdi-file-document"></span>
                             Export Commission
                         </a>

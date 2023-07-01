@@ -89,11 +89,15 @@
                 <table class="w-100">
                     <thead>
                         <td>Sales Branch</td>
-                        <td>Sales Code</td>
+                        <td colspan="2">Sales Code</td>
                     </thead>
                     <tr class="text-center">
-                        <td>{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
-                        <td>{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
+                        <td rowspan="2">{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
+                        <td colspan="2">{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>(30%) {{ $order->cso_id_30['code'] }} - {{ $order->cso_id_30['name'] }}</td>
+                        <td>(70%) {{ $order->cso_id_70['code'] }} - {{ $order->cso_id_70['name'] }}</td>
                     </tr>
                 </table>
                 <table class="w-100">
@@ -326,6 +330,7 @@
                                     <div class="form-group col-6">
                                         <label for="">Bonus</label>
                                         <input type="text"
+                                            {{ $isUpgrade ? "readonly" : "" }}
                                             class="form-control"
                                             id="commission_type_bonus"
                                             name="bonus"
@@ -349,6 +354,7 @@
                                     <div class="form-group col-6">
                                         <label for="">Upgrade</label>
                                         <input type="text"
+                                            {{ $isUpgrade ? "" : "readonly" }}
                                             class="form-control"
                                             id="commission_type_upgrade"
                                             name="upgrade"
@@ -450,12 +456,13 @@
                                         <div class="form-group col-6">
                                             <label for="">Bonus</label>
                                             <input type="text"
+                                                {{ $isUpgrade ? "readonly" : "" }}
                                                 class="form-control"
                                                 id="edit_commission_type_bonus"
                                                 name="bonus"
                                                 autocomplete="off"
                                                 data-type="currency"
-                                                placeholder="Bonus" required value="{{$isUpgrade == 1 ? 0 : number_format($order->commissionType->nominal)}}"/>
+                                                placeholder="Bonus" required value="{{ number_format($order->orderCommission->sum('bonus')) }}"/>
                                             <div class="validation"></div>
                                         </div>
                                         <div class="form-group col-6">
@@ -466,19 +473,20 @@
                                                 name="smgt_nominal"
                                                 autocomplete="off"
                                                 data-type="currency"
-                                                placeholder="Bonus Semangat" required value="{{number_format($order->commissionType->smgt_nominal)}}"/>
+                                                placeholder="Bonus Semangat" required value="{{ number_format($order->orderCommission->sum('smgt_nominal')) }}"/>
                                             <div class="validation"></div>
                                         </div>
 
                                         <div class="form-group col-6">
                                             <label for="">Upgrade</label>
                                             <input type="text"
+                                                {{ $isUpgrade ? "" : "readonly" }}
                                                 class="form-control"
                                                 id="edit_commission_type_upgrade"
                                                 name="upgrade"
                                                 autocomplete="off"
                                                 data-type="currency"
-                                                placeholder="Upgrade" required value="{{$isUpgrade == 1 ? number_format($order->commissionType->nominal) : 0}}"/>
+                                                placeholder="Upgrade" required value="{{ number_format($order->orderCommission->sum('upgrade')) }}"/>
                                             <div class="validation"></div>
                                         </div>
                                         <div class="form-group col-6">
@@ -489,7 +497,7 @@
                                                 name="excess_price"
                                                 autocomplete="off"
                                                 data-type="currency"
-                                                placeholder="Lebih Harga" required value="0"/>
+                                                placeholder="Lebih Harga" required value="{{ number_format($order->orderCommission->sum('excess_price')) }}"/>
                                             <div class="validation"></div>
                                         </div>
                                     </div>
@@ -511,99 +519,113 @@
                     @endif
                 </div>
 
-                <table class="w-100">
-                  <thead>
-                      <td>Commision Detail</td>
-                  </thead>
-                </table>
+                @if($order['status'] != \App\Order::$status['1'] && $order['status'] != \App\Order::$status['5'])
+                    <table class="w-100">
+                      <thead>
+                          <td>Commision Detail</td>
+                      </thead>
+                    </table>
 
-                @if($order->orderCommission->count() > 0)
-                    <div class="w-100" id="commisionDetailTrue">
-                        <h3 class="text-center">Commision Detail</h3>
-                            <table class="w-100">
-                            <thead style="background-color: #80808012 !important">
-                                <td>Komisi</td>
-                                <td>CSO-Name</td>
-                                <td>Bonus</td>
-                                <td>Upgrade</td>
-                                <td>Bonus Semangat</td>
-                                <td>Lebih Harga</td>
-                                <td>Edit</td>
-                            </thead>
-                            <!-- maybe this is not a good way but piye neh... -->
-                            @php if($order->orderCommission->count() > 1) { $cso_percentage = [70, 30]; } else { $cso_percentage = [100]; } @endphp
-                            @foreach($order->orderCommission as $indexOrderCommission => $orderCommission)
-                                <tr align="center">
-                                    <td>{{$cso_percentage[$indexOrderCommission]}}%</td>
-                                    <td>{{$orderCommission->cso->code}} - {{$orderCommission->cso->name}}</td>
-                                    <td>Rp. {{number_format($orderCommission->bonus)}}</td>
-                                    <td>Rp. {{number_format($orderCommission->upgrade)}}</td>
-                                    <td>Rp. {{number_format($orderCommission->smgt_nominal)}}</td>
-                                    <td>Rp. {{number_format($orderCommission->excess_price)}}</td>
+                    @if($order->orderCommission->count() > 0)
+                        <div class="w-100" id="commisionDetailTrue">
+                            <h3 class="text-center">Commision Detail</h3>
+                                <table class="w-100">
+                                <thead style="background-color: #80808012 !important">
+                                    <td>Komisi</td>
+                                    <td>CSO-Name</td>
+                                    <td>Bonus</td>
+                                    <td>Upgrade</td>
+                                    <td>Bonus Semangat</td>
+                                    <td>Lebih Harga</td>
+                                    <td>Edit</td>
+                                </thead>
+                                <!-- maybe this is not a good way but piye neh... -->
+                                @php if($order->orderCommission->count() > 1) { $cso_percentage = [70, 30]; } else { $cso_percentage = [100]; } @endphp
+                                @foreach($order->orderCommission as $indexOrderCommission => $orderCommission)
+                                    <tr align="center">
+                                        <td>{{$cso_percentage[$indexOrderCommission]}}%</td>
+                                        <td>{{$orderCommission->cso->code}} - {{$orderCommission->cso->name}}</td>
+                                        <td>Rp. {{number_format($orderCommission->bonus)}}</td>
+                                        <td>Rp. {{number_format($orderCommission->upgrade)}}</td>
+                                        <td>Rp. {{number_format($orderCommission->smgt_nominal)}}</td>
+                                        <td>Rp. {{number_format($orderCommission->excess_price)}}</td>
+                                        <td>
+                                            @if(Gate::check('detail-order_commission') || Gate::check('edit-order_commission') && Auth::user()->inRole("head-admin"))
+                                            <button value="{{ $orderCommission->id }}" class="btn-delete btn-edit-order-commission">
+                                                <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
+                                            </button>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                            <table class="w-100 my-2">
+                                <thead style="background-color: #80808012 !important">
+                                    <td></td>
+                                    <td class="text-left">Commision Type</td>
+                                </thead>
+                                <tr>
+                                    <td>Name</td>
+                                    <td>{{$order->commissionType->name}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Description</td>
+                                    <!-- <td>Description</td> -->
+                                    <td style="width:50%">{{$order->commissionType->description}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Takeaway</td>
+                                    <td>{{$order->commissionType->takeaway == 1 ? 'Yes' : 'No'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Upgrade</td>
+                                    <td>{{$order->commissionType->upgrade == 1 ? 'Yes' : 'No'}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Nominal</td>
                                     <td>
-                                        @if(Gate::check('detail-order_commission') || Gate::check('edit-order_commission'))
-                                        <button value="{{ $orderCommission->id }}" class="btn-delete btn-edit-order-commission">
-                                            <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
-                                        </button>
+                                        Rp. {{number_format($order->commissionType->nominal)}} (Default)
+                                        @if($order->commissionType->nominal != $order->orderCommission->sum('bonus') && $order->commissionType->upgrade == 0)
+                                            <span class="font-weight-bold">| Rp. {{ number_format($order->orderCommission->sum('bonus')) }} (Assign)</span>
+                                        @elseif($order->commissionType->nominal != $order->orderCommission->sum('upgrade') && $order->commissionType->upgrade == 1)
+                                            <span class="font-weight-bold">| Rp. {{ number_format($order->orderCommission->sum('upgrade')) }} (Assign)</span>
                                         @endif
                                     </td>
                                 </tr>
-                            @endforeach
-                        </table>
-                        <table class="w-100 my-2">
-                            <thead style="background-color: #80808012 !important">
-                                <td></td>
-                                <td class="text-left">Commision Type</td>
-                            </thead>
-                            <tr>
-                                <td>Name</td>
-                                <td>{{$order->commissionType->name}}</td>
-                            </tr>
-                            <tr>
-                                <td>Description</td>
-                                <!-- <td>Description</td> -->
-                                <td style="width:50%">{{$order->commissionType->description}}</td>
-                            </tr>
-                            <tr>
-                                <td>Takeaway</td>
-                                <td>{{$order->commissionType->takeaway == 1 ? 'Yes' : 'No'}}</td>
-                            </tr>
-                            <tr>
-                                <td>Upgrade</td>
-                                <td>{{$order->commissionType->upgrade == 1 ? 'Yes' : 'No'}}</td>
-                            </tr>
-                            <tr>
-                                <td>Nominal</td>
-                                <td>Rp. {{number_format($order->commissionType->nominal)}}</td>
-                            </tr>
-                            <tr>
-                                <td>Semangat Nominal</td>
-                                <td>Rp. {{number_format($order->commissionType->smgt_nominal)}}0</td>
-                            </tr>
-                        </table>
-                        <div class="row justify-content-center mb-2">
-                            @if(Gate::check('edit-order_commission'))
-                            <button type="button" class="btn btn-warning mr-2 btn-edit-comms">
-                                Edit
-                            </button>
-                            @endif
-                            @if(Gate::check('delete-order_commission'))
-                            <button type="button" class="btn btn-danger btn-delete-comms"
-                                data-toggle="modal"
-                                data-target="#deleteKomisiConfirm">
-                                Delete
-                            </button>
-                            @endif
+                                <tr>
+                                    <td>Semangat Nominal</td>
+                                    <td>
+                                        Rp. {{number_format($order->commissionType->smgt_nominal)}} (Default)
+                                        @if($order->commissionType->smgt_nominal != $order->orderCommission->sum('smgt_nominal'))
+                                            <span class="font-weight-bold">| Rp. {{ number_format($order->orderCommission->sum('smgt_nominal')) }} (Assign)</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="row justify-content-center mb-2">
+                                @if(Gate::check('edit-order_commission'))
+                                <button type="button" class="btn btn-warning mr-2 btn-edit-comms">
+                                    Edit
+                                </button>
+                                @endif
+                                @if(Gate::check('delete-order_commission'))
+                                <button type="button" class="btn btn-danger btn-delete-comms"
+                                    data-toggle="modal"
+                                    data-target="#deleteKomisiConfirm">
+                                    Delete
+                                </button>
+                                @endif
+                            </div>
                         </div>
-                    </div>
-                @else
-                    <div class="row justify-content-center">
-                    @if(Gate::check('add-order_commission'))
-                    <button type="button" class="btn btn-gradient-success mdi mdi-cash-multiple btn-add-comms">
-                        Add Commision
-                    </button>
+                    @else
+                        <div class="row justify-content-center">
+                        @if(Gate::check('add-order_commission'))
+                        <button type="button" class="btn btn-gradient-success mdi mdi-cash-multiple btn-add-comms">
+                            Add Commision
+                        </button>
+                        @endif
+                        </div>
                     @endif
-                    </div>
                 @endif
                 @if($order['description'] != null)
                     <table class="w-100">

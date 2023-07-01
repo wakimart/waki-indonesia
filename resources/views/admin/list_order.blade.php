@@ -343,25 +343,28 @@ $menu_item_second = "list_order";
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 row"
-                    style="margin: 0;padding: 0;">
-                    <div class="col-xs-6 col-sm-4"
-                        style="display: inline-block;">
-                        <div class="form-group">
-                            <label for="">
-                                View as
-                            </label>
-                            <select class="form-control"
-                                id="filter_view_as"
-                                name="filter_view_as">
-                                <option value="" selected="">All Status</option>
-                                <option {{ isset($_GET['filter_view_as']) ? $_GET['filter_view_as'] == 'order' ? 'selected=""' : '' : '' }} value="order">Order</option>
-                                <option {{ isset($_GET['filter_view_as']) ? $_GET['filter_view_as'] == 'commission' ? 'selected=""' : '' : '' }} value="commission">Commission</option>
-                            </select>
-                            <div class="validation"></div>
+
+                @if(Gate::check('list-order_commission'))
+                    <div class="col-xs-12 col-sm-12 row"
+                        style="margin: 0;padding: 0;">
+                        <div class="col-xs-6 col-sm-4"
+                            style="display: inline-block;">
+                            <div class="form-group">
+                                <label for="">
+                                    View as
+                                </label>
+                                <select class="form-control"
+                                    id="filter_view_as"
+                                    name="filter_view_as">
+                                    <option value="" selected="">All Status</option>
+                                    <option {{ isset($_GET['filter_view_as']) ? $_GET['filter_view_as'] == 'order' ? 'selected=""' : '' : '' }} value="order">Order</option>
+                                    <option {{ isset($_GET['filter_view_as']) ? $_GET['filter_view_as'] == 'commission' ? 'selected=""' : '' : '' }} value="commission">Commission</option>
+                                </select>
+                                <div class="validation"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @endif
             @endif
 
             @if (Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')

@@ -134,7 +134,7 @@
                         </tr>
                     @endforeach
                     <tfoot class="font-weight-bold" align="center">
-                        <td colspan="2">Total</td>
+                        <td colspan="3" class="text-right">Total</td>
                         <td>Rp. {{ number_format($bonusCso) }}</td>
                         <td>Rp. {{ number_format($upgradeCso) }}</td>
                         <td>Rp. {{ number_format($smgt_nominalCso) }}</td>

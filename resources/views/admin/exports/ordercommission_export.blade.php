@@ -35,7 +35,7 @@
                     if(!isset($orderPerCommission->order)){
                         continue;
                     }
-                    $percentage =  $orderPerCommission->order['30_cso_id'] == $orderPerCommission->order['70_cso_id'] ? "100%" : ($orderPerCommission->order['30_cso_id'] == $cso_commission->cso['id'] ? "30%" : "70%");
+                    $percentage =  $orderPerCommission->order['30_cso_id'] == $orderPerCommission->order['70_cso_id'] ? "100%" : ($orderPerCommission->order['30_cso_id'] == $Cso_Commission->cso['id'] ? "30%" : "70%");
                     $curnt_beli = 1;
                     $curnt_hadiah = 1;
                     $curnt_upgrade = 1;

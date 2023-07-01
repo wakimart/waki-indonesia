@@ -2204,14 +2204,13 @@ class OrderController extends Controller
                 // history update
                 $user = Auth::user();
                 $historyOrder["type_menu"] = "Order";
-                $historyOrder["method"] = "Update Commission Type ID";
+                $historyOrder["method"] = "New Order Commission";
                 $historyOrder["meta"] = json_encode(
                     [
                         "user" => $user["id"],
                         "createdAt" => date("Y-m-d H:i:s"),
                         "dataChange" => array_diff(json_decode($order, true), json_decode($previousOrderData,true)),
-                    ],
-                    JSON_THROW_ON_ERROR
+                    ]
                 );
 
                 $historyOrder["user_id"] = $user["id"];

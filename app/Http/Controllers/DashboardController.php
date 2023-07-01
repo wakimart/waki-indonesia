@@ -25,7 +25,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        CsoCommissionController::CreateMonthlyCommission();
         try {
             // Update role user yg baru
             $role = Role::where('slug', Auth::user()->roles[0]['slug'])->first();
@@ -48,6 +47,7 @@ class DashboardController extends Controller
             unset($e);
             return redirect()->route("login");
         }
+        CsoCommissionController::CreateMonthlyCommission();
 
         // Bulan ini
         $startMonth = date("Y-m-01");
