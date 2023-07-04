@@ -350,6 +350,7 @@ class FinancialRoutineController extends Controller
             ->whereBetween('op.payment_date', [$startDate, $endDate])
             ->where('op.bank_account_id', $financialRoutine->bank_account_id)
             ->where('o.active', true)
+            ->where('o.status', '!=', 'reject')
             ->orderBy('op.payment_date')
             ->groupBy('op.id')
             ->get();
@@ -448,6 +449,7 @@ class FinancialRoutineController extends Controller
                 ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
                 ->whereBetween('op.payment_date', [$startDate, $endDate])
                 ->where('op.bank_account_id', $bank)
+                ->where('op.status', '!=', 'rejected')
                 ->where('o.active', true)->first();
             return [
                 'lastMonthFinancialRoutine' => $lastMonthFinancialRoutine, 

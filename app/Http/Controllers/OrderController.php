@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Redirect;
 use App\OrderCommission;
 use App\OrderCsoCommission;
 use App\CsoCommission;
+use ZipArchive;
+use Response;
 
 class OrderController extends Controller
 {
@@ -2515,6 +2517,50 @@ class OrderController extends Controller
         } catch (\Exception $ex) {
             DB::rollBack();
             return Redirect::back()->withErrors("Something wrong when delete order commission type, please call Team IT")->withInput();
+        }
+    }
+    
+    public function downloadCustImage(Request $request){
+        if($this->backupDeliveredImage($request->input('filter_month'))){
+            $file = File::get(public_path("zip/Order Deliverd Image ".$request->input('filter_month').".zip"));
+            $response = Response::make($file, 200);
+            $response->header('Content-Type', 'application/zip');
+            $response->header('Content-disposition','attachment; filename="Order Deliverd Image '.$request->input('filter_month').'.zip"');
+            return $response;
+        }
+        else{
+            return redirect()->back()->withErrors('Image not yet uploaded.');
+        }
+    }
+
+    function backupDeliveredImage($month){
+        $totFile = 0;
+        $zip = new ZipArchive;
+        $fileName = 'Order Deliverd Image '.$month.'.zip';
+        $startDate = date($month.'-01');
+        $endDate = date('Y-m-t', strtotime($startDate));
+        if ($zip->open(public_path('zip/'.$fileName), ZipArchive::CREATE) === TRUE)
+        {
+            $orderNya = Order::whereBetween('orderDate', [$startDate, $endDate])->where('delivered_image', '!=', '[]')->get();
+            foreach ($orderNya as $perOrder) {
+                foreach (json_decode($perOrder->delivered_image, true) as $orderDeliveredImage){
+                    try {
+                        $files = File::get(public_path("sources\\order\\".$orderDeliveredImage));
+                        $zip->addFile(public_path("sources\\order\\".$orderDeliveredImage), $orderDeliveredImage);
+                    } catch (\Exception $e) {
+                        continue;
+                    }
+                }
+            }
+            $totFile = $zip->numFiles;
+            $zip->close();
+        }
+        if($totFile > 0){
+            response()->download(public_path('zip/'.$fileName));
+            return true;
+        }
+        else{
+            return false;
         }
     }
 }

@@ -277,13 +277,13 @@
 @endif
 
 @if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing') || Gate::check('add-data_therapy') || Gate::check('browse-data_therapy'))
-<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' ? 'active': '' }}">
-  <a class="nav-link" data-toggle="collapse" href="#masterData-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' ? 'true': '' }}" aria-controls="masterData-dd">
+<li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' || isset($menu_item_page) && $menu_item_page == 'list_cust_image' ? 'active': ''}}">
+  <a class="nav-link" data-toggle="collapse" href="#masterData-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' || isset($menu_item_page) && $menu_item_page == 'list_cust_image' ? 'true': '' }}" aria-controls="masterData-dd">
     <span class="menu-title">Master Data</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-table-edit menu-icon"></i>
   </a>
-  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' ? 'show': '' }}" id="masterData-dd">
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' || isset($menu_item_page) && $menu_item_page == 'list_cust_image' ? 'show': '' }}" id="masterData-dd">
     <ul class="nav flex-column">
 
 		@if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing'))
@@ -341,6 +341,8 @@
 		  </li>
 		@endif
 
+    {{-- Download file zip order delivered --}}
+    <li class="nav-item"><a class="nav-link {{isset($menu_item_page) && $menu_item_page == 'list_cust_image'? 'active': '' }}" href="{{route('list_cust_image')}}">Backup Cust Image</a></li>
 	</ul>
 </div>
 </li>

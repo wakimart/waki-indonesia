@@ -37,6 +37,12 @@
 
 
     <link rel="shortcut icon" href="{{ asset('sources/favicon.png') }}" />
+    <style>
+        .nav-link{
+            color:black !important;
+            
+        }
+    </style>
 </head>
 <body>
     <div id="app">

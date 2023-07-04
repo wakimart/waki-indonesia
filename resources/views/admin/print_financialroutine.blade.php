@@ -28,6 +28,11 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
         margin-bottom: 0 !important;
     }
 
+    .scale-up-font{
+        font-weight: bold;
+        font-size: 17px;
+    }
+
 </style>
 @endsection
 
@@ -61,7 +66,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                 <div class="card h-100">
                                     <div class="card-body">
                                         <div>
-                                            <div style="">
+                                            <div style="" class="scale-up-font">
                                                 <div class="row d-flex justify-content-end">
                                                     <div class="col-10 text-right">Code : </div>
                                                     <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['code'] }}</div>
@@ -76,7 +81,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                 </div>
                                             </div>
                                             <div style="margin: auto; text-align: center; font-weight: 600;" class="my-4">
-                                                <h5 style="font-size: 24px; @if($financialRoutine->remains_saldo < 0) color: red; @endif">
+                                                <h5 style="font-size: 28px; @if($financialRoutine->remains_saldo < 0) color: red; @endif">
                                                     Laporan Rutin Keuangan
                                                     <br>
                                                     {{ date('F Y', strtotime($financialRoutine->routine_date)) }} @if($financialRoutine->remains_saldo < 0) (MINUS) @endif
@@ -84,7 +89,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                             </div>
                                             <br>
                                         </div>
-                                        <div class="row">
+                                        <div class="row scale-up-font">
                                             <div class="col-3">
                                                 <div style="margin-bottom: 5px; text-align: right;">
                                                     <p class="mb-0">Last Month Remains Saldo :</p>
@@ -96,7 +101,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row scale-up-font">
                                             <div class="col-3">
                                                 <div style="margin-bottom: 5px; text-align: right;">
                                                     <p class="mb-0">Last Month's Sale That Hasn't Been Bank In :</p>
@@ -108,7 +113,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row scale-up-font">
                                             <div class="col-3">
                                                 <div style="margin-bottom: 5px; text-align: right;">
                                                     <p class="mb-0">Total Sale :</p>
@@ -120,7 +125,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row scale-up-font">
                                             <div class="col-3">
                                                 <div style="margin-bottom: 5px; text-align: right;">
                                                     <p class="mb-0">Interest / Administration Bank :</p>
@@ -132,7 +137,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                        <div class="row scale-up-font">
                                             <div class="col-3">
                                                 <div style="margin-bottom: 5px; text-align: right;">
                                                     <p class="mb-0">Etc In :</p>
@@ -146,7 +151,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                         </div>
                                         <br>
                                         <br>
-                                        <div class="row">
+                                        <div class="row scale-up-font">
                                             <div class="col-3">
                                                 <div style="text-align: right;">
                                                     <p class="mb-0">To Petty Cash :</p>
@@ -158,7 +163,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row justify-content-center" style="padding: 0.5em 2em;">
+                                        <div class="row scale-up-font justify-content-center" style="padding: 0.5em 2em;">
                                             <div class="table-responsive">
                                                 <table class="table">
                                                     <thead class="table-bordered">
@@ -268,7 +273,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                     <div class="card h-100">
                                         <div class="card-body">
                                             <div>
-                                                <div style="">
+                                                <div style="" class="scale-up-font">
                                                     <div class="row d-flex justify-content-end">
                                                         <div class="col-10 text-right">Code : </div>
                                                         <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['code'] }}</div>
@@ -283,7 +288,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                     </div>
                                                 </div>
                                                 <div style="margin: auto; text-align: center; font-weight: 600;" class="my-4">
-                                                    <h5 style="font-size: 24px;">
+                                                    <h5 style="font-size: 28px;">
                                                         Report Bank In Sales (by Bank)
                                                         <br>
                                                         {{ date('F Y', strtotime($financialRoutine->routine_date)) }}
@@ -291,7 +296,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                 </div>
                                                 <br>
                                             </div>
-                                            <div class="row justify-content-center" style="padding: 0.5em 2em;">
+                                            <div class="row justify-content-center scale-up-font" style="padding: 0.5em 2em;">
                                                 <div class="table-responsive">
                                                     @php
                                                         $totalSaleGross = 0;
@@ -401,7 +406,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                     <div class="card h-100">
                                         <div class="card-body">
                                             <div>
-                                                <div style="">
+                                                <div style="" class="scale-up-font">
                                                     <div class="row d-flex justify-content-end">
                                                         <div class="col-10 text-right">Code : </div>
                                                         <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['code'] }}</div>
@@ -416,7 +421,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                     </div>
                                                 </div>
                                                 <div style="margin: auto; text-align: center; font-weight: 600;" class="my-4">
-                                                    <h5 style="font-size: 24px;">
+                                                    <h5 style="font-size: 28px;">
                                                         Report Bank In Sales (by Branch)
                                                         <br>
                                                         {{ date('F Y', strtotime($financialRoutine->routine_date)) }}
@@ -424,7 +429,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                 </div>
                                                 <br>
                                             </div>
-                                            <div class="row justify-content-center" style="padding: 0.5em 2em;">
+                                            <div class="row justify-content-center scale-up-font" style="padding: 0.5em 2em;">
                                                 <div class="table-responsive">
                                                         @php 
                                                             $idxBank = 0;
