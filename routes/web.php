@@ -1695,6 +1695,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
     });
 
     Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');
+
+    Route::view("list-cust-image", "admin.export_orderimage")
+        ->name("list_cust_image");
+    Route::get("download-cust-image", "OrderController@downloadCustImage")
+        ->name("download_cust_image");
+    
 });
 
 Auth::routes();
