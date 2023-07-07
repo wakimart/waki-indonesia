@@ -519,20 +519,41 @@
                     @endif
                 </div>
 
-                @if($order['status'] != \App\Order::$status['1'] && $order['status'] != \App\Order::$status['5'])
-                    <table class="w-100">
-                      <thead>
-                          <td>Commision Detail</td>
-                      </thead>
+                <div class="w-100" id="commisionDetailTrue">
+                    <h3 class="text-center">Commision Detail</h3>
+                      <table class="w-100">
+                        <thead style="background-color: #80808012 !important">
+                            <td>Date</td>
+                            <td>Payment Gross</td>
+                            <td>Payment Netto</td>
+                            <td>Commission</td>
+                        </thead>
+
+                        <tr align="center">
+                            <td>2023-01-30</td>
+                            <td>Rp. 1,200,000</td>
+                            <td>Rp. 1,200,000</td>
+                            <td>Rp. 200,000</td>
+                        </tr>
+
+                        <tfoot>
+                            <td class="font-weight-bold text-right" colspan="3">Total Commission:</td>
+                            <td class="text-center">Rp. 200,000</td>
+                        </tfoot>
                     </table>
+                </div>
+
+                @if($order['status'] != \App\Order::$status['1'] && $order['status'] != \App\Order::$status['5'])
+
 
                     @if($order->orderCommission->count() > 0)
-                        <div class="w-100" id="commisionDetailTrue">
-                            <h3 class="text-center">Commision Detail</h3>
-                                <table class="w-100">
+                        <div class="w-100" id="commisionDetailTrue"><!-- change id to bonusDetailTrue later to remove ambiguous -->
+                            <h3 class="text-center">Bonus Detail</h3>
+                              <table class="w-100">
                                 <thead style="background-color: #80808012 !important">
-                                    <td>Komisi</td>
+                                    <td>Percentage</td>
                                     <td>CSO-Name</td>
+                                    <td>Commission</td>
                                     <td>Bonus</td>
                                     <td>Upgrade</td>
                                     <td>Bonus Semangat</td>
@@ -545,6 +566,7 @@
                                     <tr align="center">
                                         <td>{{$cso_percentage[$indexOrderCommission]}}%</td>
                                         <td>{{$orderCommission->cso->code}} - {{$orderCommission->cso->name}}</td>
+                                        <td>Rp. {{$cso_percentage[$indexOrderCommission]}}%</td>
                                         <td>Rp. {{number_format($orderCommission->bonus)}}</td>
                                         <td>Rp. {{number_format($orderCommission->upgrade)}}</td>
                                         <td>Rp. {{number_format($orderCommission->smgt_nominal)}}</td>
@@ -561,8 +583,7 @@
                             </table>
                             <table class="w-100 my-2">
                                 <thead style="background-color: #80808012 !important">
-                                    <td></td>
-                                    <td class="text-left">Commision Type</td>
+                                    <td colspan="2" class="text-left">Commision Type</td>
                                 </thead>
                                 <tr>
                                     <td>Name</td>
