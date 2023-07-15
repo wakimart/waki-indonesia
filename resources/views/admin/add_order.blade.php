@@ -407,6 +407,8 @@ $menu_item_second = "add_order";
                                 <div id="tambahan_product"></div>
                                 {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
+                                <hr />
+
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group" style="display: none;">
@@ -459,13 +461,14 @@ $menu_item_second = "add_order";
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-9">
                                         <div class="form-group">
                                             <label for="">Prize Product</label>
-                                            <select class="form-control"
-                                                id="prize"
-                                                name="prize"
+                                            <select class="form-control pilihan-prize"
+                                                id="prize_0"
+                                                name="prize_0"
                                                 data-msg="Mohon Pilih Prize Produk">
                                                 <option selected disabled value="">
                                                     Choose Prize Product
@@ -511,10 +514,27 @@ $menu_item_second = "add_order";
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-12 text-right"
+                                        style="margin-bottom: 1em;">
+                                        <button id="tambah_prize"
+                                            title="Tambah Prize"
+                                            style="padding: 0.4em 0.7em;">
+                                            <i class="mdi mdi-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                                <div id="tambahan_prize"></div>
+                                {{-- ++++++++++++++ ======== ++++++++++++++ --}}
+
+                                <hr />
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-12 grid-margin stretch-card">
                     <div class="card">
                         <div class="card-body">
@@ -930,6 +950,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <script type="application/javascript">
     var total_bank = 0;
     var total_product = 0;
+    var total_prize = 0;
     var arrBooleanCso = [ {{ Auth::user()->roles[0]['slug'] == 'cso' ? "true" : "false" }}, false, false ];
 
     $(document).ready(function () {
@@ -1245,6 +1266,82 @@ document.addEventListener("DOMContentLoaded", function () {
                     checkRemainingPayment();
                 }
             }
+
+            //remove dari array
+            arr_index_temp.splice($(this).val(), 1);
+        });
+
+        $("#tambah_prize").click(function (e) {
+            e.preventDefault();
+            total_prize++;
+
+            const newDivPrize = document.createElement("div");
+            newDivPrize.className = "form-group";
+
+            const newSelectPrize = document.createElement("select");
+            newSelectPrize.id = `prize_${total_prize}`;
+            newSelectPrize.className = "form-control pilihan-product";
+            newSelectPrize.name = `product_${total_prize}`;
+            newSelectPrize.required = true;
+            newSelectPrize.innerHTML = promoOption;
+
+            const newDivPrizeQty = document.createElement("div");
+            newDivPrizeQty.className = "form-group";
+
+            const newSelectPrizeQty = document.createElement("input");
+            newSelectPrizeQty.type = "number";
+            newSelectPrizeQty.className = "form-control";
+            newSelectPrizeQty.id = `prize_qty_${total_prize}`;
+            newSelectPrizeQty.name = `prize_qty_${total_prize}`;
+            newSelectPrizeQty.required = true;
+            newSelectPrizeQty.value = "1";
+            newSelectPrizeQty.min = "1";
+
+            const newDivPrizeRemove = document.createElement("div");
+            newDivPrizeRemove.style = "margin-bottom: 1em; display:flex; justify-content: flex-end; padding: 0;";
+
+            const newPrizeButtonRemove = document.createElement("button");
+            newPrizeButtonRemove.className = "hapus_prize";
+            newPrizeButtonRemove.value = total_prize;
+            newPrizeButtonRemove.title = "Kurangi Prize";
+            newPrizeButtonRemove.style = "padding: 0.4em 0.7em; background-color: red;";
+            newPrizeButtonRemove.innerHTML = '<i class="fas fa-minus"></i>';
+
+            const newDivPrizeCol9 = document.createElement("div");
+            newDivPrizeCol9.className = "col-md-9 form-group";
+
+            const newDivPrizeCol3 = document.createElement("div");
+            newDivPrizeCol3.className = "col-md-3 form-group";
+
+            const newDivPrizeCol12Qty = document.createElement("div");
+            newDivPrizeCol12Qty.className = "col-md-12 form-group text-right";
+
+            newDivPrizeCol9.innerHTML = "<label>Prize Product</label>";
+            newDivPrizeCol9.appendChild(newDivPrize.appendChild(newSelectPrize));
+            newDivPrizeCol3.innerHTML = "<label>Qty Prize Product</label>"
+            newDivPrizeCol3.appendChild(newDivPrizeQty.appendChild(newSelectPrizeQty));
+            newDivPrizeCol12Qty.appendChild(newDivPrizeRemove.appendChild(newPrizeButtonRemove));
+
+            const newDivPrizeParentProduct = document.createElement("div");
+            newDivPrizeParentProduct.className = "row";
+            newDivPrizeParentProduct.id = `prize_parent_${total_prize}`;
+
+            newDivPrizeParentProduct.appendChild(newDivPrizeCol9);
+            newDivPrizeParentProduct.appendChild(newDivPrizeCol3);
+            newDivPrizeParentProduct.appendChild(newDivPrizeCol12Qty);
+
+            document.getElementById("tambahan_prize").appendChild(newDivPrizeParentProduct);
+
+            $("#prize_" + total_prize).select2({
+                theme: "bootstrap4",
+            });
+        });
+
+        $(document).on("click", ".hapus_prize", function(e){
+            e.preventDefault();
+            // total_product--;
+
+            $('#prize_parent_'+$(this).val()).remove();
 
             //remove dari array
             arr_index_temp.splice($(this).val(), 1);
