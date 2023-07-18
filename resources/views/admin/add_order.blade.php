@@ -1274,6 +1274,9 @@ document.addEventListener("DOMContentLoaded", function () {
         $("#tambah_prize").click(function (e) {
             e.preventDefault();
             total_prize++;
+            if(total_prize == 3){
+              $("#tambah_prize").hide();
+            }
 
             const newDivPrize = document.createElement("div");
             newDivPrize.className = "form-group";
@@ -1281,7 +1284,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const newSelectPrize = document.createElement("select");
             newSelectPrize.id = `prize_${total_prize}`;
             newSelectPrize.className = "form-control pilihan-product";
-            newSelectPrize.name = `product_${total_prize}`;
+            newSelectPrize.name = `prize_${total_prize}`;
             newSelectPrize.required = true;
             newSelectPrize.innerHTML = promoOption;
 
@@ -1339,7 +1342,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         $(document).on("click", ".hapus_prize", function(e){
             e.preventDefault();
-            // total_product--;
+            total_prize--;
+            if (total_prize < 3) {
+              $("#tambah_prize").show();
+            }
 
             $('#prize_parent_'+$(this).val()).remove();
 

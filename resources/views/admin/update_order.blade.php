@@ -53,7 +53,7 @@ $menu_item_page = "order";
     .select2-container .select2-selection--single {
         height: 45px !important;
     }
-    
+
     .select2-container--bootstrap4 .select2-results__group {
         color: black;
     }
@@ -276,9 +276,12 @@ $menu_item_page = "order";
                                 $ProductPromos = $orders->orderDetail;
                                 $totalProduct = count($ProductPromos);
 
-                                $total_product = -1;
-                                ?>
+                                $totalPrize = count($ProductPromos);
 
+                                $total_product = -1;
+                                $total_prize = -1;
+                                ?>
+                                <!-- type 2 for prize -->
                                 @foreach ($orders->orderDetail as $orderDetail)
                                 @if ($orderDetail->type == App\OrderDetail::$Type['1'])
                                     <?php
@@ -332,12 +335,12 @@ $menu_item_page = "order";
                                                         @foreach($products as $product)
                                                         <option value="product_{{ $product->id }}"
                                                             @if($orderDetail->product_id && $product['id'] == $orderDetail->product_id) selected @endif>
-                                                            {{ $product->code }} 
-                                                            - ({{ $product->name }}) 
+                                                            {{ $product->code }}
+                                                            - ({{ $product->name }})
                                                             - Rp {{ number_format($product->price) }}
                                                         </option>
                                                         @endforeach
-                                                    </optgroup>    
+                                                    </optgroup>
 
                                                     <option value="other" <?php echo $orderDetail->other ? "selected" : "";?>>
                                                         OTHER
@@ -413,10 +416,18 @@ $menu_item_page = "order";
                                         </div>
                                     @endif
                                     </div>
+
+                                @elseif ($orderDetail->type == App\OrderDetail::$Type['2'])
+                                  <?php
+                                  $total_prize++;
+                                  ?>
                                 @endif
+
                                 @endforeach
                                 <div id="tambahan_product"></div>
                                 {{-- ++++++++++++++ ======== ++++++++++++++ --}}
+
+                                <hr />
 
                                 @if($orders['cash_upgrade'] == 2)
                                 <div class="row">
@@ -434,13 +445,13 @@ $menu_item_page = "order";
                                                 @foreach($products as $product)
                                                 <option value="{{ $product->id }}"
                                                     @if($orderDetails['upgrade']['product_id'] && $product->id == $orderDetails['upgrade']['product_id']) selected @endif>
-                                                    {{ $product->code }} 
-                                                    - ({{ $product->name }}) 
+                                                    {{ $product->code }}
+                                                    - ({{ $product->name }})
                                                     - Rp {{ number_format($product->price) }}
                                                 </option>
                                                 @endforeach
 
-                                                <option value="other" 
+                                                <option value="other"
                                                     @if($orderDetails['upgrade']['other']) selected @endif>
                                                     OTHER
                                                 </option>
@@ -463,7 +474,7 @@ $menu_item_page = "order";
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <input type="text" 
+                                            <input type="text"
                                                 @if ($orderDetails['upgrade']['other'] == null) style="display: none;" @endif
                                                 class="form-control"
                                                 name="old_product_other"
@@ -477,6 +488,8 @@ $menu_item_page = "order";
                                     </div>
                                 </div>
                                 @endif
+
+                                <hr />
 
                                 <div class="row">
                                     <div class="col-md-9">
@@ -493,8 +506,8 @@ $menu_item_page = "order";
                                                 @foreach($products as $product)
                                                 <option value="{{ $product->id }}"
                                                     @if($orderDetails['prize']['product_id'] && $product->id == $orderDetails['prize']['product_id']) selected @endif>
-                                                    {{ $product->code }} 
-                                                    - ({{ $product->name }}) 
+                                                    {{ $product->code }}
+                                                    - ({{ $product->name }})
                                                     - Rp {{ number_format($product->price) }}
                                                 </option>
                                                 @endforeach
@@ -519,9 +532,9 @@ $menu_item_page = "order";
                                             <div class="validation"></div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <!-- <div class="col-md-12">
                                         <div class="form-group">
-                                            <input type="text" 
+                                            <input type="text"
                                                 @If($orderDetails['prize']['other'] == null) style="display: none" @endif
                                                 class="form-control"
                                                 name="prize_other"
@@ -532,8 +545,24 @@ $menu_item_page = "order";
                                                 style="text-transform: uppercase;" />
                                             <div class="validation"></div>
                                         </div>
+                                    </div> -->
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 text-right"
+                                        style="margin-bottom: 1em;">
+                                        <button id="tambah_prize"
+                                            title="Tambah Prize"
+                                            style="padding: 0.4em 0.7em;">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
                                     </div>
                                 </div>
+
+                                <div id="tambahan_prize"></div>
+                                {{-- ++++++++++++++ ======== ++++++++++++++ --}}
+
+                                <hr />
                             </div>
                             @endif
                         </div>
@@ -640,7 +669,7 @@ $menu_item_page = "order";
                                             <select class="form-control bank_cicilan" name="cicilan_{{ $indexPayment }}" data-msg="Mohon Pilih Jumlah Cicilan">
                                                 <option selected value="1">1X</option>
                                                 @for($i=2; $i<=12;$i+=2)
-                                                    <option class="other_valCicilan" value="{{ $i }}" 
+                                                    <option class="other_valCicilan" value="{{ $i }}"
                                                     @if($payment['cicilan'] == $i) selected @endif>
                                                         {{ $i }}X
                                                     </option>
@@ -1041,6 +1070,7 @@ document.addEventListener("DOMContentLoaded", function () {
 <script type="application/javascript">
     var total_bank = "{{ $indexPayment-1 }}";
     var total_product = "{{ $total_product }}";
+    var total_prize = "{{ $total_prize }}";
     var count = 0;
     var arrBooleanCso = ['false', 'false', 'false'];
 
@@ -1048,7 +1078,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var total_price = parseInt($('#fixed_payment').val());
     var arr_index_temp = [];
 
-    $(document).ready(function () {  
+    $(document).ready(function () {
         $(document).on("input", 'input[data-type="currency"]', function() {
             $(this).val(numberWithCommas($(this).val()));
         });
@@ -1115,7 +1145,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="p-3 mb-2" style="border: 1px solid black" id="bank_` + total_bank + `">
                 <div class="form-group">
                     <label for="">Payment Type ` + (total_bank + 1) + `</label>
-                </div>                                            
+                </div>
                 <div class="row">
                     <div class="form-group col-md-8">
                         <select class="form-control bank_name"
@@ -1299,7 +1329,7 @@ document.addEventListener("DOMContentLoaded", function () {
             newDivCol3.appendChild(newDivQty.appendChild(newSelectQty));
             newDivCol12Qty.appendChild(newDivRemove.appendChild(newButtonRemove));
             newDivOther.appendChild(newInputOther);
-            
+
             const newDivParentProduct = document.createElement("div");
             newDivParentProduct.className = "row";
             newDivParentProduct.id = `product_parent_${total_product}`;
@@ -1339,6 +1369,90 @@ document.addEventListener("DOMContentLoaded", function () {
                     checkRemainingPayment();
                 }
             }
+
+            //remove dari array
+            arr_index_temp.splice($(this).val(), 1);
+        });
+
+        $("#tambah_prize").click(function (e) {
+            e.preventDefault();
+            total_prize++;
+            if(total_prize == 3){
+              $("#tambah_prize").hide();
+            }
+
+            const newDivPrize = document.createElement("div");
+            newDivPrize.className = "form-group";
+
+            const newSelectPrize = document.createElement("select");
+            newSelectPrize.id = `prize_${total_prize}`;
+            newSelectPrize.className = "form-control pilihan-product";
+            newSelectPrize.name = `prize_${total_prize}`;
+            newSelectPrize.required = true;
+            newSelectPrize.innerHTML = promoOption;
+            newSelectPrize.setAttribute("onchange", "selectOther(this)");
+            newSelectPrize.setAttribute("data-sequence", total_product);
+
+            const newDivPrizeQty = document.createElement("div");
+            newDivPrizeQty.className = "form-group";
+
+            const newSelectPrizeQty = document.createElement("input");
+            newSelectPrizeQty.type = "number";
+            newSelectPrizeQty.className = "form-control";
+            newSelectPrizeQty.id = `prize_qty_${total_prize}`;
+            newSelectPrizeQty.name = `prize_qty_${total_prize}`;
+            newSelectPrizeQty.required = true;
+            newSelectPrizeQty.value = "1";
+            newSelectPrizeQty.min = "1";
+            newSelectPrizeQty.setAttribute("oninput", "selectQty(this)");
+            newSelectPrizeQty.setAttribute("data-sequence", total_product);
+
+            const newDivPrizeRemove = document.createElement("div");
+            newDivPrizeRemove.style = "margin-bottom: 1em; display:flex; justify-content: flex-end; padding: 0;";
+
+            const newPrizeButtonRemove = document.createElement("button");
+            newPrizeButtonRemove.className = "hapus_prize";
+            newPrizeButtonRemove.value = total_prize;
+            newPrizeButtonRemove.title = "Kurangi Prize";
+            newPrizeButtonRemove.style = "padding: 0.4em 0.7em; background-color: red;";
+            newPrizeButtonRemove.innerHTML = '<i class="fas fa-minus"></i>';
+
+            const newDivPrizeCol9 = document.createElement("div");
+            newDivPrizeCol9.className = "col-md-9 form-group";
+
+            const newDivPrizeCol3 = document.createElement("div");
+            newDivPrizeCol3.className = "col-md-3 form-group";
+
+            const newDivPrizeCol12Qty = document.createElement("div");
+            newDivPrizeCol12Qty.className = "col-md-12 form-group text-right";
+
+            newDivPrizeCol9.appendChild(newDivPrize.appendChild(newSelectPrize));
+            newDivPrizeCol3.appendChild(newDivPrizeQty.appendChild(newSelectPrizeQty));
+            newDivPrizeCol12Qty.appendChild(newDivPrizeRemove.appendChild(newPrizeButtonRemove));
+
+            const newDivPrizeParentProduct = document.createElement("div");
+            newDivPrizeParentProduct.className = "row";
+            newDivPrizeParentProduct.id = `prize_parent_${total_prize}`;
+
+            newDivPrizeParentProduct.appendChild(newDivPrizeCol9);
+            newDivPrizeParentProduct.appendChild(newDivPrizeCol3);
+            newDivPrizeParentProduct.appendChild(newDivPrizeCol12Qty);
+
+            document.getElementById("tambahan_prize").appendChild(newDivPrizeParentProduct);
+
+            $("#prize_" + total_prize).select2({
+                theme: "bootstrap4",
+            });
+        });
+
+        $(document).on("click", ".hapus_prize", function(e){
+            e.preventDefault();
+            total_prize--;
+            if (total_prize < 3) {
+              $("#tambah_prize").show();
+            }
+
+            $('#prize_parent_'+$(this).val()).remove();
 
             //remove dari array
             arr_index_temp.splice($(this).val(), 1);
