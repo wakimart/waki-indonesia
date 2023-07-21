@@ -24,10 +24,10 @@ class CsoCommission_onCSOExport implements FromView, ShouldAutoSize, WithTitle, 
     public function columnFormats(): array
     {
         return [
-            'D' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
-            'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
-            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
-            'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'D' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
         ];
     }
 
