@@ -5,11 +5,12 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class CsoCommission_onCSOExport implements FromView, ShouldAutoSize, WithTitle, WithColumnFormatting
+class CsoCommission_onCSOExport implements FromView, ShouldAutoSize, WithColumnWidths, WithTitle, WithColumnFormatting
 {
 	public function __construct($CsoCommissions)
     {
@@ -28,6 +29,18 @@ class CsoCommission_onCSOExport implements FromView, ShouldAutoSize, WithTitle, 
             'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
             'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
             'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+        ];
+    }
+    public function columnWidths(): array
+    {
+        return [
+						'A' => 4,
+            'B' => 40,
+            'C' => 15,
+            'D' => 20,
+            'E' => 20,
+            'F' => 20,
+            'G' => 25,
         ];
     }
 
