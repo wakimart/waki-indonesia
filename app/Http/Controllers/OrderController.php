@@ -204,18 +204,16 @@ class OrderController extends Controller
                 $orderDetail->save();
             }
 
-            //pembentukan array prize
-            if (isset($data['prize'])) {
-                $orderDetail = new OrderDetail;
-                $orderDetail->order_id = $order['id'];
-                $orderDetail->type = OrderDetail::$Type['2'];
-                $orderDetail->qty = $data['prize_qty'] ?? 1;
-                if ($data['prize'] == "other") {
-                    $orderDetail->other = $data['prize_other'];
-                } else {
-                    $orderDetail->product_id = $data['prize'];
+            // prize (new : max 3 item)
+            if($data['lots_of_prizes'] !== 0){
+                for($i = 0; $i < $data['lots_of_prizes']; $i++){
+                    $orderDetail = new OrderDetail;
+                    $orderDetail->order_id = $order['id'];
+                    $orderDetail->type = OrderDetail::$Type['2'];
+                    $orderDetail->product_id = $data['prize_'.$i];
+                    $orderDetail->qty = $data['prize_qty_'.$i];
+                    $orderDetail->save();
                 }
-                $orderDetail->save();
             }
 
             //pembentukan array Bank
@@ -433,7 +431,8 @@ class OrderController extends Controller
             $orderDetails['prize'] = OrderDetail::where('order_id', $orders['id'])
                 ->where('type', OrderDetail::$Type['2'])->first();
             $arr_price = [];
-            return view('admin.update_order', compact('orders','promos', 'products', 'from_know','branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks', 'orderDetails', 'arr_price'));
+            $lotsOfPrizes = OrderDetail::where([['order_id', $request->get('id')], ['type', 'prize']])->count();
+            return view('admin.update_order', compact('orders','promos', 'products', 'from_know','branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks', 'orderDetails', 'arr_price', 'lotsOfPrizes'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -448,7 +447,7 @@ class OrderController extends Controller
      */
     public function update(Request $request)
     {
-        // return response()->json(['errors' => $request->all()], 500);
+        // return response()->json($request->all());
         DB::beginTransaction();
         try{
             $historyUpdate= [];
@@ -564,26 +563,19 @@ class OrderController extends Controller
             }
 
             //pembentukan array prize
-            if (isset($data['prize'])) {
-                // $orderDetail = OrderDetail::where("order_id", $orders['id'])
-                //     ->where("type", OrderDetail::$Type['2'])->first();
-                $orderDetail = $orderDetailOlds->filter(function ($item) {
-                    return $item->type == OrderDetail::$Type['2'];
-                })->first();
-                if (!$orderDetail) {
-                    $orderDetail = new OrderDetail;
+            if(isset($data['prize_0'])){
+                // hapus data hadiah yang lama
+                $deletePrizes = OrderDetail::where([['order_id', $orders['id']], ['type', 'prize']])->delete();
+                for($i = 0; $i < 3; $i++){
+                    if(isset($data['prize_'.$i])){
+                        $addPrize = new OrderDetail();
+                        $addPrize->order_id = $orders['id'];
+                        $addPrize->product_id = $data['prize_'.$i];
+                        $addPrize->qty = $data['prize_qty_'.$i];
+                        $addPrize->type = OrderDetail::$Type['2'];
+                        $addPrize->save();
+                    }
                 }
-                $orderDetail->product_id = null;
-                $orderDetail->other = null;
-                $orderDetail->order_id = $orders['id'];
-                $orderDetail->type = OrderDetail::$Type['2'];
-                $orderDetail->qty = $data['prize_qty'] ?? 1;
-                if ($data['prize'] == "other") {
-                    $orderDetail->other = $data['prize_other'];
-                } else {
-                    $orderDetail->product_id = $data['prize'];
-                }
-                $orderDetail->save();
             }
 
             //pembentukan array Bank

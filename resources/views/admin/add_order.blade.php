@@ -469,6 +469,7 @@ $menu_item_second = "add_order";
                                             <select class="form-control pilihan-prize"
                                                 id="prize_0"
                                                 name="prize_0"
+                                                data-sequence="0"
                                                 data-msg="Mohon Pilih Prize Produk">
                                                 <option selected disabled value="">
                                                     Choose Prize Product
@@ -482,11 +483,12 @@ $menu_item_second = "add_order";
                                                 </option>
                                                 @endforeach
 
-                                                <option value="other">
+                                                {{--<option value="other">
                                                     OTHER
-                                                </option>
+                                                </option>--}}
                                             </select>
                                             <div class="validation"></div>
+                                            <input type="hidden" name="lots_of_prizes" id="lotsOfPrizes" value="0">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
@@ -494,8 +496,10 @@ $menu_item_second = "add_order";
                                             <label for="">Qty Prize Product</label>
                                             <input type="number"
                                                 class="form-control"
-                                                name="prize_qty"
-                                                id="prize_qty"
+                                                data-sequence="0"
+                                                min="1"
+                                                name="prize_qty_0"
+                                                id="prize_qty_0"
                                                 placeholder="Qty"
                                                 data-msg="Mohon Isi Jumlah Prize" />
                                             <div class="validation"></div>
@@ -892,10 +896,11 @@ $menu_item_second = "add_order";
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
 let promoOption = `<option selected disabled value="">Choose Product</option>`;
+let prizeOption = `<option selected disabled value="">Choose Product</option>`;
 let quantityOption = "";
 
 document.addEventListener("DOMContentLoaded", function () {
-    $("#product_0, #old_product, #prize").select2({
+    $("#product_0, #old_product, #prize_0").select2({
         theme: "bootstrap4",
     });
 
@@ -945,7 +950,34 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let i = 1; i <= 10; i++) {
         quantityOption += `<option value="${i}">${i}</option>`;
     }
+
+    prizeOption+=`<optgroup label="Prize">`;
+    @foreach ($products as $product)
+        prizeOption += `<option value="{{ $product->id }}">{{ $product->code . " - (" . $product->name . ") - Rp. " . number_format($product->price) }}</option>`;
+    @endforeach
+    prizeOption+="</optgroup>";
 }, false);
+
+var lotsOfPrizes = 0
+var whetherThePrize0HasBeenClicked = 'not yet'
+$(document).ready(function () {
+    $("#prize_0").on('change', function() {
+        if(whetherThePrize0HasBeenClicked == 'not yet'){
+            increaseTheNumberOfPrizes()
+        }
+        whetherThePrize0HasBeenClicked = 'already'
+    });
+})
+
+function increaseTheNumberOfPrizes() {
+    lotsOfPrizes++
+    $('#lotsOfPrizes').val(lotsOfPrizes)
+}
+
+function decreaseTheNumberOfPrizes() {
+    lotsOfPrizes--
+    $('#lotsOfPrizes').val(lotsOfPrizes)
+}
 </script>
 <script type="application/javascript">
     var total_bank = 0;
@@ -1273,8 +1305,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         $("#tambah_prize").click(function (e) {
             e.preventDefault();
+            increaseTheNumberOfPrizes()
             total_prize++;
-            if(total_prize == 3){
+            if(total_prize >= 2){
               $("#tambah_prize").hide();
             }
 
@@ -1283,10 +1316,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const newSelectPrize = document.createElement("select");
             newSelectPrize.id = `prize_${total_prize}`;
-            newSelectPrize.className = "form-control pilihan-product";
+            newSelectPrize.className = "form-control pilihan-prize";
             newSelectPrize.name = `prize_${total_prize}`;
             newSelectPrize.required = true;
-            newSelectPrize.innerHTML = promoOption;
+            newSelectPrize.innerHTML = prizeOption;
+            newSelectPrize.setAttribute("data-sequence", total_prize);
 
             const newDivPrizeQty = document.createElement("div");
             newDivPrizeQty.className = "form-group";
@@ -1299,6 +1333,7 @@ document.addEventListener("DOMContentLoaded", function () {
             newSelectPrizeQty.required = true;
             newSelectPrizeQty.value = "1";
             newSelectPrizeQty.min = "1";
+            newSelectPrizeQty.setAttribute("data-sequence", total_prize);
 
             const newDivPrizeRemove = document.createElement("div");
             newDivPrizeRemove.style = "margin-bottom: 1em; display:flex; justify-content: flex-end; padding: 0;";
@@ -1342,6 +1377,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         $(document).on("click", ".hapus_prize", function(e){
             e.preventDefault();
+            decreaseTheNumberOfPrizes()
             total_prize--;
             if (total_prize < 3) {
               $("#tambah_prize").show();
@@ -1395,7 +1431,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $(this).hide();
         });
 
-        $("#old_product, #prize").change(function() {
+        $("#old_product").change(function() {
             element = $(this);
             if (element.val() == "other") {
                 $("#" + element.attr('id') + "_other").show();

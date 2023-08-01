@@ -280,6 +280,7 @@ $menu_item_page = "order";
 
                                 $total_product = -1;
                                 $total_prize = -1;
+                                $lots_of_prizes = 0;
                                 ?>
                                 <!-- type 2 for prize -->
                                 @foreach ($orders->orderDetail as $orderDetail)
@@ -421,10 +422,67 @@ $menu_item_page = "order";
                                   <?php
                                   $total_prize++;
                                   ?>
+
+                                    <div class="row" id="div_prize_{{$lots_of_prizes}}">
+                                        <div class="col-md-9">
+                                            <div class="form-group">
+                                                <label for="">Prize Product</label>
+                                                <select class="form-control prize-select"
+                                                    name="prize_{{$lots_of_prizes}}"
+                                                    data-msg="Mohon Pilih Prize Produk">
+                                                    <option selected disabled value="">
+                                                        Choose Prize Product
+                                                    </option>
+
+                                                    @foreach($products as $product)
+                                                    <option value="{{ $product->id }}"
+                                                        @if($product->id == $orderDetail->product_id) selected @endif>
+                                                        {{ $product->code }}
+                                                        - ({{ $product->name }})
+                                                        - Rp {{ number_format($product->price) }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
+                                                <div class="validation"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="">Qty Prize Product</label>
+                                                <input type="number"
+                                                    class="form-control"
+                                                    name="prize_qty_{{$lots_of_prizes}}"
+                                                    placeholder="Qty"
+                                                    value="{{ $orderDetail->qty }}"
+                                                    min="1"
+                                                    data-msg="Mohon Isi Jumlah Prize" />
+                                                <div class="validation"></div>
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                    <div class="row {{$lots_of_prizes == 0 && $lotsOfPrizes < 3 ? '' : 'd-none'}}" id="div_add_prize_{{$lots_of_prizes}}">
+                                        <div class="col-md-12 text-right" style="margin-bottom: 1em;">
+                                            <button type="button" class="add_prize" style="padding: 0.4em 0.7em;">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    @if($lots_of_prizes > 0)
+                                        <div class="row">
+                                            <div class="col-md-12 text-right" style="margin-bottom: 1em;">
+                                                <button class="delete_prize" type="button" data-index="{{$lots_of_prizes}}" style="padding: 0.4em 0.7em; background-color: red;">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    @php $lots_of_prizes++ @endphp
                                 @endif
 
                                 @endforeach
                                 <div id="tambahan_product"></div>
+                                <div id="latest_prize_div"></div>
                                 {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
                                 <hr />
@@ -490,76 +548,6 @@ $menu_item_page = "order";
                                 @endif
 
                                 <hr />
-
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <div class="form-group">
-                                            <label for="">Prize Product</label>
-                                            <select class="form-control"
-                                                id="prize"
-                                                name="prize"
-                                                data-msg="Mohon Pilih Prize Produk">
-                                                <option selected disabled value="">
-                                                    Choose Prize Product
-                                                </option>
-
-                                                @foreach($products as $product)
-                                                <option value="{{ $product->id }}"
-                                                    @if($orderDetails['prize']['product_id'] && $product->id == $orderDetails['prize']['product_id']) selected @endif>
-                                                    {{ $product->code }}
-                                                    - ({{ $product->name }})
-                                                    - Rp {{ number_format($product->price) }}
-                                                </option>
-                                                @endforeach
-
-                                                <option value="other" @If($orderDetails['prize']['other']) selected @endif>
-                                                    OTHER
-                                                </option>
-                                            </select>
-                                            <div class="validation"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Qty Prize Product</label>
-                                            <input type="number"
-                                                class="form-control"
-                                                name="prize_qty"
-                                                id="prize_qty"
-                                                placeholder="Qty"
-                                                value="{{ $orderDetails['prize']['qty'] ?? '' }}"
-                                                data-msg="Mohon Isi Jumlah Prize" />
-                                            <div class="validation"></div>
-                                        </div>
-                                    </div>
-                                    <!-- <div class="col-md-12">
-                                        <div class="form-group">
-                                            <input type="text"
-                                                @If($orderDetails['prize']['other'] == null) style="display: none" @endif
-                                                class="form-control"
-                                                name="prize_other"
-                                                id="prize_other"
-                                                placeholder="Prize Product Name"
-                                                data-msg="Mohon Isi Hadiah"
-                                                value="{{ $orderDetails['prize']['other'] ?? '' }}"
-                                                style="text-transform: uppercase;" />
-                                            <div class="validation"></div>
-                                        </div>
-                                    </div> -->
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-12 text-right"
-                                        style="margin-bottom: 1em;">
-                                        <button id="tambah_prize"
-                                            title="Tambah Prize"
-                                            style="padding: 0.4em 0.7em;">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div id="tambahan_prize"></div>
                                 {{-- ++++++++++++++ ======== ++++++++++++++ --}}
 
                                 <hr />
@@ -851,7 +839,7 @@ let promoOption = `<option selected disabled value="">Choose Product</option>`;
 let quantityOption = "";
 
 document.addEventListener("DOMContentLoaded", function () {
-    $("#old_product, #prize").select2({
+    $("#old_product, .prize-select").select2({
         theme: "bootstrap4",
     });
 
@@ -1638,5 +1626,81 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let input of document.querySelectorAll('#tags')) {
         tagsInput(input);
     }
+</script>
+<script>
+    var lots_of_prizes = parseInt('{{$lotsOfPrizes}}')
+    $(document).ready(function () {
+        $(document).on("click", ".delete_prize", function(){
+            $(this).remove()
+            lots_of_prizes--
+            var index = $(this).data('index')
+            $('#div_prize_'+index).remove()
+            if(lots_of_prizes < 3){
+                $('#div_add_prize_0').removeClass("d-none")
+            }
+        });
+
+        $(document).on("click", ".add_prize", function(){
+            if($('#div_prize_1').length == 0){
+                // it doesn't exist
+                var next_index = 1
+            }else{
+                var next_index = 2
+            }
+
+            var div_add_prize = `
+                <div class="row" id="div_prize_${next_index}">
+                    <div class="col-md-9">
+                        <div class="form-group">
+                            <label for="">Prize Product</label>
+                            <select class="form-control prize-select"
+                                name="prize_${next_index}"
+                                data-msg="Mohon Pilih Prize Produk">
+                                <option selected disabled value="">
+                                    Choose Prize Product
+                                </option>
+
+                                @foreach($products as $product)
+                                <option value="{{ $product->id }}">
+                                    {{ $product->code }}
+                                    - ({{ $product->name }})
+                                    - Rp {{ number_format($product->price) }}
+                                </option>
+                                @endforeach
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="">Qty Prize Product</label>
+                            <input type="number"
+                                class="form-control"
+                                name="prize_qty_${next_index}"
+                                placeholder="Qty"
+                                value="1"
+                                min="1"
+                                data-msg="Mohon Isi Jumlah Prize" />
+                            <div class="validation"></div>
+                        </div>
+                    </div>                                        
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-right" style="margin-bottom: 1em;">
+                        <button class="delete_prize" type="button" data-index="${next_index}" style="padding: 0.4em 0.7em; background-color: red;">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+            `
+
+            $('#latest_prize_div').append(div_add_prize)
+            
+            lots_of_prizes++
+            if(lots_of_prizes == 3){
+                $('#div_add_prize_0').addClass("d-none")
+            }
+        })
+    })
 </script>
 @endsection
