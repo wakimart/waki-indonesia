@@ -2228,11 +2228,15 @@ class OrderController extends Controller
                     $csoIDandPercentage[$order['30_cso_id']] = 30;
                 }
 
+                //order commision 3%
+                $commision_3_percentage = $order->orderPayment->sum('commission_percentage');
+
                 foreach($csoIDandPercentage as $cso_id => $cso_percentage){
                     // order commission
                     $orderCommission = new OrderCommission();
                     $orderCommission->order_id = $request->order_id;
                     $orderCommission->cso_id = $cso_id;
+                    $orderCommission->commission = $cso_percentage / 100 * $commision_3_percentage;
                     $orderCommission->bonus = $cso_percentage / 100 * str_replace(',', '', $request->bonus);
                     $orderCommission->upgrade = $cso_percentage / 100 * str_replace(',', '', $request->upgrade);
                     $orderCommission->smgt_nominal = $cso_percentage / 100 * str_replace(',', '', $request->smgt_nominal);
@@ -2243,7 +2247,7 @@ class OrderController extends Controller
                     $orderCsoCommission = new OrderCsoCommission();
                     $orderCsoCommission->order_commission_id = $orderCommission->id;
                     // where cso id & what month is it now
-                    $month = date('m');
+                    $month = date('m', strtotime($order['created_at']));
                     $csoCommission = CsoCommission::where('cso_id', $cso_id)->whereMonth('created_at', $month)->first();
                     $orderCsoCommission->cso_commission_id = $csoCommission->id;
                     $orderCsoCommission->save();

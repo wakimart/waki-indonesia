@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderCommission extends Model
 {
     protected $fillable = [
-        'order_id', 'cso_id', 'bonus', 'upgrade', 'smgt_nominal', 'excess_price', 'active',
+        'order_id', 'cso_id', 'commission', 'bonus', 'upgrade', 'smgt_nominal', 'excess_price', 'active'
     ];
 
     public function order()

@@ -529,16 +529,36 @@
                             <td>Commission</td>
                         </thead>
 
-                        <tr align="center">
-                            <td>2023-01-30</td>
-                            <td>Rp. 1,200,000</td>
-                            <td>Rp. 1,200,000</td>
-                            <td>Rp. 200,000</td>
-                        </tr>
+
+                        @foreach($order->orderPayment as $orderPayment)
+                            <tr align="center">
+                                @php
+                                    $totalSaleGross = 0;
+                                    $totalSaleNetto = 0;
+                                    if($orderPayment->totalSale['bank_in'] > 0){
+                                        $totalSaleGross = $orderPayment->totalSale['bank_in'];
+                                        $totalSaleNetto = $orderPayment->totalSale['bank_in'];
+                                    }
+                                    elseif($orderPayment->totalSale['debit'] > 0){
+                                        $totalSaleGross = $orderPayment->totalSale['debit'];
+                                        $totalSaleNetto = $orderPayment->totalSale['netto_debit'];
+                                    }
+                                    elseif($orderPayment->totalSale['card'] > 0){
+                                        $totalSaleGross = $orderPayment->totalSale['card'];
+                                        $totalSaleNetto = $orderPayment->totalSale['netto_card'];
+                                    }
+                                @endphp
+
+                                <td>{{ $orderPayment['payment_date'] }}</td>
+                                <td>Rp. {{ number_format($totalSaleGross) }}</td>
+                                <td>Rp. {{ number_format($totalSaleNetto) }}</td>
+                                <td>Rp. {{ number_format($orderPayment->commission_percentage) }}</td>
+                            </tr>
+                        @endforeach
 
                         <tfoot>
                             <td class="font-weight-bold text-right" colspan="3">Total Commission:</td>
-                            <td class="text-center">Rp. 200,000</td>
+                            <td class="text-center font-weight-bold">Rp. {{ number_format($order->orderPayment->sum('commission_percentage')) }}</td>
                         </tfoot>
                     </table>
                 </div>
@@ -566,7 +586,7 @@
                                     <tr align="center">
                                         <td>{{$cso_percentage[$indexOrderCommission]}}%</td>
                                         <td>{{$orderCommission->cso->code}} - {{$orderCommission->cso->name}}</td>
-                                        <td>Rp. {{$cso_percentage[$indexOrderCommission]}}%</td>
+                                        <td>Rp. {{number_format($orderCommission->commission)}}</td>
                                         <td>Rp. {{number_format($orderCommission->bonus)}}</td>
                                         <td>Rp. {{number_format($orderCommission->upgrade)}}</td>
                                         <td>Rp. {{number_format($orderCommission->smgt_nominal)}}</td>

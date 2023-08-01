@@ -26,12 +26,18 @@ class TotalSaleController extends Controller
 
         if ($orderPayment->type_payment == "cash") {
             $totalSale->bank_in = $orderPayment->total_payment;
+            $orderPayment->commission_percentage = $totalSale->bank_in * 3 / 100;
+            $orderPayment->save();
         } else if ($orderPayment->type_payment == "debit") {
             $totalSale->debit = $orderPayment->total_payment;
             $totalSale->netto_debit = $orderPayment->total_payment - ($orderPayment->total_payment * ($orderPayment->charge_percentage_company + $orderPayment->charge_percentage_bank) / 100);
+            $orderPayment->commission_percentage = $totalSale->netto_debit * 3 / 100;
+            $orderPayment->save();
         } else if ($orderPayment->type_payment == "card" || $orderPayment->type_payment == "card installment") {
             $totalSale->card = $orderPayment->total_payment;
             $totalSale->netto_card = $orderPayment->total_payment - ($orderPayment->total_payment * ($orderPayment->charge_percentage_company + $orderPayment->charge_percentage_bank) / 100);
+            $orderPayment->commission_percentage = $totalSale->netto_card * 3 / 100;
+            $orderPayment->save();
         }
 
         $totalSale->created_at = $orderPayment->created_at;
@@ -52,12 +58,35 @@ class TotalSaleController extends Controller
         $totalSale->netto_card = 0;
         if ($orderPayment->type_payment == "cash") {
             $totalSale->bank_in = $orderPayment->total_payment;
+            $orderPayment->commission_percentage = $totalSale->bank_in * 3 / 100;
+            $orderPayment->save();
         } else if ($orderPayment->type_payment == "debit") {
             $totalSale->debit = $orderPayment->total_payment;
             $totalSale->netto_debit = $orderPayment->total_payment - ($orderPayment->total_payment * ($orderPayment->charge_percentage_company + $orderPayment->charge_percentage_bank) / 100);
+            $orderPayment->commission_percentage = $totalSale->netto_debit * 3 / 100;
+            $orderPayment->save();
         } else if ($orderPayment->type_payment == "card" || $orderPayment->type_payment == "card installment") {
             $totalSale->card = $orderPayment->total_payment;
             $totalSale->netto_card = $orderPayment->total_payment - ($orderPayment->total_payment * ($orderPayment->charge_percentage_company + $orderPayment->charge_percentage_bank) / 100);
+            $orderPayment->commission_percentage = $totalSale->netto_card * 3 / 100;
+            $orderPayment->save();
+        }
+
+        //check if there's a commission
+        if($orderPayment->order->orderCommission->count() > 0){
+            $csoIDandPercentage = [];
+            if($orderPayment->order['70_cso_id'] == $orderPayment->order['30_cso_id']){
+                $orderCommissionNya = $orderPayment->order->orderCommission->where('cso_id', $orderPayment->order->cso_id)->first();
+                $orderCommissionNya->commission = $orderPayment->order->orderPayment->sum('commission_percentage');
+                $orderCommissionNya->update();
+            }else{
+                $orderCommissionNya = $orderPayment->order->orderCommission->where('cso_id', $orderPayment->order['70_cso_id'])->first();
+                $orderCommissionNya->commission = 70 / 100 * $orderPayment->order->orderPayment->sum('commission_percentage');
+                $orderCommissionNya->update();
+                $orderCommissionNya = $orderPayment->order->orderCommission->where('cso_id', $orderPayment->order['30_cso_id'])->first();
+                $orderCommissionNya->commission = 30 / 100 * $orderPayment->order->orderPayment->sum('commission_percentage');
+                $orderCommissionNya->update();
+            }
         }
 
         $totalSale->created_at = $orderPayment->created_at;

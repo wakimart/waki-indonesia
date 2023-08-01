@@ -152,11 +152,13 @@ $menu_item_page_sub = "cso_commission";
                                     @foreach ($CsoCommissions as $key => $Cso_Commission)
                                         @php
                                             $bonusPerCso = 0;
+                                            $commissionPerCso = 0;
                                             if(count($Cso_Commission->orderCommission) > 0){
 
                                                 $bonusPerCso = $Cso_Commission->orderCommission->sum(function ($row) {return ($row->bonus + $row->upgrade + $row->smgt_nominal + $row->excess_price);});
+                                                $commissionPerCso = $Cso_Commission->commission == 0 ? $Cso_Commission->orderCommission->sum('commission') : $Cso_Commission->commission;
                                             }
-                                            $tot_commission += $Cso_Commission['commission'];
+                                            $tot_commission += $commissionPerCso;
                                             $tot_pajak += $Cso_Commission['pajak'];
                                             $tot_bonus += $bonusPerCso;
                                             $tot_result += $Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak'];
@@ -166,7 +168,7 @@ $menu_item_page_sub = "cso_commission";
                                             <td class="text-center">{{ $key+1 }}</td>
                                             <td>{{ $Cso_Commission->cso['code'] }} - {{ $Cso_Commission->cso['name'] }}</td>
                                             <td>{{ $Cso_Commission->cso['no_rekening'] }}</td>
-                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['commission']) }}</td>
+                                            <td class="text-right" {!! ($Cso_Commission->commission > 0) ? 'style="background-color: #cde9ff;"' : '' !!}>Rp. {{ number_format($commissionPerCso) }}</td>
                                             <td class="text-right">Rp. {{ number_format($bonusPerCso) }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['pajak']) }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak']) }}</td>
@@ -197,11 +199,14 @@ $menu_item_page_sub = "cso_commission";
                                         @endphp
                                     @endforeach
                                     <tr class="text-right">
-                                        <th colspan="3">TOTAL SALES</th>
+                                        <th colspan="3" rowspan="2">TOTAL COMMISSION</th>
                                         <th>Rp. {{ number_format($tot_commission) }}</th>
                                         <th>Rp. {{ number_format($tot_bonus) }}</th>
                                         <th>Rp. {{ number_format($tot_pajak) }}</th>
                                         <th>Rp. {{ number_format($tot_result) }}</th>
+                                    </tr>
+                                    <tr class="text-right">
+                                        <th colspan="4">Rp. {{ number_format($tot_commission + $tot_bonus + $tot_pajak + $tot_result) }}</th>
                                     </tr>
                                 </tbody>
                             </table>

@@ -73,7 +73,7 @@ class CsoCommissionController extends Controller
                 return response()->json([
                     'month' => date('Y-m', strtotime($cso_commission->created_at)),
                     'cso' => $cso_commission->cso['code']. '-' .$cso_commission->cso['name'],
-                    'commission' => $cso_commission->commission,
+                    'commission' => $cso_commission->commission == 0 ? $cso_commission->orderCommission->sum('commission') : $cso_commission->commission,
                     'pajak' => $cso_commission->pajak,
                 ], 200);
             }
