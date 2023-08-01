@@ -5,11 +5,13 @@ namespace App\Exports;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class CsoCommission_onOrderExport implements FromView, ShouldAutoSize, WithTitle, WithColumnFormatting
+class CsoCommission_onOrderExport implements FromView, ShouldAutoSize, WithColumnWidths, WithEvents, WithTitle, WithColumnFormatting
 {
 	public function __construct($CsoCommissions)
     {
@@ -24,14 +26,39 @@ class CsoCommission_onOrderExport implements FromView, ShouldAutoSize, WithTitle
     public function columnFormats(): array
     {
         return [
-            'D' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
-            'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
-            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
-            'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
-            'H' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
-            'I' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED,
+            'D' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'E' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'H' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'I' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
         ];
     }
+    public function columnWidths(): array
+    {
+        return [
+						'A' => 8,
+            'B' => 40,
+            'C' => 8,
+            'D' => 20,
+            'E' => 20,
+            'F' => 20,
+            'G' => 20,
+            'H' => 20,
+            'I' => 40,
+        ];
+    }
+
+		public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class    => function(AfterSheet $event) {
+                $event->sheet->getDelegate()->getRowDimension('3')->setRowHeight(-1);
+
+            },
+        ];
+    }
+
 
     public function view(): View
     {

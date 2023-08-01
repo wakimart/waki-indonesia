@@ -47,9 +47,9 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                         class="btn btn-gradient-info m-1">
                         Print
                         <span>
-                            <i class="mdi mdi-printer" 
-                                style="margin-left: 5px; 
-                                    font-size: 24px; 
+                            <i class="mdi mdi-printer"
+                                style="margin-left: 5px;
+                                    font-size: 24px;
                                     vertical-align: middle;">
                             </i>
                         </span>
@@ -224,16 +224,16 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            @php 
-                                                                $total_in = $financialRoutine->financialRoutine['remains_saldo'] + 
+                                                            @php
+                                                                $total_in = $financialRoutine->financialRoutine['remains_saldo'] +
                                                                     $financialRoutine->financialRoutine['remains_sales'] +
-                                                                    $financialRoutine->total_sale + 
-                                                                    $financialRoutine->bank_interest + 
+                                                                    $financialRoutine->total_sale +
+                                                                    $financialRoutine->bank_interest +
                                                                     $financialRoutine->etc_in;
                                                                 $total_out = $sub_total_fr_details +
-                                                                    $financialRoutine->bank_tax + 
-                                                                    $financialRoutine->etc_out + 
-                                                                    $financialRoutine->remains_sales + 
+                                                                    $financialRoutine->bank_tax +
+                                                                    $financialRoutine->etc_out +
+                                                                    $financialRoutine->remains_sales +
                                                                     $financialRoutine->remains_saldo;
                                                             @endphp
                                                             <td class="text-right" style="font-weight: 600;">Total : </td>
@@ -252,8 +252,6 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                     </div>
                                     <div class="clearfix"></div>
                                     <div class="clearfix"></div>
-                                    <p class="mb-0" style="page-break-after: always;">&nbsp;</p>
-                                    <p class="mb-0" style="page-break-before: always;">&nbsp;</p>
                                 </div>
                             </div>
                         </div>
@@ -321,7 +319,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                             </tr>
                                                         </thead>
                                                         <tbody class="table-bordered">
-                                                            @php 
+                                                            @php
                                                                 $subtotalBankIn = 0;
                                                                 $subtotalDebit = 0;
                                                                 $subtotalNettoDebit = 0;
@@ -356,7 +354,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                                     {{ number_format($total_sale['ts_netto_card']) }}
                                                                 </td>
                                                             </tr>
-                                                            @php 
+                                                            @php
                                                                 $subtotalBankIn += $total_sale['ts_bank_in'];
                                                                 $subtotalDebit += $total_sale['ts_debit'];
                                                                 $subtotalNettoDebit += $total_sale['ts_netto_debit'];
@@ -392,8 +390,6 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                         </div>
                                         <div class="clearfix"></div>
                                         <div class="clearfix"></div>
-                                        <p class="mb-0" style="page-break-after: always;">&nbsp;</p>
-                                        <p class="mb-0" style="page-break-before: always;">&nbsp;</p>
                                     </div>
                                 </div>
                             </div>
@@ -431,7 +427,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                             </div>
                                             <div class="row justify-content-center scale-up-font" style="padding: 0.5em 2em;">
                                                 <div class="table-responsive">
-                                                        @php 
+                                                        @php
                                                             $idxBank = 0;
                                                             $totalGross = 0;
                                                             $totalNetto = 0;
@@ -462,7 +458,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody class="table-bordered">
-                                                                    @php 
+                                                                    @php
                                                                         $subtotalBankIn = 0;
                                                                         $subtotalDebit = 0;
                                                                         $subtotalNettoDebit = 0;
@@ -493,7 +489,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                                             <td class="text-right">{{ number_format($order['ts_card']) }}</td>
                                                                             <td class="text-right">{{ number_format($order['ts_netto_card']) }}</td>
                                                                         </tr>
-                                                                        @php 
+                                                                        @php
                                                                             $subtotalBankIn += $order['ts_bank_in'];
                                                                             $subtotalDebit += $order['ts_debit'];
                                                                             $subtotalNettoDebit += $order['ts_netto_debit'];
@@ -527,8 +523,6 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                         </div>
                                         <div class="clearfix"></div>
                                         <div class="clearfix"></div>
-                                        <p class="mb-0" style="page-break-after: always;">&nbsp;</p>
-                                        <p class="mb-0" style="page-break-before: always;">&nbsp;</p>
                                     </div>
                                 </div>
                             </div>
@@ -555,9 +549,9 @@ $(document).ready(function() {
         var printContents2 = document.getElementById("element-to-print-2").innerHTML;
         var originalContents = document.body.innerHTML;
 
-        document.body.innerHTML = printContents + 
-            `<div style="page-break-before:always;">` + 
-                printContents2 + 
+        document.body.innerHTML = printContents +
+            `<div style="page-break-before:always;">` +
+                printContents2 +
             "</div>";
 
         window.print();
