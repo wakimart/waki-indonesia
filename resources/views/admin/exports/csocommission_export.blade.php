@@ -24,11 +24,13 @@
         @foreach ($CsoCommissions as $key => $Cso_Commission)
             @php
                 $bonusPerCso = 0;
+                $commissionPerCso = 0;
                 if(count($Cso_Commission->orderCommission) > 0){
 
                     $bonusPerCso = $Cso_Commission->orderCommission->sum(function ($row) {return ($row->bonus + $row->upgrade + $row->smgt_nominal + $row->excess_price);});
+                    $commissionPerCso = $Cso_Commission->commission == 0 ? $Cso_Commission->orderCommission->sum('commission') : $Cso_Commission->commission;
                 }
-                $tot_commission += $Cso_Commission['commission'];
+                $tot_commission += $commissionPerCso;
                 $tot_pajak += $Cso_Commission['pajak'];
                 $tot_bonus += $bonusPerCso;
                 $tot_result += $Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak'];
@@ -38,7 +40,7 @@
                 <td style="border: 1px solid black; ">{{ $key+1 }}</td>
                 <td style="border: 1px solid black; text-align: left;">{{ $Cso_Commission->cso['code'] }} - {{ $Cso_Commission->cso['name'] }}</td>
                 <td style="border: 1px solid black; text-align: left; font-weight: bold;">{{ $Cso_Commission->cso['no_rekening'] }}</td>
-                <td style="border: 1px solid black; text-align: right;">{{ $Cso_Commission['commission'] }}</td>
+                <td style="border: 1px solid black; text-align: right; {{ $Cso_Commission->commission > 0 ? 'background-color: #cde9ff;' : '' }}">{{ $commissionPerCso }}</td>
                 <td style="border: 1px solid black; text-align: right;">{{ $bonusPerCso }}</td>
                 <td style="border: 1px solid black; text-align: right;">{{ $Cso_Commission['pajak'] }}</td>
                 <td style="border: 1px solid black; text-align: right;">{{ $Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak'] }}</td>
