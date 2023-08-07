@@ -33,7 +33,7 @@
                 $tot_commission += $commissionPerCso;
                 $tot_pajak += $Cso_Commission['pajak'];
                 $tot_bonus += $bonusPerCso;
-                $tot_result += $Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak'];
+                $tot_result += $commissionPerCso + $bonusPerCso - $Cso_Commission['pajak'];
             @endphp
 
             <tr>

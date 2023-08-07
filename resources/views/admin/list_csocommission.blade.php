@@ -161,7 +161,7 @@ $menu_item_page_sub = "cso_commission";
                                             $tot_commission += $commissionPerCso;
                                             $tot_pajak += $Cso_Commission['pajak'];
                                             $tot_bonus += $bonusPerCso;
-                                            $tot_result += $Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak'];
+                                            $tot_result += $commissionPerCso + $bonusPerCso - $Cso_Commission['pajak'];
                                         @endphp
 
                                         <tr>
@@ -205,9 +205,9 @@ $menu_item_page_sub = "cso_commission";
                                         <th>Rp. {{ number_format($tot_pajak) }}</th>
                                         <th>Rp. {{ number_format($tot_result) }}</th>
                                     </tr>
-                                    <tr class="text-right">
+                                    {{-- <tr class="text-right">
                                         <th colspan="4">Rp. {{ number_format($tot_commission + $tot_bonus + $tot_pajak + $tot_result) }}</th>
-                                    </tr>
+                                    </tr> --}}
                                 </tbody>
                             </table>
                             <br/>
