@@ -417,6 +417,7 @@ class OrderController extends Controller
      */
     public function update(Request $request)
     {
+        // return response()->json($request->all());
         // return response()->json(['errors' => $request->all()], 500);
         DB::beginTransaction();
         try{

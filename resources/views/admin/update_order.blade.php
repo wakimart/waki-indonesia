@@ -73,6 +73,7 @@ $menu_item_page = "order";
             </nav>
         </div>
         <form id="actionUpdate" class="forms-sample" method="POST" action="{{ route('update_order') }}">
+            <input type="hidden" name="user_code" value="{{Auth::user()->code}}">
             {{ csrf_field() }}
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
@@ -547,13 +548,13 @@ $menu_item_page = "order";
                                 </div>
                                 <div class="form-group">
                                     <label for="">CSO Code 30%</label>
-                                    <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" value="{{$orders->cso_id_30['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+                                    <input type="text" class="form-control cso" required name="30_cso_id" id="30_cso" value="{{$orders->cso_id_30['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
                                     <input type="hidden" class="csoId" name="idCSO30" value="">
                                     <div class="validation"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="">CSO Code 70%</label>
-                                    <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" value="{{$orders->cso_id_70['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+                                    <input type="text" class="form-control cso" required name="70_cso_id" id="70_cso" value="{{$orders->cso_id_70['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
                                     <input type="hidden" class="csoId" name="idCSO70" value="">
                                     <div class="validation"></div>
                                 </div>
@@ -726,13 +727,34 @@ $menu_item_page = "order";
                                 <button id="updateOrder" type="submit" class="btn btn-gradient-primary mr-2">Save</button>
                                 <button class="btn btn-light">Cancel</button>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
+        </form>
+    </div>
+</div>
+<!-- Error modal -->
+<div class="modal fade"
+    id="error-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="error-modal-desc"></div>
         </div>
     </div>
 </div>
+<!-- End Modal View -->
 @endsection
 
 @section('script')
@@ -800,31 +822,65 @@ document.addEventListener("DOMContentLoaded", function () {
         var frmUpdate;
 
         $("#actionUpdate").on("submit", function (e) {
-            e.preventDefault();
+            testNetwork(networkValue, function(val){                
+                $.ajax({
+                    method: "post",
+                    url: "http://{{ env('OFFLINE_URL') }}/api/update-order-data",
+                    data: $("#actionUpdate").serializeArray(),
+                    success: function(res){   
+                        if(res.status == 'success'){
+                            e.preventDefault();
 
-            frmUpdate = _("actionUpdate");
-            frmUpdate = new FormData(document.getElementById("actionUpdate"));
-            frmUpdate.enctype = "multipart/form-data";
+                            frmUpdate = _("actionUpdate");
+                            frmUpdate = new FormData(document.getElementById("actionUpdate"));
+                            frmUpdate.enctype = "multipart/form-data";
 
-            // frmUpdate.append('total_images', 3);
-            deleted_img.forEach((element) => {
-                frmUpdate.append('dltimg-' + element, element);
-            });
+                            // frmUpdate.append('total_images', 3);
+                            deleted_img.forEach((element) => {
+                                frmUpdate.append('dltimg-' + element, element);
+                            });
 
-            // Change numberWithComma before submit
-            $('input[data-type="currency"]').each(function() {
-                var frmName = $(this).attr('name');
-                frmUpdate.set(frmName, numberNoCommas(frmUpdate.get(frmName)));
-            });
+                            // Change numberWithComma before submit
+                            $('input[data-type="currency"]').each(function() {
+                                var frmName = $(this).attr('name');
+                                frmUpdate.set(frmName, numberNoCommas(frmUpdate.get(frmName)));
+                            });
 
-            var URLNya = $("#actionUpdate").attr('action');
-            var ajax = new XMLHttpRequest();
-            ajax.upload.addEventListener("progress", progressHandler, false);
-            ajax.addEventListener("load", completeHandler, false);
-            ajax.addEventListener("error", errorHandler, false);
-            ajax.open("POST", URLNya);
-            ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
-            ajax.send(frmUpdate);
+                            var URLNya = $("#actionUpdate").attr('action');
+                            var ajax = new XMLHttpRequest();
+                            ajax.upload.addEventListener("progress", progressHandler, false);
+                            ajax.addEventListener("load", completeHandler, false);
+                            ajax.addEventListener("error", errorHandler, false);
+                            ajax.open("POST", URLNya);
+                            ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+                            ajax.send(frmUpdate);
+                        }else{
+                            var modal = `                
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-center">${res.status}</h5>
+                                    <hr>
+                                    <p class="text-center">${res.message}</p>
+                                </div>                
+                            `
+                            $('#error-modal-desc').html(modal)
+                            $('#error-modal').modal("show")
+                        }
+                    },
+                    error: function(xhr){
+                        var modal = `                
+                            <div class="modal-body">
+                                <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                                <hr>
+                                <p class="text-center">${xhr.responseJSON.message}</p>
+                            </div>                
+                        `
+                        $('#error-modal-desc').html(modal)
+                        $('#error-modal').modal("show")
+                    }
+                    
+                })
+            })
+            return false      
         });
 
         function progressHandler(event){
@@ -865,7 +921,7 @@ document.addEventListener("DOMContentLoaded", function () {
             else{
                 alert("Input Success !!!");
                 var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
-                window.location.href = url;
+                // window.location.href = url;
                 //window.location.reload()
             }
 
@@ -956,6 +1012,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
             });
         });
+
+        var networkValue
+        function testNetwork(networkValue, response){            
+            $.ajax({
+                method: "post",
+                url: "http://{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
+                dataType: 'json',
+                contentType: 'application/json',
+                processData: false,
+                headers: {
+                    "api-key": "{{ env('API_KEY') }}",
+                },
+                success: response,
+                error: function(xhr, status, error) {
+                    var modal = `                
+                        <div class="modal-body">
+                            <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                            <hr>
+                            <p class="text-center">${xhr.responseJSON.message}</p>
+                        </div>                
+                    `
+                    $('#modal-change-status').modal("hide")
+                    $('.modal-backdrop').remove();
+                    $('#error-modal-desc').html(modal)
+                    $('#error-modal').modal("show")
+                }
+            });
+        };
     });
 </script>
 <script type="application/javascript">
