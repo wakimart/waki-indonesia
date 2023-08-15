@@ -247,6 +247,172 @@ class OfflineSideController extends Controller
         }
     }
 
+
+    /**
+     * update order data from online to offline (total payment, products, etc)
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function updateOrderData(Request $request)
+    {
+        // return response()->json($request->all());
+        DB::beginTransaction();
+        try{
+            $historyUpdate= [];
+            $data = $request->all();
+            $orders = Order::where('code', $data['order_code'])->first();
+            $dataBefore = Order::where('code', $data['order_code'])->first();
+
+            $orderPayments = OrderPayment::where("order_id", $orders["id"])->get();
+            $orderPaymentOlds = OrderPayment::where("order_id", $orders["id"])->get();
+            
+            return response()->json($orders);
+            //pembentukan array Bank
+            $index = 0;
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'bank'){
+                    if(isset($data['cicilan_'.$arrKey[1]])){
+                        $isUpdateOrCreatePayment = true;
+                        // Update Order Payment
+                        if (isset($data['orderpaymentold'][$arrKey[1]])) {
+                            $orderPayment = OrderPayment::find($data['orderpaymentold'][$arrKey[1]]);
+                        } else {
+                            if (isset($data['bankold_'.$arrKey[1]])) {
+                                $isUpdateOrCreatePayment = false;
+                            }
+                            $orderPayment = new OrderPayment;
+                        }
+                        // Update Order Payment
+                        if ($isUpdateOrCreatePayment) {
+                            $orderPayment->order_id = $orders['id'];
+                            $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
+                            $orderPayment->payment_date = $orders["orderDate"];
+                            $orderPayment->bank_id = $data['bank_' . $arrKey[1]];
+                            $orderPayment->cicilan = $data['cicilan_' . $arrKey[1]];
+    
+                            // save image
+                            $arrImage = [];
+                            $idxImg = 1;
+                            for ($i = 0; $i < 3; $i++) {
+                                $orderPaymentImages = json_decode($orderPayment->image, true) ?? [];
+                                // Jika Hapus Gambar Lama
+                                if (isset($orderPaymentImages[$i]) && isset($data['dltimg-'.$arrKey[1].'-'.$i])) {
+                                    if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
+                                        File::delete("sources/order/" . $orderPaymentImages[$i]);
+                                    }
+                                    unset($orderPaymentImages[$i]);
+                                }
+                                if ($request->hasFile('images_' . $arrKey[1] . '_' . $i)) {
+                                    $path = "sources/order";
+    
+                                    // Hapus Img Lama Jika Update Image
+                                    if (isset($orderPaymentImages[$i])) {
+                                        if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
+                                            File::delete("sources/order/" . $orderPaymentImages[$i]);
+                                        }
+                                    }
+    
+                                    $file = $request->file('images_' . $arrKey[1] . '_' . $i);
+                                    $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $arrKey[1] . $idxImg . "_order." . $file->getClientOriginalExtension();
+    
+                                    // Cek ada folder tidak
+                                    if (!is_dir($path)) {
+                                        File::makeDirectory($path, 0777, true, true);
+                                    }
+    
+                                    //compressed img
+                                    $compres = Image::make($file->getRealPath());
+                                    $compres->resize(540, null, function ($constraint) {
+                                        $constraint->aspectRatio();
+                                    })->save($path.'/'.$fileName);
+    
+                                    //array_push($data['image'], $fileName);
+                                    $arrImage[] = $fileName;
+                                    $idxImg++;
+                                } else if (isset($orderPaymentImages[$i])) {
+                                    $arrImage[] = $orderPaymentImages[$i];
+                                    $idxImg++;
+                                }
+                            }
+                            $orderPayment->image = json_encode($arrImage);
+                            $orderPayment->save();
+                            $index++;
+                        }
+                    }
+                }
+            }
+
+            // Hapus Old Order Payment
+            foreach ($orderPayments as $orderPayment) {
+                if (!in_array($orderPayment['id'], $data['orderpaymentold'])) {
+                    $orderPaymentImages = json_decode($orderPayment->image, true);
+                    foreach ($orderPaymentImages as $orderPaymentImage) {
+                        if (File::exists("sources/order/" . $orderPaymentImage)) {
+                            File::delete("sources/order/" . $orderPaymentImage);
+                        }
+                    }
+                    $orderPayment->delete();
+                }
+            }
+
+            $orders->updateDownPayment();
+            $orders->save();
+
+            $dataChanges = array_diff(json_decode($orders, true), json_decode($dataBefore, true));
+            $childs = ["orderPayment" => $orderPaymentOlds];
+            foreach ($childs as $key => $child) {
+                $orderChild = $orders->$key->keyBy('id');
+                $child = $child->keyBy('id');
+                foreach ($child as $i=>$c) {
+                    $array_diff_c = isset($orderChild[$i]) 
+                        ? array_diff(json_decode($orderChild[$i], true), json_decode($c, true)) 
+                        : "deleted";
+                    if ($array_diff_c == "deleted") {
+                        $dataChanges[$key][$c['id']."_deleted"] = $c;
+                    } else if ($array_diff_c) {
+                        $dataChanges[$key][$c['id']] = $array_diff_c;
+                    }
+                }
+                if ($orderChild > $child) {
+                    $array_diff_c = array_diff($orderChild->pluck('id')->toArray(), $child->pluck('id')->toArray());
+                    if ($array_diff_c) {
+                        $dataChanges[$key]["added"] = $array_diff_c;
+                    }
+                }
+            }
+
+            $user = User::where('code', $request->user_code)->first();
+            $historyUpdate['type_menu'] = "Order";
+            $historyUpdate['method'] = "Update";
+            $historyUpdate['meta'] = json_encode([
+                'user'=>$user['id'],
+                'createdAt' => date("Y-m-d h:i:s"),
+                'dataChange'=> $dataChanges
+            ]);
+
+            $historyUpdate['user_id'] = $user['id'];
+            $historyUpdate['menu_id'] = $orders->id;
+            $createData = HistoryUpdate::create($historyUpdate);
+
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'data order successfully updated'
+            ], 200);
+        }catch(\Exception $ex){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ], 500);
+        }
+    }
+
     /**
      * replicate cso data from online side
      *
