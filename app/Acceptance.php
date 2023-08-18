@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Acceptance extends Model
 {
     protected $fillable = [
-        'code', 'no_do', 'no_mpc', 'name', 'address', 'phone', 'upgrade_date', 'oldproduct_id', 'newproduct_id', 'purchase_date', 'arr_condition', 'request_price', 'description', 'image', 'user_id', 'order_id', 'branch_id', 'cso_id', 'status', 'active', 'province', 'city', 'district', 'other_product', "product_addons_id", "area", "without_commission",
+        'code', 'no_do', 'no_mpc', 'name', 'address', 'phone', 'upgrade_date', 'oldproduct_id', 'newproduct_id', 'purchase_date', 'arr_condition', 'request_price', 'description', 'image', 'user_id', 'order_id', 'branch_id', 'cso_id', 'status', 'active', 'province', 'city', 'district', 'other_product', "product_addons_id", "area", "without_commission", "bill_do"
     ];
 
     static $Area = ['0' => 'null', '1' => 'surabaya', '2' => 'jakarta'];

@@ -23,7 +23,12 @@ class AcceptanceExport implements FromView, ShouldAutoSize
         $acceptances = Acceptance::where('active', true);
 
         if($this->status != null){
-        	$acceptances = $acceptances->where('status', $this->status);
+            if($this->status == "approved-non_commission"){
+                $acceptances = $acceptances->where([['status', 'approved'], ['without_commission', true]]);
+            }
+            else{
+                $acceptances = $acceptances->where('status', $this->status);
+            }
         }
 
         if($this->dateRange[0] != null && $this->dateRange[1] != null){
@@ -33,7 +38,7 @@ class AcceptanceExport implements FromView, ShouldAutoSize
         //dd($acceptances->get());
 
         return view('admin.exports.acceptance_export', [
-            'acceptances' => $acceptances->get(),
+            'acceptances' => $acceptances->orderBy('branch_id')->get(),
         ]);
     }
 }

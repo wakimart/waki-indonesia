@@ -231,6 +231,7 @@ $menu_item_second = "list_acceptance_form";
                         <option value="">All</option>
                         <option value="new">New</option>
                         <option value="approved">Approved</option>
+                        <option value="approved-non_commission">Approved Without Commission</option>
                         <option value="rejected">Rejected</option>
                     </select>
                 </div>
