@@ -15,6 +15,7 @@ use App\Cso;
 use App\Branch;
 use Illuminate\Support\Facades\File;
 use Intervention\Image\ImageManagerStatic as Image;
+use Carbon\Carbon;
 
 class OfflineSideController extends Controller
 {
@@ -270,7 +271,6 @@ class OfflineSideController extends Controller
             $orderPayments = OrderPayment::where("order_id", $orders["id"])->get();
             $orderPaymentOlds = OrderPayment::where("order_id", $orders["id"])->get();
             
-            return response()->json($orders);
             //pembentukan array Bank
             $index = 0;
             foreach ($data as $key => $value) {
@@ -279,8 +279,8 @@ class OfflineSideController extends Controller
                     if(isset($data['cicilan_'.$arrKey[1]])){
                         $isUpdateOrCreatePayment = true;
                         // Update Order Payment
-                        if (isset($data['orderpaymentold'][$arrKey[1]])) {
-                            $orderPayment = OrderPayment::find($data['orderpaymentold'][$arrKey[1]]);
+                        if (isset($orderPayments[$arrKey[1]]['id'])) {
+                            $orderPayment = OrderPayment::find($orderPayments[$arrKey[1]]['id']);
                         } else {
                             if (isset($data['bankold_'.$arrKey[1]])) {
                                 $isUpdateOrCreatePayment = false;
@@ -302,8 +302,8 @@ class OfflineSideController extends Controller
                                 $orderPaymentImages = json_decode($orderPayment->image, true) ?? [];
                                 // Jika Hapus Gambar Lama
                                 if (isset($orderPaymentImages[$i]) && isset($data['dltimg-'.$arrKey[1].'-'.$i])) {
-                                    if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
-                                        File::delete("sources/order/" . $orderPaymentImages[$i]);
+                                    if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i])) {
+                                        File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i]);
                                     }
                                     unset($orderPaymentImages[$i]);
                                 }
@@ -312,8 +312,8 @@ class OfflineSideController extends Controller
     
                                     // Hapus Img Lama Jika Update Image
                                     if (isset($orderPaymentImages[$i])) {
-                                        if (File::exists("sources/order/" . $orderPaymentImages[$i])) {
-                                            File::delete("sources/order/" . $orderPaymentImages[$i]);
+                                        if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i])) {
+                                            File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i]);
                                         }
                                     }
     
@@ -347,13 +347,20 @@ class OfflineSideController extends Controller
                 }
             }
 
+            // convert order payment id from online to offline
+            $getIDFromOrderPaymentOlds = [];
+            foreach($data['oldorderpaymentamount'] as $index => $amount){
+                $orderPaymentOfflineSide = OrderPayment::where('order_id', $orders->id)->where('total_payment', $amount)->where('bank_id', $data['oldorderpaymentbankid'][$index])->first();
+                array_push($getIDFromOrderPaymentOlds, $orderPaymentOfflineSide->id);
+            }
+
             // Hapus Old Order Payment
             foreach ($orderPayments as $orderPayment) {
-                if (!in_array($orderPayment['id'], $data['orderpaymentold'])) {
+                if (!in_array($orderPayment['id'], $getIDFromOrderPaymentOlds)) {
                     $orderPaymentImages = json_decode($orderPayment->image, true);
                     foreach ($orderPaymentImages as $orderPaymentImage) {
-                        if (File::exists("sources/order/" . $orderPaymentImage)) {
-                            File::delete("sources/order/" . $orderPaymentImage);
+                        if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage)) {
+                            File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage);
                         }
                     }
                     $orderPayment->delete();
