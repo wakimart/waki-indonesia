@@ -598,6 +598,8 @@ $menu_item_page = "order";
                                 <input type="hidden" name="bankold_{{ $indexPayment }}" value="{{ $payment['id'] }}">
                                 <div class="p-3 mb-2" style="border: 1px solid black" id="bank_{{ $indexPayment }}">
                                     <input type="hidden" name="orderpaymentold[]" value={{ $payment['id'] }}>
+                                    <input type="hidden" name="oldorderpaymentamount[]" value="{{$payment['total_payment']}}">
+                                    <input type="hidden" name="oldorderpaymentbankid[]" value="{{$payment['bank_id']}}">
                                     <div class="form-group">
                                         <label for="">Payment Type {{ ($indexPayment) != 0 ? ($indexPayment + 1) : '' }}</label>
                                     </div>
@@ -822,38 +824,44 @@ document.addEventListener("DOMContentLoaded", function () {
         var frmUpdate;
 
         $("#actionUpdate").on("submit", function (e) {
+            e.preventDefault();
+
+            frmUpdate = _("actionUpdate");
+            frmUpdate = new FormData(document.getElementById("actionUpdate"));
+            frmUpdate.enctype = "multipart/form-data";
+
+            // frmUpdate.append('total_images', 3);
+            deleted_img.forEach((element) => {
+                frmUpdate.append('dltimg-' + element, element);
+            });
+
+            // Change numberWithComma before submit
+            $('input[data-type="currency"]').each(function() {
+                var frmName = $(this).attr('name');
+                frmUpdate.set(frmName, numberNoCommas(frmUpdate.get(frmName)));
+            });
+
+            var URLNya = $("#actionUpdate").attr('action');
+            var ajax = new XMLHttpRequest();
+            ajax.upload.addEventListener("progress", progressHandler, false);
+            ajax.addEventListener("load", completeHandler, false);
+            ajax.addEventListener("error", errorHandler, false);
+            ajax.open("POST", URLNya);
+            ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
+            ajax.send(frmUpdate);
+
             testNetwork(networkValue, function(val){                
                 $.ajax({
                     method: "post",
                     url: "http://{{ env('OFFLINE_URL') }}/api/update-order-data",
-                    data: $("#actionUpdate").serializeArray(),
+                    data: frmUpdate,
+                    processData: false,
+                    contentType: false,
                     success: function(res){   
                         if(res.status == 'success'){
-                            e.preventDefault();
-
-                            frmUpdate = _("actionUpdate");
-                            frmUpdate = new FormData(document.getElementById("actionUpdate"));
-                            frmUpdate.enctype = "multipart/form-data";
-
-                            // frmUpdate.append('total_images', 3);
-                            deleted_img.forEach((element) => {
-                                frmUpdate.append('dltimg-' + element, element);
-                            });
-
-                            // Change numberWithComma before submit
-                            $('input[data-type="currency"]').each(function() {
-                                var frmName = $(this).attr('name');
-                                frmUpdate.set(frmName, numberNoCommas(frmUpdate.get(frmName)));
-                            });
-
-                            var URLNya = $("#actionUpdate").attr('action');
-                            var ajax = new XMLHttpRequest();
-                            ajax.upload.addEventListener("progress", progressHandler, false);
-                            ajax.addEventListener("load", completeHandler, false);
-                            ajax.addEventListener("error", errorHandler, false);
-                            ajax.open("POST", URLNya);
-                            ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
-                            ajax.send(frmUpdate);
+                            alert("Input Success !!!");
+                            var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
+                            window.location.href = url;
                         }else{
                             var modal = `                
                                 <div class="modal-body">
@@ -889,7 +897,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function completeHandler(event){
             var hasil = JSON.parse(event.target.responseText);
-            console.log(hasil);
 
             for (var key of frmUpdate.keys()) {
                 $("#actionUpdate").find("input[name="+key.name+"]").removeClass("is-invalid");
@@ -919,7 +926,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("Input Error !!!");
             }
             else{
-                alert("Input Success !!!");
+                // alert("Input Success !!!");
                 var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
                 // window.location.href = url;
                 //window.location.reload()
