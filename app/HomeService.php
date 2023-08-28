@@ -73,4 +73,8 @@ class HomeService extends Model
     {
         return $this->belongsToMany(Order::class, 'order_homeservices');
     }
+
+    public function homeServiceSurvey(){
+        return $this->hasOne('App\HomeServiceSurvey');
+    }
 }

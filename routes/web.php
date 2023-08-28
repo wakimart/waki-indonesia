@@ -539,6 +539,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/print_area_list_hs', 'HomeServiceController@printAreaListHs')
             ->name('print_area_list_hs')
             ->middleware('can:browse-area_home_service');
+
+        // Survey utk Homeservice
+        Route::post('/add-home_service-survey', 'HomeServiceSurveyController@store')
+            ->name('add_home_service_survey');
+        Route::get('/detail-home_service-survey/{id}', 'HomeServiceSurveyController@detail')
+            ->name('detail_home_service_survey');
     });
 
     Route::group(['prefix' => 'therapy', 'middleware' => 'auth'], function() {
