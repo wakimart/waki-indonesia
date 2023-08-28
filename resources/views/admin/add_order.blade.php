@@ -561,7 +561,7 @@ $menu_item_second = "add_order";
                                         id="30_cso"
                                         placeholder="CSO Code 30%"
                                         data-msg="Mohon Isi Kode CSO"
-                                        style="text-transform: uppercase;" />
+                                        style="text-transform: uppercase;" required />
                                     <div class="validation"></div>
                                 </div>
                                 <div class="form-group">
@@ -572,7 +572,7 @@ $menu_item_second = "add_order";
                                         id="70_cso"
                                         placeholder="CSO Code 70%"
                                         data-msg="Mohon Isi Kode CSO"
-                                        style="text-transform: uppercase;" />
+                                        style="text-transform: uppercase;" required />
                                     <div class="validation"></div>
                                 </div>
                             </div>
