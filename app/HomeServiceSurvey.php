@@ -20,4 +20,14 @@ class HomeServiceSurvey extends Model
     public function homeService(){
     	return $this->belongsTo('App\HomeService');
     }
+
+    public function resultAverage(){
+    	$res1 = $this->result_quest_1 * 4 / 20; //point 4
+    	$res2 = $this->result_quest_2 / 5; //point 1
+    	$res3 = $this->result_quest_3 * 2 / 10; //point 2
+    	$res4 = $this->result_quest_4 * 3 / 15; //point 3
+
+    	$conclussion = ($res1+$res2+$res3+$res4) / 4;
+    	return floor($conclussion * 5);
+    }
 }
