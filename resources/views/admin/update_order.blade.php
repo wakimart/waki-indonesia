@@ -932,7 +932,7 @@ document.addEventListener("DOMContentLoaded", function () {
             testNetwork(networkValue, function(val){                
                 $.ajax({
                     method: "post",
-                    url: "http://{{ env('OFFLINE_URL') }}/api/update-order-data",
+                    url: "{{ env('OFFLINE_URL') }}/api/update-order-data",
                     data: frmUpdate,
                     processData: false,
                     contentType: false,
@@ -1103,7 +1103,7 @@ document.addEventListener("DOMContentLoaded", function () {
         function testNetwork(networkValue, response){            
             $.ajax({
                 method: "post",
-                url: "http://{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
+                url: "{{ env('OFFLINE_URL') }}/api/end-point-for-check-status-network",
                 dataType: 'json',
                 contentType: 'application/json',
                 processData: false,
