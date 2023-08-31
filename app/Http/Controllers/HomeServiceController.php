@@ -12,6 +12,7 @@ use App\Exports\HomeServicesCompareExport;
 use App\GeometryDistrict;
 use App\HistoryUpdate;
 use App\HomeService;
+use App\HomeServiceSurvey;
 use App\Http\Controllers\gCalendarController;
 use App\Order;
 use App\RajaOngkir_Subdistrict;
@@ -581,6 +582,7 @@ class HomeServiceController extends Controller
             "h.updated_at AS updated_at",
             "o.code as order_code",
             "o.id as order_id",
+            "hsv.id as home_service_survey_id"
         )
         ->from("home_services AS h")
         ->leftJoin(
@@ -622,6 +624,12 @@ class HomeServiceController extends Controller
         ->leftJoin(
             "order_homeservices as oh",
             "oh.home_service_id",
+            "=",
+            "h.id"
+        )
+        ->leftJoin(
+            "home_service_surveys as hsv",
+            "hsv.home_service_id",
             "=",
             "h.id"
         )
@@ -926,9 +934,21 @@ class HomeServiceController extends Controller
                         $result .= "</p>";
                     }
 
-                    $result .= '</p>'
-                        . '</td>';
+                    $result .= '</p>';
 
+                    if($dayData->home_service_survey_id != null){
+                        $result .= '<p style="border-top: 1px solid black; color: orange; font-size: initial;"><span class="font-weight-bold">Survey Rate : </span>';
+                        $totalStar = HomeServiceSurvey::find($dayData->home_service_survey_id)->resultAverage();
+                        for ( $idxStar=0; $idxStar < $totalStar; $idxStar++ ) { 
+                            $result .= '<span class="mdi mdi-star"></span>';
+                        }
+                        for ( $idxStar=0; $idxStar < (5 - $totalStar); $idxStar++ ) { 
+                            $result .= '<span class="mdi mdi-star-outline"></span>';
+                        }
+                        $result .= '<span> ('.$totalStar.'/5)</span></p>';
+                    }
+
+                    $result .= '</td>';
 
                     if (!$isAdminManagement) {
                         $result .= '<td style="text-align: center">';
