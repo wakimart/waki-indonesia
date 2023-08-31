@@ -6,6 +6,9 @@ $menu_item_second = "list_homeservice";
 
 @section('style')
 <link rel="stylesheet" href="{{ asset('css/admin/calendarorganizer.css?v=' . filemtime('css/admin/calendarorganizer.css')) }}">
+<link rel="stylesheet" href="raty.css">
+<script src="raty.js"></script>
+
 <style>
     .hs-filter a {
       font-weight: 600;
@@ -41,80 +44,110 @@ $menu_item_second = "list_homeservice";
         -ms-user-select: none;
         user-select: none;
     }
-    .titleAppoin {
-        font-weight: bolder;
-    }
-    .timeContainerDiv{
-        flex: 1 !important;
-    }
+    .titleAppoin { font-weight: bolder; }
+    .timeContainerDiv{ flex: 1 !important; }
     .paragrapContainerDiv{
         flex-direction: column;
         align-items: normal !important;
     }
-    .iconContainerDiv{
-        flex: 1 !important;
-    }
+    .iconContainerDiv{ flex: 1 !important; }
     .cjslib-day-indicator {
-        color: #ffa000; background-color: #ffa000;
+        color: #ffa000;
+        background-color: #ffa000;
     }
-    .cjslib-indicator-type-numeric {
-        color: #ffffff;
-    }
-    .cjslib-day.cjslib-day-today > .cjslib-day-num {
-        border-color: #ffa000 !important;
-    }
-    .table-bordered th, .table-bordered td {
-        border: 1px solid darkgray !important;
-    }
+    .cjslib-indicator-type-numeric { color: #ffffff; }
+    .cjslib-day.cjslib-day-today > .cjslib-day-num { border-color: #ffa000 !important; }
+    .table-bordered th, .table-bordered td { border: 1px solid darkgray !important; }
 
     .cancel-template {
         list-style-type: none;
         margin: 25px 0 0 0;
     }
-
     .cancel-template li {
         margin: 0 5px 0 0;
         width: auto;
         height: 45px;
         position: relative;
     }
-
     .cancel-template label,
     .cancel-template input {
         display: block;
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        top: 0; left: 0; right: 0; bottom: 0;
     }
-
     .cancel-template input[type="radio"] {
         opacity: 0.01;
         z-index: 100;
     }
-
     .cancel-template input[type="radio"]:checked+label,
-    .Checked+label {
-        background: #2ecc71;
-    }
-
+    .Checked+label { background: #2ecc71; }
     .cancel-template label {
         padding: 5px;
         border: 1px solid #CCC;
         cursor: pointer;
         z-index: 90;
     }
-
-    .cancel-template label:hover {
-        background: #DDD;
-    }
-    
+    .cancel-template label:hover { background: #DDD; }
     .ellipsis {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
     }
+    .signature-pad {
+      width: 320px;
+      height: 200px;
+      background-color: white;
+      margin-bottom: 0.5em;
+    }
+    @media (max-width:400px){
+      .signature-pad {
+        width: 255px !important;
+      }
+    }
+    @media (min-width:768px){
+      .signature-pad {
+        width: 470px !important;
+      }
+    }
+    .starlabel {
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+    .hide { display: none; }
+    .clear {
+      float: none;
+      clear: both;
+    }
+    .rating {
+      unicode-bidi: bidi-override;
+      direction: rtl;
+    }
+    .rating > label {
+      padding: 0 !important;
+      margin: 0 !important;
+      cursor: pointer;
+      color: #000;
+      width: 1.5em;
+      font-size: 1.5em;
+    }
+    .rating > label:hover,
+    .rating > label:hover ~ label,
+    .rating > input.radio-btn:checked ~ label {
+        color: transparent;
+    }
+    .rating > label:hover:before,
+    .rating > label:hover ~ label:before,
+    .rating > input.radio-btn:checked ~ label:before,
+    .rating > input.radio-btn:checked ~ label:before {
+        content: "\2605";
+        color: #6558f5;
+        margin-left: -1rem;
+    }
+    .star_full {
+        content: "\2606";
+        color: #6558f5;
+    }
+    .comment { color:  #212121; }
 </style>
 @endsection
 
@@ -775,7 +808,7 @@ $menu_item_second = "list_homeservice";
     </div>
     <!-- partial -->
 
-    <!-- Modal View -->
+    <!-- Modal Detail Appointment -->
     <div class="modal fade" id="viewHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -910,7 +943,11 @@ $menu_item_second = "list_homeservice";
                       Cancel
                   </button>
               @endif
-
+              <div class="w-100 text-center" style="position: relative; margin-top: -1.5rem; bottom: -2.5rem;">
+                <button class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#surveyModal">
+                    Submit Survey
+                </button>
+              </div>
           </div>
         </div>
       </div>
@@ -1539,10 +1576,150 @@ $menu_item_second = "list_homeservice";
         </div>
     </div>
     <!-- End Modal Date Picker export By Input Xls -->
+
+    <!-- Modal Survey -->
+    <div class="modal fade" id="surveyModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Home Service Survey</h5>
+            <button type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" style="overflow:auto;">
+            <ol>
+              <li>
+                <div>
+                  Apakah Anda merasa puas dengan kualitas layanan yang diberikan oleh tim kami di rumah Anda ?
+                </div>
+                <div class="rating">
+                  <input id="satisfy5" name="satisfy" type="radio" value="5" class="radio-btn hide" />
+                  <label for="satisfy5">☆</label>
+                  <input id="satisfy4" name="satisfy" type="radio" value="4" class="radio-btn hide" />
+                  <label for="satisfy4">☆</label>
+                  <input id="satisfy3" name="satisfy" type="radio" value="3" class="radio-btn hide" />
+                  <label for="satisfy3">☆</label>
+                  <input id="satisfy2" name="satisfy" type="radio" value="2" class="radio-btn hide" />
+                  <label for="satisfy2">☆</label>
+                  <input id="satisfy1" name="satisfy" type="radio" value="1" class="radio-btn hide" />
+                  <label for="satisfy1">☆</label>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li>
+                <div>
+                  Bagaimana penilaian Anda terhadap keramahan tim kami yang datang ke rumah Anda ?
+                </div>
+                <div class="rating">
+                  <input id="kind5" name="kind" type="radio" value="5" class="radio-btn hide" />
+                  <label for="kind5">☆</label>
+                  <input id="kind4" name="kind" type="radio" value="4" class="radio-btn hide" />
+                  <label for="kind4">☆</label>
+                  <input id="kind3" name="kind" type="radio" value="3" class="radio-btn hide" />
+                  <label for="kind3">☆</label>
+                  <input id="kind2" name="kind" type="radio" value="2" class="radio-btn hide" />
+                  <label for="kind2">☆</label>
+                  <input id="kind1" name="kind" type="radio" value="1" class="radio-btn hide" />
+                  <label for="kind1">☆</label>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li>
+                <div>
+                  Apakah tim kami bersedia menjawab pertanyaan atau kekhawatiran Anda dengan baik?
+                </div>
+                <div class="rating">
+                  <input id="qna5" name="qna" type="radio" value="5" class="radio-btn hide" />
+                  <label for="qna5">☆</label>
+                  <input id="qna4" name="qna" type="radio" value="4" class="radio-btn hide" />
+                  <label for="qna4">☆</label>
+                  <input id="qna3" name="qna" type="radio" value="3" class="radio-btn hide" />
+                  <label for="qna3">☆</label>
+                  <input id="qna2" name="qna" type="radio" value="2" class="radio-btn hide" />
+                  <label for="qna2">☆</label>
+                  <input id="qna1" name="qna" type="radio" value="1" class="radio-btn hide" />
+                  <label for="qna1">☆</label>
+                  <div class="clear"></div>
+                </div>
+              </li>
+              <li>
+                <div>
+                  Apakah tim kami tepat waktu sesuai dengan janji yang telah dijadwalkan ?
+                </div>
+                <div class="rating">
+                  <input id="ontime5" name="ontime" type="radio" value="5" class="radio-btn hide" />
+                  <label for="ontime5">☆</label>
+                  <input id="ontime4" name="ontime" type="radio" value="4" class="radio-btn hide" />
+                  <label for="ontime4">☆</label>
+                  <input id="ontime3" name="ontime" type="radio" value="3" class="radio-btn hide" />
+                  <label for="ontime3">☆</label>
+                  <input id="ontime2" name="ontime" type="radio" value="2" class="radio-btn hide" />
+                  <label for="ontime2">☆</label>
+                  <input id="ontime1" name="ontime" type="radio" value="1" class="radio-btn hide" />
+                  <label for="ontime1">☆</label>
+                  <div class="clear"></div>
+                </div>
+              </li>
+            </ol>
+            <!-- display signature -->
+            <canvas id="signature-pad-1" class="signature-pad" width=470 height=200 style="border: 2px solid black"></canvas>
+            <div class="" id="button-canvas-1">
+                <button type="button" class="btn btn-secondary btn-sm decrease-width" id="clear-canvas-1">Clear</button>
+                <button type="button" class="btn btn-primary btn-sm decrease-width" id="save-canvas-1">Save</button>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="w-100 row m-0">
+              <div class="w-50 text-left row m-0">
+                <button class="btn btn-danger mr-2" data-dismiss="modal" aria-label="Close">
+                    Cancel
+                </button>
+                <button class="btn btn-warning">
+                    Clear
+                </button>
+              </div>
+              <div class="w-50 text-right">
+                <button class="btn btn-success">
+                    Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal Survey -->
+
+
 </div>
 @endsection
 
 @section('script')
+<script type="text/javascript">
+    var signature_pad = []
+        this["canvas_1"] = $("#signature-pad-1")[0];
+        if(window.devicePixelRatio >= 2){
+            this["canvas_1"].width = 255
+        }
+        signature_pad['1'] = new SignaturePad(this["canvas_1"], {});
+    document.getElementById('clear-canvas-1').addEventListener('click', function () {
+        signature_pad[1].clear();
+    });
+    document.getElementById('save-canvas-1').addEventListener('click', function () {
+        if (signature_pad[1].isEmpty()) {
+            return alert("Please provide a signature first.");
+        } else {
+            $('#ref-id').val(1)
+            $('#signature-data').val(signature_pad[1].toDataURL("image/png"))
+            $('#signatureForm').submit()
+        }
+    });
+</script>
+
 <script type="application/javascript">
 $(document).ready(function(){
    $('.hs-filter a').on("click", function(event) {
@@ -1592,6 +1769,8 @@ $(document).ready(function(){
         }
     });
 });
+
+
 
 {{-- Mendapatkan CSRF Token --}}
 function getCSRF() {
@@ -2315,7 +2494,7 @@ processKeyUp = function(event) {
         var val = document.getElementById(event.explicitOriginalTarget.id);
         val.value = val.value.replace(/ +(?= )/g,'');
     }
-}; 
+};
 document.getElementById("cancel_desc").onkeyup=processKeyUp;
 document.getElementById("reschedule_desc").onkeyup=processKeyUp;
 
