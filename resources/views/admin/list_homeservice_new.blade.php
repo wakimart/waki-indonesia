@@ -140,12 +140,12 @@ $menu_item_second = "list_homeservice";
     .rating > input.radio-btn:checked ~ label:before,
     .rating > input.radio-btn:checked ~ label:before {
         content: "\2605";
-        color: #6558f5;
+        color: #ffa500;
         margin-left: -1rem;
     }
     .star_full {
         content: "\2606";
-        color: #6558f5;
+        color: #ffa500;
     }
     .comment { color:  #212121; }
 </style>
@@ -943,7 +943,7 @@ $menu_item_second = "list_homeservice";
                       Cancel
                   </button>
               @endif
-              <div class="w-100 text-center" style="position: relative; margin-top: -1.5rem; bottom: -2.5rem;">
+              <div class="w-100 text-center">
                 <button class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#surveyModal">
                     Submit Survey
                 </button>
@@ -1590,105 +1590,107 @@ $menu_item_second = "list_homeservice";
                 <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body" style="overflow:auto;">
-            <ol>
-              <li>
-                <div>
-                  Apakah Anda merasa puas dengan kualitas layanan yang diberikan oleh tim kami di rumah Anda ?
-                </div>
-                <div class="rating">
-                  <input id="satisfy5" name="satisfy" type="radio" value="5" class="radio-btn hide" />
-                  <label for="satisfy5">☆</label>
-                  <input id="satisfy4" name="satisfy" type="radio" value="4" class="radio-btn hide" />
-                  <label for="satisfy4">☆</label>
-                  <input id="satisfy3" name="satisfy" type="radio" value="3" class="radio-btn hide" />
-                  <label for="satisfy3">☆</label>
-                  <input id="satisfy2" name="satisfy" type="radio" value="2" class="radio-btn hide" />
-                  <label for="satisfy2">☆</label>
-                  <input id="satisfy1" name="satisfy" type="radio" value="1" class="radio-btn hide" />
-                  <label for="satisfy1">☆</label>
-                  <div class="clear"></div>
-                </div>
-              </li>
-              <li>
-                <div>
-                  Bagaimana penilaian Anda terhadap keramahan tim kami yang datang ke rumah Anda ?
-                </div>
-                <div class="rating">
-                  <input id="kind5" name="kind" type="radio" value="5" class="radio-btn hide" />
-                  <label for="kind5">☆</label>
-                  <input id="kind4" name="kind" type="radio" value="4" class="radio-btn hide" />
-                  <label for="kind4">☆</label>
-                  <input id="kind3" name="kind" type="radio" value="3" class="radio-btn hide" />
-                  <label for="kind3">☆</label>
-                  <input id="kind2" name="kind" type="radio" value="2" class="radio-btn hide" />
-                  <label for="kind2">☆</label>
-                  <input id="kind1" name="kind" type="radio" value="1" class="radio-btn hide" />
-                  <label for="kind1">☆</label>
-                  <div class="clear"></div>
-                </div>
-              </li>
-              <li>
-                <div>
-                  Apakah tim kami bersedia menjawab pertanyaan atau kekhawatiran Anda dengan baik?
-                </div>
-                <div class="rating">
-                  <input id="qna5" name="qna" type="radio" value="5" class="radio-btn hide" />
-                  <label for="qna5">☆</label>
-                  <input id="qna4" name="qna" type="radio" value="4" class="radio-btn hide" />
-                  <label for="qna4">☆</label>
-                  <input id="qna3" name="qna" type="radio" value="3" class="radio-btn hide" />
-                  <label for="qna3">☆</label>
-                  <input id="qna2" name="qna" type="radio" value="2" class="radio-btn hide" />
-                  <label for="qna2">☆</label>
-                  <input id="qna1" name="qna" type="radio" value="1" class="radio-btn hide" />
-                  <label for="qna1">☆</label>
-                  <div class="clear"></div>
-                </div>
-              </li>
-              <li>
-                <div>
-                  Apakah tim kami tepat waktu sesuai dengan janji yang telah dijadwalkan ?
-                </div>
-                <div class="rating">
-                  <input id="ontime5" name="ontime" type="radio" value="5" class="radio-btn hide" />
-                  <label for="ontime5">☆</label>
-                  <input id="ontime4" name="ontime" type="radio" value="4" class="radio-btn hide" />
-                  <label for="ontime4">☆</label>
-                  <input id="ontime3" name="ontime" type="radio" value="3" class="radio-btn hide" />
-                  <label for="ontime3">☆</label>
-                  <input id="ontime2" name="ontime" type="radio" value="2" class="radio-btn hide" />
-                  <label for="ontime2">☆</label>
-                  <input id="ontime1" name="ontime" type="radio" value="1" class="radio-btn hide" />
-                  <label for="ontime1">☆</label>
-                  <div class="clear"></div>
-                </div>
-              </li>
-            </ol>
-            <!-- display signature -->
-            <canvas id="signature-pad-1" class="signature-pad" width=470 height=200 style="border: 2px solid black"></canvas>
-            <div class="" id="button-canvas-1">
-                <button type="button" class="btn btn-secondary btn-sm decrease-width" id="clear-canvas-1">Clear</button>
-                <button type="button" class="btn btn-primary btn-sm decrease-width" id="save-canvas-1">Save</button>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <div class="w-100 row m-0">
-              <div class="w-50 text-left row m-0">
-                <button class="btn btn-danger mr-2" data-dismiss="modal" aria-label="Close">
-                    Cancel
-                </button>
-                <button class="btn btn-warning">
-                    Clear
-                </button>
+          <form action="{{route('add_home_service_survey')}}" method="POST" enctype="multipart/form-data" id="signatureForm">
+            @csrf
+            <input type="hidden" name="home_service_id" id="hs_id_survey">
+            <input type="hidden" name="online_signature" id="signature-data">
+              <div class="modal-body" style="overflow:auto;">
+                <ol>
+                  <li>
+                    <div>
+                      Apakah Anda merasa puas dengan kualitas layanan yang diberikan oleh tim kami di rumah Anda ?
+                    </div>
+                    <div class="rating">
+                      <input id="satisfy5" name="result_quest_1" type="radio" value="5" class="radio-btn hide">
+                      <label for="satisfy5">☆</label>
+                      <input id="satisfy4" name="result_quest_1" type="radio" value="4" class="radio-btn hide">
+                      <label for="satisfy4">☆</label>
+                      <input id="satisfy3" name="result_quest_1" type="radio" value="3" class="radio-btn hide">
+                      <label for="satisfy3">☆</label>
+                      <input id="satisfy2" name="result_quest_1" type="radio" value="2" class="radio-btn hide">
+                      <label for="satisfy2">☆</label>
+                      <input id="satisfy1" name="result_quest_1" type="radio" value="1" class="radio-btn hide" required>
+                      <label for="satisfy1">☆</label>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Bagaimana penilaian Anda terhadap keramahan tim kami yang datang ke rumah Anda ?
+                    </div>
+                    <div class="rating">
+                      <input id="kind5" name="result_quest_2" type="radio" value="5" class="radio-btn hide">
+                      <label for="kind5">☆</label>
+                      <input id="kind4" name="result_quest_2" type="radio" value="4" class="radio-btn hide">
+                      <label for="kind4">☆</label>
+                      <input id="kind3" name="result_quest_2" type="radio" value="3" class="radio-btn hide">
+                      <label for="kind3">☆</label>
+                      <input id="kind2" name="result_quest_2" type="radio" value="2" class="radio-btn hide">
+                      <label for="kind2">☆</label>
+                      <input id="kind1" name="result_quest_2" type="radio" value="1" class="radio-btn hide" required>
+                      <label for="kind1">☆</label>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Apakah tim kami bersedia menjawab pertanyaan atau kekhawatiran Anda dengan baik?
+                    </div>
+                    <div class="rating">
+                      <input id="qna5" name="result_quest_3" type="radio" value="5" class="radio-btn hide">
+                      <label for="qna5">☆</label>
+                      <input id="qna4" name="result_quest_3" type="radio" value="4" class="radio-btn hide">
+                      <label for="qna4">☆</label>
+                      <input id="qna3" name="result_quest_3" type="radio" value="3" class="radio-btn hide">
+                      <label for="qna3">☆</label>
+                      <input id="qna2" name="result_quest_3" type="radio" value="2" class="radio-btn hide">
+                      <label for="qna2">☆</label>
+                      <input id="qna1" name="result_quest_3" type="radio" value="1" class="radio-btn hide" required>
+                      <label for="qna1">☆</label>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div>
+                      Apakah tim kami tepat waktu sesuai dengan janji yang telah dijadwalkan ?
+                    </div>
+                    <div class="rating">
+                      <input id="ontime5" name="result_quest_4" type="radio" value="5" class="radio-btn hide">
+                      <label for="ontime5">☆</label>
+                      <input id="ontime4" name="result_quest_4" type="radio" value="4" class="radio-btn hide">
+                      <label for="ontime4">☆</label>
+                      <input id="ontime3" name="result_quest_4" type="radio" value="3" class="radio-btn hide">
+                      <label for="ontime3">☆</label>
+                      <input id="ontime2" name="result_quest_4" type="radio" value="2" class="radio-btn hide">
+                      <label for="ontime2">☆</label>
+                      <input id="ontime1" name="result_quest_4" type="radio" value="1" class="radio-btn hide" required>
+                      <label for="ontime1">☆</label>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                </ol>
+
+                <!-- display signature -->
+                <canvas id="signature-pad-1" class="signature-pad" width=470 height=200 style="border: 2px solid black"></canvas>
               </div>
-              <div class="w-50 text-right">
-                <button class="btn btn-success">
-                    Submit
-                </button>
+              <div class="modal-footer">
+                <div class="w-100 row m-0">
+                  <div class="w-50 text-left row m-0">
+                    <button class="btn btn-danger mr-2" data-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-warning" id="clear-survey">
+                        Clear
+                    </button>
+                  </div>
+                  <div class="w-50 text-right">
+                    <button class="btn btn-success" id="save-survey">
+                        Submit
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -1701,22 +1703,45 @@ $menu_item_second = "list_homeservice";
 @section('script')
 <script type="text/javascript">
     var signature_pad = []
-        this["canvas_1"] = $("#signature-pad-1")[0];
-        if(window.devicePixelRatio >= 2){
-            this["canvas_1"].width = 255
+    this["canvas_1"] = $("#signature-pad-1")[0];
+    if(window.devicePixelRatio >= 2){
+        this["canvas_1"].width = 255
+    }
+    signature_pad['1'] = new SignaturePad(this["canvas_1"], {});
+    document.getElementById('clear-survey').addEventListener('click', function (e) {
+        e.preventDefault();
+        for (var i = 5; i >= 1; i--) {
+            $('#satisfy'+i).prop('checked', false);
+            $('#kind'+i).prop('checked', false);
+            $('#qna'+i).prop('checked', false);
+            $('#ontime'+i).prop('checked', false);
         }
-        signature_pad['1'] = new SignaturePad(this["canvas_1"], {});
-    document.getElementById('clear-canvas-1').addEventListener('click', function () {
         signature_pad[1].clear();
     });
-    document.getElementById('save-canvas-1').addEventListener('click', function () {
+    document.getElementById('save-survey').addEventListener('click', function (e) {
+        e.preventDefault();
+        let checkValid = $("#signatureForm")[0].checkValidity();
+
         if (signature_pad[1].isEmpty()) {
-            return alert("Please provide a signature first.");
-        } else {
-            $('#ref-id').val(1)
-            $('#signature-data').val(signature_pad[1].toDataURL("image/png"))
-            $('#signatureForm').submit()
+            return alert("Please provide a signature first !");
         }
+        else if(!checkValid){
+            return alert("Please complete the surveys first !");
+        }
+        else {
+            $('#signature-data').val(signature_pad[1].toDataURL("image/png"));
+            $('#signatureForm').submit();
+        }
+    });
+
+    $('#surveyModal').on('shown.bs.modal', function (e) {
+        for (var i = 5; i >= 1; i--) {
+            $('#satisfy'+i).prop('checked', false);
+            $('#kind'+i).prop('checked', false);
+            $('#qna'+i).prop('checked', false);
+            $('#ontime'+i).prop('checked', false);
+        }
+        signature_pad[1].clear();
     });
 </script>
 
@@ -2083,6 +2108,7 @@ function clickView(btn) {
         document.getElementById("view-cso2").innerHTML = result.cso2_code_name;
         document.getElementById("view-date").innerHTML = dateString;
         document.getElementById("view-time").innerHTML = timeString;
+        document.getElementById("hs_id_survey").value = result.id;
 
         @if(Gate::check('add-service'))
             if (result.technician_schedule) {

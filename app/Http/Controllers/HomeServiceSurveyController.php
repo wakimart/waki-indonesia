@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -13,16 +14,6 @@ use App\HomeService;
 class HomeServiceSurveyController extends Controller
 {
     public function store(Request $request){
-    	$request = new \Illuminate\Http\Request();
-		$request->replace([
-			'home_service_id' => 95690,
-			'result_quest_1' => 3,
-			'result_quest_2' => 4,
-			'result_quest_3' => 5,
-			'result_quest_4' => 2,
-			'online_signature' => 'Sdvsdefaesedfvef',
-		]);
-
         DB::beginTransaction();
         try {
         	$messages = array(
@@ -44,6 +35,18 @@ class HomeServiceSurveyController extends Controller
 	        
 	        }else{
 		    	$data = $request->all();
+
+		    	//for signature
+		    	$filename = $data['home_service_id'] . "-signature.png";
+	            $data_uri = explode(',', $data['online_signature']);
+	            $encoded_image = $data_uri[1];
+	            $decoded_image = base64_decode($encoded_image);
+	            if (!is_dir("sources/home_service_surveys")) {
+	                File::makeDirectory("sources/home_service_surveys", 0777, true, true);
+	            }
+	            file_put_contents('sources/home_service_surveys/' . $filename, $decoded_image);
+	            $data['online_signature'] = $filename;
+
 		    	$HomeServiceSurveyNya = HomeServiceSurvey::create($data);
 	            DB::commit();
 

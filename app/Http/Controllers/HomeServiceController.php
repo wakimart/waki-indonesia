@@ -257,6 +257,7 @@ class HomeServiceController extends Controller
         $currentDayData = json_decode($currentDayData->getContent(), true)['msg'];
         $cancelTemplates = HomeService::$cancelTemplates;
         $rescheduleTemplates = HomeService::$rescheduleTemplates;
+        $questHSSurvey = HomeServiceSurvey::$allQuest;
 
         return view(
             "admin.list_homeservice_new",
@@ -266,7 +267,8 @@ class HomeServiceController extends Controller
                 "branches",
                 "csos",
                 "cancelTemplates",
-                "rescheduleTemplates"
+                "rescheduleTemplates",
+                "questHSSurvey"
             )
         );
     }
