@@ -11,12 +11,12 @@ $menu_item_second = "list_homeservice";
 
 <style>
     .hs-filter a {
-      font-weight: 600;
-      font-size: 1.1em;
+        font-weight: 600;
+        font-size: 1.1em;
     }
     .hs-filter a.active {
-      background-color: #ffc107 !important;
-      color: white !important;
+        background-color: #ffc107 !important;
+        color: white !important;
     }
     .cjslib-day-indicator {
         color: #ffc107 !important;
@@ -94,41 +94,45 @@ $menu_item_second = "list_homeservice";
         text-overflow: ellipsis;
     }
     .signature-pad {
-      width: 320px;
-      height: 200px;
-      background-color: white;
-      margin-bottom: 0.5em;
+        width: 320px;
+        height: 180px;
+        background-color: white;
     }
     @media (max-width:400px){
       .signature-pad {
-        width: 255px !important;
+          width: 250px !important;
       }
     }
     @media (min-width:768px){
       .signature-pad {
-        width: 470px !important;
+          width: 470px !important;
       }
     }
+    .questiontext {
+        font-size: 13px;
+        line-height: 1.5;
+    }
     .starlabel {
-      padding: 0 !important;
-      margin: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
     .hide { display: none; }
     .clear {
-      float: none;
-      clear: both;
+        float: none;
+        clear: both;
     }
     .rating {
-      unicode-bidi: bidi-override;
-      direction: rtl;
+        unicode-bidi: bidi-override;
+        direction: rtl;
     }
     .rating > label {
-      padding: 0 !important;
-      margin: 0 !important;
-      cursor: pointer;
-      color: #000;
-      width: 1.5em;
-      font-size: 1.5em;
+        padding: 0 !important;
+        margin: 0 !important;
+        cursor: pointer;
+        color: #000;
+        width: 1.5em;
+        font-size: 1.5em;
+        line-height: 1;
     }
     .rating > label:hover,
     .rating > label:hover ~ label,
@@ -147,7 +151,6 @@ $menu_item_second = "list_homeservice";
         content: "\2606";
         color: #ffa500;
     }
-    .comment { color:  #212121; }
 </style>
 @endsection
 
@@ -1579,9 +1582,9 @@ $menu_item_second = "list_homeservice";
 
     <!-- Modal Survey -->
     <div class="modal fade" id="surveyModal" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered  modal-dialog-scrollable" role="document">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header pb-0">
             <h5 class="modal-title">Home Service Survey</h5>
             <button type="button"
                 class="close"
@@ -1594,10 +1597,10 @@ $menu_item_second = "list_homeservice";
             @csrf
             <input type="hidden" name="home_service_id" id="hs_id_survey">
             <input type="hidden" name="online_signature" id="signature-data">
-              <div class="modal-body" style="overflow:auto;">
+              <div class="modal-body" style="overflow-y:auto;">
                 <ol>
                   <li>
-                    <div>
+                    <div class="questiontext">
                       Apakah Anda merasa puas dengan kualitas layanan yang diberikan oleh tim kami di rumah Anda ?
                     </div>
                     <div class="rating">
@@ -1615,7 +1618,7 @@ $menu_item_second = "list_homeservice";
                     </div>
                   </li>
                   <li>
-                    <div>
+                    <div class="questiontext">
                       Bagaimana penilaian Anda terhadap keramahan tim kami yang datang ke rumah Anda ?
                     </div>
                     <div class="rating">
@@ -1633,7 +1636,7 @@ $menu_item_second = "list_homeservice";
                     </div>
                   </li>
                   <li>
-                    <div>
+                    <div class="questiontext">
                       Apakah tim kami bersedia menjawab pertanyaan atau kekhawatiran Anda dengan baik?
                     </div>
                     <div class="rating">
@@ -1651,7 +1654,7 @@ $menu_item_second = "list_homeservice";
                     </div>
                   </li>
                   <li>
-                    <div>
+                    <div class="questiontext">
                       Apakah tim kami tepat waktu sesuai dengan janji yang telah dijadwalkan ?
                     </div>
                     <div class="rating">
@@ -1673,18 +1676,18 @@ $menu_item_second = "list_homeservice";
                 <!-- display signature -->
                 <canvas id="signature-pad-1" class="signature-pad" width=470 height=200 style="border: 2px solid black"></canvas>
               </div>
-              <div class="modal-footer">
+              <div class="modal-footer pt-0">
                 <div class="w-100 row m-0">
-                  <div class="w-50 text-left row m-0">
-                    <button class="btn btn-danger mr-2" data-dismiss="modal" aria-label="Close">
+                  <div class="w-75 text-left row m-0">
+                    <button class="btn btn-sm btn-danger mr-1" data-dismiss="modal" aria-label="Close">
                         Cancel
                     </button>
-                    <button class="btn btn-warning" id="clear-survey">
+                    <button class="btn btn-sm btn-warning" id="clear-survey">
                         Clear
                     </button>
                   </div>
-                  <div class="w-50 text-right">
-                    <button class="btn btn-success" id="save-survey">
+                  <div class="w-25 text-right">
+                    <button class="btn btn-sm btn-success" id="save-survey">
                         Submit
                     </button>
                   </div>
