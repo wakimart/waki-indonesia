@@ -110,7 +110,7 @@ $menu_item_second = "list_homeservice";
     }
     .questiontext {
         font-size: 13px;
-        line-height: 1.5;
+        line-height: 1.2;
     }
     .starlabel {
         padding: 0 !important;
@@ -815,7 +815,7 @@ $menu_item_second = "list_homeservice";
     <div class="modal fade" id="viewHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header pb-0">
             <h5 class="modal-title">View Appointment</h5>
             <button type="button"
                 class="close"
@@ -825,7 +825,7 @@ $menu_item_second = "list_homeservice";
             </button>
           </div>
           <div class="modal-body">
-              <table style="margin: auto;">
+              <table style="margin: auto; font-size: 0.85rem;">
                 @if(Gate::check('view-type-home_service'))
                   <tr>
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Customer: </td>
@@ -897,8 +897,65 @@ $menu_item_second = "list_homeservice";
                       <td id="view-time" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                   </tr>
               </table>
+
+              <div class="w-100 mt-3 surveyResult d-none">
+                <ol class="mb-0">
+                  <li>
+                    <div class="questiontext">
+                      Apakah Anda merasa puas dengan kualitas layanan yang diberikan oleh tim kami di rumah Anda ?
+                    </div>
+                    <div class="rating" id="ratingq1" style="color: orange;">
+                      <span class="mdi mdi-star-outline"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="questiontext">
+                      Bagaimana penilaian Anda terhadap keramahan tim kami yang datang ke rumah Anda ?
+                    </div>
+                    <div class="rating" id="ratingq2" style="color: orange;">
+                      <span class="mdi mdi-star-outline"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="questiontext">
+                      Apakah tim kami bersedia menjawab pertanyaan atau kekhawatiran Anda dengan baik?
+                    </div>
+                    <div class="rating" id="ratingq3" style="color: orange;">
+                      <span class="mdi mdi-star-outline"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="questiontext">
+                      Apakah tim kami tepat waktu sesuai dengan janji yang telah dijadwalkan ?
+                    </div>
+                    <div class="rating" id="4" style="color: orange;">
+                      <span class="mdi mdi-star-outline"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                </ol>
+              </div>
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer pt-0">
               @if(isset($_GET['id_hs']) && Gate::check('acc-cancel-home_service'))
                   <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
                       @csrf
@@ -2138,6 +2195,7 @@ function clickView(btn) {
         $('#add_survey').removeClass('d-none');
         if(result.home_service_survey != null){
             $('#add_survey').addClass('d-none');
+            $('.surveyResult').removeClass('d-none');
         }
 
         $("#viewHomeServiceModal").modal("show");
