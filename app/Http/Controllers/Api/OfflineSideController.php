@@ -397,8 +397,8 @@ class OfflineSideController extends Controller
                                 $orderPaymentImages = json_decode($orderPayment->image, true) ?? [];
                                 // Jika Hapus Gambar Lama
                                 if (isset($orderPaymentImages[$i]) && isset($data['dltimg-'.$arrKey[1].'-'.$i])) {
-                                    if (File::exists("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImages[$i])) {
-                                        File::delete("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImages[$i]);
+                                    if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i])) {
+                                        File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i]);
                                     }
                                     unset($orderPaymentImages[$i]);
                                 }
@@ -407,8 +407,8 @@ class OfflineSideController extends Controller
     
                                     // Hapus Img Lama Jika Update Image
                                     if (isset($orderPaymentImages[$i])) {
-                                        if (File::exists("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImages[$i])) {
-                                            File::delete("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImages[$i]);
+                                        if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i])) {
+                                            File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i]);
                                         }
                                     }
     
@@ -452,8 +452,8 @@ class OfflineSideController extends Controller
                 if (!in_array($orderPayment['id'], $getIDFromOrderPaymentOlds)) {
                     $orderPaymentImages = json_decode($orderPayment->image, true);
                     foreach ($orderPaymentImages as $orderPaymentImage) {
-                        if (File::exists("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImage)) {
-                            File::delete("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImage);
+                        if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage)) {
+                            File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage);
                         }
                     }
                     $orderPayment->delete();
