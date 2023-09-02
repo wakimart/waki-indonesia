@@ -50,12 +50,12 @@ class HomeServiceSurveyController extends Controller
 		    	$HomeServiceSurveyNya = HomeServiceSurvey::create($data);
 	            DB::commit();
 
-	            return response()->json(['success' => $HomeServiceSurveyNya]);
+                return redirect()->back()->with("success", "Surveys has been uploaded");
 	        }
         
         } catch (Exception $ex) {
             DB::rollback();
-            return response()->json(['errors' => $ex->getMessage()]);
+            return redirect()->back()->with("errors", $ex->getMessage());
         }
     }
 

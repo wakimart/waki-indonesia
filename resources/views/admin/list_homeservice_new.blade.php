@@ -943,7 +943,7 @@ $menu_item_second = "list_homeservice";
                       Cancel
                   </button>
               @endif
-              <div class="w-100 text-center">
+              <div id="add_survey" class="w-100 text-center d-none">
                 <button class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#surveyModal">
                     Submit Survey
                 </button>
@@ -2076,7 +2076,7 @@ function clickView(btn) {
 
         return response.json();
     }).then(function (response) {
-        const result = response.result;
+        const result = response.result;console.log(result);
 
         const appointmentDate = new Date(result.appointment);
 
@@ -2131,6 +2131,12 @@ function clickView(btn) {
                 + result.code
             );
         @endif
+
+        $('#add_survey').removeClass('d-none');
+        if(result.home_service_survey != null){
+            $('#add_survey').addClass('d-none');
+        }
+
         $("#viewHomeServiceModal").modal("show");
     }).catch(function (error) {
         console.error(error);

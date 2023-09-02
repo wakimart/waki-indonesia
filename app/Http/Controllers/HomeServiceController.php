@@ -1234,6 +1234,7 @@ class HomeServiceController extends Controller
             $data['cso_code_name'] = $data->cso['code'].' - '.$data->cso['name'];
             $data['cso2_code_name'] = $data->cso2['code'].' - '.$data->cso2['name'];
             $data['branch_code_name'] = $data->branch['code'].' '.$data->branch['name'];
+            $data->homeServiceSurvey;
             return response()->json(['result' => $data]);
         }else{
             return response()->json(['result' => 'Gagal!!']);
