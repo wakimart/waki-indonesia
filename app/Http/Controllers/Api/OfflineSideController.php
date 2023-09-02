@@ -268,9 +268,104 @@ class OfflineSideController extends Controller
             $orders = Order::where('code', $data['order_code'])->first();
             $dataBefore = Order::where('code', $data['order_code'])->first();
 
+            $orderDetails = OrderDetail::where('order_id', $orders['id'])->get();
+            $orderDetailOlds = OrderDetail::where('order_id', $orders['id'])->get();
+
             $orderPayments = OrderPayment::where("order_id", $orders["id"])->get();
             $orderPaymentOlds = OrderPayment::where("order_id", $orders["id"])->get();
             
+            //pembentukan array product
+            $index = 0;
+            foreach ($data as $key => $value) {
+                $arrKey = explode("_", $key);
+                if ($arrKey[0] == 'product') {
+                    if (isset($arrKey[1]) && isset($data['qty_' . $arrKey[1]])) {
+                        $isUpdateOrCreateProduct = true;
+                        if (isset($data['orderdetailold'][$arrKey[1]])) {
+                            $orderDetail = OrderDetail::where('order_detail_id', $data['orderdetailold'][$arrKey[1]])->first();
+                            if($orderDetail){
+                                $orderDetail->product_id = null;
+                                $orderDetail->promo_id = null;
+                                $orderDetail->other = null;
+                            }else{
+                                return response()->json([
+                                    'status' => 'error',
+                                    'message' => 'the order detail id on the offline side is still empty'
+                                ], 500);
+                            }
+                        } else {
+                            if (isset($data['productold_'.$arrKey[1]])) {
+                                $isUpdateOrCreateProduct = false;
+                            }
+                            $orderDetail = new OrderDetail;
+                        }
+                        if ($isUpdateOrCreateProduct) {
+                            $orderDetail->order_id = $orders['id'];
+                            $orderDetail->type = OrderDetail::$Type['1'];
+                            $orderDetail->qty = $data['qty_' . $arrKey[1]];
+                            if ($value == 'other') {
+                                $orderDetail->other = $data['product_other_' . $arrKey[1]];
+                            } else {
+                                $splitValue = explode("_", $value);
+                                if ($splitValue[0] == "promo") {
+                                    $orderDetail->promo_id = $splitValue[1];
+                                } else if ($splitValue[0] == "product") {
+                                    $orderDetail->product_id = $splitValue[1];
+                                }
+                            }
+                            $orderDetail->save();
+                            $index++;
+                        }
+                    }
+                }
+            }
+            // Hapus Old Order Detail Pembelian
+            foreach ($orderDetails as $orderDetail) {
+                if ($orderDetail['type'] == OrderDetail::$Type['1'] && !in_array($orderDetail['order_detail_id'], $data['orderdetailold'])) {
+                    $orderDetail->delete();
+                }
+            }
+            //pembentukan array old_product
+            if (isset($data['old_product'])) {
+                $orderDetail = $orderDetails->filter(function ($item) {
+                    return $item->type == OrderDetail::$Type['3'];
+                })->first();
+                if (!$orderDetail) {
+                    $orderDetail = new OrderDetail;
+                }
+                $orderDetail->product_id = null;
+                $orderDetail->other = null;
+                $orderDetail->order_id = $orders['id'];
+                $orderDetail->type = OrderDetail::$Type['3'];
+                $orderDetail->qty = $data['old_product_qty'] ?? 1;
+                if ($data['old_product'] == "other") {
+                    $orderDetail->other = $data['old_product_other'];
+                } else {
+                    $orderDetail->product_id = $data['old_product'];
+                }
+                $orderDetail->save();
+            }
+            //pembentukan array prize
+            if (isset($data['prize'])) {
+                $orderDetail = $orderDetailOlds->filter(function ($item) {
+                    return $item->type == OrderDetail::$Type['2'];
+                })->first();
+                if (!$orderDetail) {
+                    $orderDetail = new OrderDetail;
+                }
+                $orderDetail->product_id = null;
+                $orderDetail->other = null;
+                $orderDetail->order_id = $orders['id'];
+                $orderDetail->type = OrderDetail::$Type['2'];
+                $orderDetail->qty = $data['prize_qty'] ?? 1;
+                if ($data['prize'] == "other") {
+                    $orderDetail->other = $data['prize_other'];
+                } else {
+                    $orderDetail->product_id = $data['prize'];
+                }
+                $orderDetail->save();
+            }
+
             //pembentukan array Bank
             $index = 0;
             foreach ($data as $key => $value) {
@@ -302,8 +397,8 @@ class OfflineSideController extends Controller
                                 $orderPaymentImages = json_decode($orderPayment->image, true) ?? [];
                                 // Jika Hapus Gambar Lama
                                 if (isset($orderPaymentImages[$i]) && isset($data['dltimg-'.$arrKey[1].'-'.$i])) {
-                                    if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i])) {
-                                        File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i]);
+                                    if (File::exists("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImages[$i])) {
+                                        File::delete("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImages[$i]);
                                     }
                                     unset($orderPaymentImages[$i]);
                                 }
@@ -312,8 +407,8 @@ class OfflineSideController extends Controller
     
                                     // Hapus Img Lama Jika Update Image
                                     if (isset($orderPaymentImages[$i])) {
-                                        if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i])) {
-                                            File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i]);
+                                        if (File::exists("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImages[$i])) {
+                                            File::delete("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImages[$i]);
                                         }
                                     }
     
@@ -346,32 +441,30 @@ class OfflineSideController extends Controller
                     }
                 }
             }
-
             // convert order payment id from online to offline
             $getIDFromOrderPaymentOlds = [];
             foreach($data['oldorderpaymentamount'] as $index => $amount){
                 $orderPaymentOfflineSide = OrderPayment::where('order_id', $orders->id)->where('total_payment', $amount)->where('bank_id', $data['oldorderpaymentbankid'][$index])->first();
                 array_push($getIDFromOrderPaymentOlds, $orderPaymentOfflineSide->id);
             }
-
             // Hapus Old Order Payment
             foreach ($orderPayments as $orderPayment) {
                 if (!in_array($orderPayment['id'], $getIDFromOrderPaymentOlds)) {
                     $orderPaymentImages = json_decode($orderPayment->image, true);
                     foreach ($orderPaymentImages as $orderPaymentImage) {
-                        if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage)) {
-                            File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage);
+                        if (File::exists("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImage)) {
+                            File::delete("/home/prum/kerja/waki-indonesia-offline/public/sources/order/" . $orderPaymentImage);
                         }
                     }
                     $orderPayment->delete();
                 }
             }
-
             $orders->updateDownPayment();
+
             $orders->save();
 
             $dataChanges = array_diff(json_decode($orders, true), json_decode($dataBefore, true));
-            $childs = ["orderPayment" => $orderPaymentOlds];
+            $childs = ["orderDetail" => $orderDetailOlds, "orderPayment" => $orderPaymentOlds];
             foreach ($childs as $key => $child) {
                 $orderChild = $orders->$key->keyBy('id');
                 $child = $child->keyBy('id');
