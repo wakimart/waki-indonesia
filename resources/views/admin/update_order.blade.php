@@ -841,6 +841,17 @@ $menu_item_page = "order";
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
+// callback for find waki-indonesia 0ffline (local or ngrok)
+var urlOffline = "{{ env('OFFLINE_URL_2') }}"
+$.ajax({
+    url:'https://waki-indonesia-offline.office/cms-admin/login',
+    error: function(){
+        urlOffline = "{{ env('OFFLINE_URL_2') }}"
+    },
+    success: function(){
+        urlOffline = "{{ env('OFFLINE_URL') }}"
+    }
+});
 let promoOption = `<option selected disabled value="">Choose Product</option>`;
 let quantityOption = "";
 
@@ -932,7 +943,7 @@ document.addEventListener("DOMContentLoaded", function () {
             testNetwork(networkValue, function(val){                
                 $.ajax({
                     method: "post",
-                    url: "{{ env('OFFLINE_URL') }}api/update-order-data",
+                    url: `${urlOffline}/api/update-order-data`,
                     data: frmUpdate,
                     processData: false,
                     contentType: false,
@@ -1103,7 +1114,7 @@ document.addEventListener("DOMContentLoaded", function () {
         function testNetwork(networkValue, response){            
             $.ajax({
                 method: "post",
-                url: "{{ env('OFFLINE_URL') }}api/end-point-for-check-status-network",
+                url: `${urlOffline}/api/end-point-for-check-status-network`,
                 dataType: 'json',
                 contentType: 'application/json',
                 processData: false,
