@@ -267,6 +267,22 @@ class OfflineSideController extends Controller
             $data = $request->all();
             $orders = Order::where('code', $data['order_code'])->first();
             $dataBefore = Order::where('code', $data['order_code'])->first();
+            $orders['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+            $orders['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
+            $orders['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
+            $orders['no_member'] = $data['no_member'];
+            $orders['name'] = $data['name'];
+            $orders['address'] = $data['address'];
+            $orders['cash_upgrade'] = $data['cash_upgrade'];
+            $orders['total_payment'] = $data['total_payment'];
+            $orders['remaining_payment'] = $data['remaining_payment'];
+            $orders['customer_type'] = $data['customer_type'];
+            $orders['description'] = $data['description'];
+            $orders['phone'] = $data['phone'];
+            $orders['know_from'] = $data['know_from'];
+            $orders['province'] = $data['province_id'];
+            $orders['city'] = $data['city'];
+            $orders['distric'] = $data['distric'];
 
             $orderDetails = OrderDetail::where('order_id', $orders['id'])->get();
             $orderDetailOlds = OrderDetail::where('order_id', $orders['id'])->get();
