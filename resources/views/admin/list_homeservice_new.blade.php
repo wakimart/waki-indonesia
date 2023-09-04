@@ -902,7 +902,7 @@ $menu_item_second = "list_homeservice";
                 <ol class="mb-0">
                   <li>
                     <div class="questiontext">
-                      Apakah Anda merasa puas dengan kualitas layanan yang diberikan oleh tim kami di rumah Anda ?
+                      {{ $questHSSurvey[0] }}
                     </div>
                     <div class="rating" id="ratingq1" style="color: orange;">
                       <span class="mdi mdi-star-outline"></span>
@@ -915,7 +915,7 @@ $menu_item_second = "list_homeservice";
                   </li>
                   <li>
                     <div class="questiontext">
-                      Bagaimana penilaian Anda terhadap keramahan tim kami yang datang ke rumah Anda ?
+                      {{ $questHSSurvey[1] }}
                     </div>
                     <div class="rating" id="ratingq2" style="color: orange;">
                       <span class="mdi mdi-star-outline"></span>
@@ -928,7 +928,7 @@ $menu_item_second = "list_homeservice";
                   </li>
                   <li>
                     <div class="questiontext">
-                      Apakah tim kami bersedia menjawab pertanyaan atau kekhawatiran Anda dengan baik?
+                      {{ $questHSSurvey[2] }}
                     </div>
                     <div class="rating" id="ratingq3" style="color: orange;">
                       <span class="mdi mdi-star-outline"></span>
@@ -941,9 +941,9 @@ $menu_item_second = "list_homeservice";
                   </li>
                   <li>
                     <div class="questiontext">
-                      Apakah tim kami tepat waktu sesuai dengan janji yang telah dijadwalkan ?
+                      {{ $questHSSurvey[3] }}
                     </div>
-                    <div class="rating" id="4" style="color: orange;">
+                    <div class="rating" id="ratingq4" style="color: orange;">
                       <span class="mdi mdi-star-outline"></span>
                       <span class="mdi mdi-star"></span>
                       <span class="mdi mdi-star"></span>
@@ -1658,7 +1658,7 @@ $menu_item_second = "list_homeservice";
                 <ol>
                   <li>
                     <div class="questiontext">
-                      Apakah Anda merasa puas dengan kualitas layanan yang diberikan oleh tim kami di rumah Anda ?
+                      {{ $questHSSurvey[0] }}
                     </div>
                     <div class="rating">
                       <input id="satisfy5" name="result_quest_1" type="radio" value="5" class="radio-btn hide">
@@ -1676,7 +1676,7 @@ $menu_item_second = "list_homeservice";
                   </li>
                   <li>
                     <div class="questiontext">
-                      Bagaimana penilaian Anda terhadap keramahan tim kami yang datang ke rumah Anda ?
+                      {{ $questHSSurvey[1] }}
                     </div>
                     <div class="rating">
                       <input id="kind5" name="result_quest_2" type="radio" value="5" class="radio-btn hide">
@@ -1694,7 +1694,7 @@ $menu_item_second = "list_homeservice";
                   </li>
                   <li>
                     <div class="questiontext">
-                      Apakah tim kami bersedia menjawab pertanyaan atau kekhawatiran Anda dengan baik?
+                      {{ $questHSSurvey[2] }}
                     </div>
                     <div class="rating">
                       <input id="qna5" name="result_quest_3" type="radio" value="5" class="radio-btn hide">
@@ -1712,7 +1712,7 @@ $menu_item_second = "list_homeservice";
                   </li>
                   <li>
                     <div class="questiontext">
-                      Apakah tim kami tepat waktu sesuai dengan janji yang telah dijadwalkan ?
+                      {{ $questHSSurvey[3] }}
                     </div>
                     <div class="rating">
                       <input id="ontime5" name="result_quest_4" type="radio" value="5" class="radio-btn hide">
@@ -2193,9 +2193,28 @@ function clickView(btn) {
         @endif
 
         $('#add_survey').removeClass('d-none');
+        $('.surveyResult').addClass('d-none');
         if(result.home_service_survey != null){
             $('#add_survey').addClass('d-none');
             $('.surveyResult').removeClass('d-none');
+
+            //change score on survey
+            let resultQS = [];
+            resultQS.push(result.home_service_survey.result_quest_1);
+            resultQS.push(result.home_service_survey.result_quest_2);
+            resultQS.push(result.home_service_survey.result_quest_3);
+            resultQS.push(result.home_service_survey.result_quest_4);
+
+            for (var i = 0; i < resultQS.length; i++) {
+                let resultInnerHtml = "";
+                for (var j = 0; j < 5 - resultQS[i]; j++) {
+                    resultInnerHtml += "<span class=\"mdi mdi-star-outline\"></span>";
+                }
+                for (var j = 0; j < resultQS[i]; j++) {
+                    resultInnerHtml += "<span class=\"mdi mdi-star\"></span>";
+                }
+                $('#ratingq' + (i+1))[0].innerHTML = resultInnerHtml;
+            }
         }
 
         $("#viewHomeServiceModal").modal("show");
