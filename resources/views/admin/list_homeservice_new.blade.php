@@ -94,6 +94,8 @@ $menu_item_second = "list_homeservice";
         text-overflow: ellipsis;
     }
     .signature-pad {
+        display: block;
+        margin: auto;
         width: 320px;
         height: 180px;
         background-color: white;
@@ -898,7 +900,63 @@ $menu_item_second = "list_homeservice";
                   </tr>
               </table>
 
-              <div class="w-100 mt-3 surveyResult d-none">
+              <div class="buttonContainer w-100 pt-3 d-flex justify-content-center flex-wrap">
+                @if(isset($_GET['id_hs']) && Gate::check('acc-cancel-home_service'))
+                    <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                        @csrf
+                        <div class="form-group">
+
+                            <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                            <input type="hidden" id="input_id_hs_hidden" name="id" value="-" />
+
+                            <div style="text-align: center;">
+                                <h5>Are you sure want to cancel this Home Service?</h5>
+                                <p id="cancel_desc_view"></p>
+                                <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                            </div>
+                        </div>
+                    </form>
+                @else
+                    @if(Gate::check('add-service'))
+                        <a id="create_technician_schedule"
+                            href="">
+                            <button id="btn-share"
+                                type="button"
+                                class="btn btn-gradient-primary mr-2">
+                                Add Schedule
+                            </button>
+                        </a>
+                    @endif
+                    @if(Gate::check('view-type-home_service') && Gate::check('view-phone-home_service'))
+                        <a id="url_share"
+                            href=""
+                            data-action="share/whatsapp/share"
+                            target="_blank">
+                            <button id="btn-share"
+                                type="button"
+                                class="btn btn-gradient-primary mr-2">
+                                <span class="mdi mdi-whatsapp">
+                                </span>
+                                Share
+                            </button>
+                        </a>
+                    @endif
+                    <button class="btn btn-light"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        Cancel
+                    </button>
+                @endif
+                <div id="add_survey" class="w-100 text-center d-none">
+                  <button class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#surveyModal">
+                      Submit Survey
+                  </button>
+                </div>
+              </div>
+
+              <div class="w-100 mt-2 surveyResult d-none">
+                <h5 class="modal-title">Hasil Survey</h5>
                 <ol class="mb-0">
                   <li>
                     <div class="questiontext">
@@ -953,60 +1011,8 @@ $menu_item_second = "list_homeservice";
                     </div>
                   </li>
                 </ol>
-              </div>
-          </div>
-          <div class="modal-footer pt-0">
-              @if(isset($_GET['id_hs']) && Gate::check('acc-cancel-home_service'))
-                  <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
-                      @csrf
-                      <div class="form-group">
-
-                          <input type="hidden" id="hiddenInput" name="cancel" value="1" />
-                          <input type="hidden" id="input_id_hs_hidden" name="id" value="-" />
-
-                          <div style="text-align: center;">
-                              <h5>Are you sure want to cancel this Home Service?</h5>
-                              <p id="cancel_desc_view"></p>
-                              <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
-                              <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
-                          </div>
-                      </div>
-                  </form>
-              @else
-                  @if(Gate::check('add-service'))
-                      <a id="create_technician_schedule"
-                          href="">
-                          <button id="btn-share"
-                              type="button"
-                              class="btn btn-gradient-primary mr-2">
-                              Add Schedule
-                          </button>
-                      </a>
-                  @endif
-                  @if(Gate::check('view-type-home_service') && Gate::check('view-phone-home_service'))
-                      <a id="url_share"
-                          href=""
-                          data-action="share/whatsapp/share"
-                          target="_blank">
-                          <button id="btn-share"
-                              type="button"
-                              class="btn btn-gradient-primary mr-2">
-                              <span class="mdi mdi-whatsapp">
-                              </span>
-                              Share
-                          </button>
-                      </a>
-                  @endif
-                  <button class="btn btn-light"
-                      data-dismiss="modal"
-                      aria-label="Close">
-                      Cancel
-                  </button>
-              @endif
-              <div id="add_survey" class="w-100 text-center d-none">
-                <button class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#surveyModal">
-                    Submit Survey
-                </button>
+                <!-- display signature -->
+                <div id="displaySignature" class="text-center"></div>
               </div>
           </div>
         </div>
@@ -1730,8 +1736,15 @@ $menu_item_second = "list_homeservice";
                   </li>
                 </ol>
 
-                <!-- display signature -->
-                <canvas id="signature-pad-1" class="signature-pad" width=470 height=200 style="border: 2px solid black"></canvas>
+                <!-- signature pad -->
+                <div class="w-100 ">
+                  <div class="wrapper">
+                    <input type="hidden" name="online_signature" id="signature-data">
+                    <input type="hidden" name="url" value="{{ url()->full() }}" />
+                    <canvas id="signature-pad-1" class="signature-pad" width=470 height=200 style="border: 2px solid black"></canvas>
+                  </div>
+                </div>
+
               </div>
               <div class="modal-footer pt-0">
                 <div class="w-100 row m-0">
@@ -2215,6 +2228,8 @@ function clickView(btn) {
                 }
                 $('#ratingq' + (i+1))[0].innerHTML = resultInnerHtml;
             }
+            let displaySignature = '<img class="img-fluid" style="max-height: 50px;" src="{{asset('sources/home_service_surveys/')}}/' + result.home_service_survey.online_signature + '" />';
+            $('#displaySignature').html(displaySignature);
         }
 
         $("#viewHomeServiceModal").modal("show");
