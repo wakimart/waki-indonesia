@@ -73,6 +73,7 @@ $menu_item_page = "order";
             </nav>
         </div>
         <form id="actionUpdate" class="forms-sample" method="POST" action="{{ route('update_order') }}">
+            <input type="hidden" name="user_code" value="{{Auth::user()->code}}">
             {{ csrf_field() }}
             <div class="row">
                 <div class="col-12 grid-margin stretch-card">
@@ -569,13 +570,13 @@ $menu_item_page = "order";
                                 </div>
                                 <div class="form-group">
                                     <label for="">CSO Code 30%</label>
-                                    <input type="text" class="form-control cso" name="30_cso_id" id="30_cso" value="{{$orders->cso_id_30['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+                                    <input type="text" class="form-control cso" required name="30_cso_id" id="30_cso" value="{{$orders->cso_id_30['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
                                     <input type="hidden" class="csoId" name="idCSO30" value="">
                                     <div class="validation"></div>
                                 </div>
                                 <div class="form-group">
                                     <label for="">CSO Code 70%</label>
-                                    <input type="text" class="form-control cso" name="70_cso_id" id="70_cso" value="{{$orders->cso_id_70['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
+                                    <input type="text" class="form-control cso" required name="70_cso_id" id="70_cso" value="{{$orders->cso_id_70['code']}}" data-msg="Mohon Isi Kode CSO" style="text-transform:uppercase"/>
                                     <input type="hidden" class="csoId" name="idCSO70" value="">
                                     <div class="validation"></div>
                                 </div>
@@ -619,6 +620,8 @@ $menu_item_page = "order";
                                 <input type="hidden" name="bankold_{{ $indexPayment }}" value="{{ $payment['id'] }}">
                                 <div class="p-3 mb-2" style="border: 1px solid black" id="bank_{{ $indexPayment }}">
                                     <input type="hidden" name="orderpaymentold[]" value={{ $payment['id'] }}>
+                                    <input type="hidden" name="oldorderpaymentamount[]" value="{{$payment['total_payment']}}">
+                                    <input type="hidden" name="oldorderpaymentbankid[]" value="{{$payment['bank_id']}}">
                                     <div class="form-group">
                                         <label for="">Payment Type {{ ($indexPayment) != 0 ? ($indexPayment + 1) : '' }}</label>
                                     </div>
@@ -751,7 +754,6 @@ $menu_item_page = "order";
                                 <button class="btn btn-light">Cancel</button>
                             </div>
                         </div>
-                        </form>
                     </div>
                 </div>
                 <div class="col-12 grid-margin stretch-card">
@@ -767,7 +769,7 @@ $menu_item_page = "order";
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 
@@ -813,11 +815,43 @@ $menu_item_page = "order";
         </div>
     </div>
 </div>
+<!-- Error modal -->
+<div class="modal fade"
+    id="error-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="error-modal-desc"></div>
+        </div>
+    </div>
+</div>
+<!-- End Modal View -->
 @endsection
 
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
+// callback for find waki-indonesia 0ffline (local or ngrok)
+var urlOffline = "{{ env('OFFLINE_URL_2') }}"
+$.ajax({
+    url:'https://waki-indonesia-offline.office/cms-admin/login',
+    error: function(){
+        urlOffline = "{{ env('OFFLINE_URL_2') }}"
+    },
+    success: function(){
+        urlOffline = "{{ env('OFFLINE_URL') }}"
+    }
+});
 let promoOption = `<option selected disabled value="">Choose Product</option>`;
 let quantityOption = "";
 
@@ -905,6 +939,46 @@ document.addEventListener("DOMContentLoaded", function () {
             ajax.open("POST", URLNya);
             ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
             ajax.send(frmUpdate);
+
+            testNetwork(networkValue, function(val){                
+                $.ajax({
+                    method: "post",
+                    url: `${urlOffline}/api/update-order-data`,
+                    data: frmUpdate,
+                    processData: false,
+                    contentType: false,
+                    success: function(res){   
+                        if(res.status == 'success'){
+                            alert("Input Success !!!");
+                            var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
+                            window.location.href = url;
+                        }else{
+                            var modal = `                
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-center">${res.status}</h5>
+                                    <hr>
+                                    <p class="text-center">${res.message}</p>
+                                </div>                
+                            `
+                            $('#error-modal-desc').html(modal)
+                            $('#error-modal').modal("show")
+                        }
+                    },
+                    error: function(xhr){
+                        var modal = `                
+                            <div class="modal-body">
+                                <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                                <hr>
+                                <p class="text-center">${xhr.responseJSON.message}</p>
+                            </div>                
+                        `
+                        $('#error-modal-desc').html(modal)
+                        $('#error-modal').modal("show")
+                    }
+                    
+                })
+            })
+            return false      
         });
 
         function progressHandler(event){
@@ -913,7 +987,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         function completeHandler(event){
             var hasil = JSON.parse(event.target.responseText);
-            console.log(hasil);
 
             for (var key of frmUpdate.keys()) {
                 $("#actionUpdate").find("input[name="+key.name+"]").removeClass("is-invalid");
@@ -943,9 +1016,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 alert("Input Error !!!");
             }
             else{
-                alert("Input Success !!!");
+                // alert("Input Success !!!");
                 var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
-                window.location.href = url;
+                // window.location.href = url;
                 //window.location.reload()
             }
 
@@ -1036,6 +1109,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
             });
         });
+
+        var networkValue
+        function testNetwork(networkValue, response){            
+            $.ajax({
+                method: "post",
+                url: `${urlOffline}/api/end-point-for-check-status-network`,
+                dataType: 'json',
+                contentType: 'application/json',
+                processData: false,
+                headers: {
+                    "api-key": "{{ env('API_KEY') }}",
+                },
+                success: response,
+                error: function(xhr, status, error) {
+                    var modal = `                
+                        <div class="modal-body">
+                            <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                            <hr>
+                            <p class="text-center">${xhr.responseJSON.message}</p>
+                        </div>                
+                    `
+                    $('#modal-change-status').modal("hide")
+                    $('.modal-backdrop').remove();
+                    $('#error-modal-desc').html(modal)
+                    $('#error-modal').modal("show")
+                }
+            });
+        };
     });
 </script>
 <script type="application/javascript">
