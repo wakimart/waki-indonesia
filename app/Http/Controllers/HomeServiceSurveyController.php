@@ -55,7 +55,7 @@ class HomeServiceSurveyController extends Controller
         
         } catch (Exception $ex) {
             DB::rollback();
-            return redirect()->back()->with("errors", $ex->getMessage());
+            return redirect()->back()->withErrors("message", $ex->getMessage());
         }
     }
 

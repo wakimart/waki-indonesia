@@ -1659,7 +1659,6 @@ $menu_item_second = "list_homeservice";
           <form action="{{route('add_home_service_survey')}}" method="POST" enctype="multipart/form-data" id="signatureForm">
             @csrf
             <input type="hidden" name="home_service_id" id="hs_id_survey">
-            <input type="hidden" name="online_signature" id="signature-data">
               <div class="modal-body" style="overflow-y:auto;">
                 <ol>
                   <li>
