@@ -327,8 +327,16 @@ class HomeServiceController extends Controller
             $cso_id = Cso::where('code', $filterCSO)->first();
 
             $currentMonthDataCount = $currentMonthDataCount->where(
-                "cso_id",
-                $cso_id->id
+                function ($query) use ($cso_id) {
+                    $query->where(
+                        "cso_id",
+                        $cso_id->id
+                    )
+                    ->orWhere(
+                        "cso2_id",
+                        $cso_id->id
+                    );
+                }
             );
         }
 
@@ -696,8 +704,16 @@ class HomeServiceController extends Controller
             $cso_id = Cso::where('code', $filterCSO)->first();
 
             $currentDayData = $currentDayData->where(
-                "h.cso_id",
-                $cso_id->id
+                function ($query) use ($cso_id) {
+                    $query->where(
+                        "h.cso_id",
+                        $cso_id->id
+                    )
+                    ->orWhere(
+                        "h.cso2_id",
+                        $cso_id->id
+                    );
+                }
             );
         }
 

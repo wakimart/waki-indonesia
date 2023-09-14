@@ -126,7 +126,7 @@ $menu_item_second = "add_home_service";
                     <div class="form-group">
                         <label for="">Kode Partner CSO(Optional)</label>
                         <input type="text" class="form-control" name="cso2_id" id="cso2" placeholder="Kode Partner CSO (opsional)" style="text-transform:uppercase"/>
-                        <div class="validation"></div>
+                        <div class="validation" id="validation_cso2"></div>
                         <span class="invalid-feedback">
                             <strong></strong>
                         </span>
