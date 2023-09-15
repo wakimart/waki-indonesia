@@ -283,6 +283,7 @@ class TheraphyServiceController extends Controller
 
     public function listTherapyLocation(Request $request){
         $url = $request->all();
+        $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
         $therapyLocations = TherapyLocation::where("status", true);
         $countTherapyLocations = $therapyLocations->count();
         $therapyLocations = $therapyLocations->paginate(10);
@@ -293,6 +294,7 @@ class TheraphyServiceController extends Controller
                 "countTherapyLocations",
                 "therapyLocations",
                 "url",
+                "branches",
             )
         )
         ->with('i', (request()->input('page', 1) - 1) * 10 + 1);

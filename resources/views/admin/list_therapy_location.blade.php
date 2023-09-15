@@ -32,47 +32,90 @@ $menu_item_second = "list_therapy_location";
                 </ol>
             </nav>
         </div>
-        <div class="col-12 grid-margin stretch-card" style="padding: 0;">
-            <div class="card">
-                <div class="card-body">
-                    <h5 style="margin-bottom: 0.5em;">
-                        Total: <?php echo $countTherapyLocations; ?> data
-                    </h5>
-                    <div class="table-responsive"
-                        style="border: 1px solid #ebedf2;">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>Nama Therapy Location</th>
-                                    <th class="center">Edit</th>
-                                    <th class="center">Delete</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($therapyLocations as $index => $value)
-                                    <tr>
-                                        <td>{{$index + 1}}</td>
-                                        <td>{{$value->name}}</td>
-                                        <td class="center">
-                                            <a href="{{ route('edit_therapy_location', $value->id) }}">
-                                                <i class="mdi mdi-border-color mr-3" style="font-size: 24px; color:#fed713;"></i>
-                                            </a>
-                                        </td>
-                                        <td class="center">
-                                            <button onclick="submitDelete(`{{ route('delete_therapy_location', $value->id) }}`)" class="btn-delete">
-                                                <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                @endforeach                                
-                            </tbody>
-                        </table>
-                        <br>
-                        <?php echo $therapyLocations->appends($url)->links(); ?>
-                    </div>
-                </div>
-            </div>
+
+        <div class="row">
+          <div class="col-12 grid-margin stretch-card">
+    				<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+    					<div class="form-group">
+    					<label for="">Filter By Team</label>
+    						<select class="form-control" id="filter_branch" name="filter_branch">
+    						<option value="" selected="">All Branch</option>
+    						@foreach($branches as $branch)
+    							@php
+    							$selected = "";
+    							if(isset($_GET['filter_branch'])){
+    								if($_GET['filter_branch'] == $branch['id']){
+    								$selected = "selected=\"\"";
+    								}
+    							}
+    							@endphp
+
+    							<option {{$selected}} value="{{ $branch['id'] }}">{{ $branch['code'] }} - {{ $branch['name'] }}</option>
+    						@endforeach
+    						</select>
+    						<div class="validation"></div>
+    					</div>
+    				</div>
+    				<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+    					<div class="form-group">
+    					<label for="">Search By Name, Code, and Phone</label>
+    					<input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
+    						<div class="validation"></div>
+    					</div>
+    				</div>
+
+    				<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+    					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+    						<label for=""></label>
+    						<div class="form-group">
+    						<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+
+          <div class="col-12 grid-margin stretch-card">
+              <div class="card">
+                  <div class="card-body">
+                      <h5 style="margin-bottom: 0.5em;">
+                          Total: <?php echo $countTherapyLocations; ?> data
+                      </h5>
+                      <div class="table-responsive"
+                          style="border: 1px solid #ebedf2;">
+                          <table class="table table-bordered">
+                              <thead>
+                                  <tr>
+                                      <th>No.</th>
+                                      <th>Nama Therapy Location</th>
+                                      <th class="center">Edit</th>
+                                      <th class="center">Delete</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  @foreach($therapyLocations as $index => $value)
+                                      <tr>
+                                          <td>{{$index + 1}}</td>
+                                          <td>{{$value->name}}</td>
+                                          <td class="center">
+                                              <a href="{{ route('edit_therapy_location', $value->id) }}">
+                                                  <i class="mdi mdi-border-color mr-3" style="font-size: 24px; color:#fed713;"></i>
+                                              </a>
+                                          </td>
+                                          <td class="center">
+                                              <button onclick="submitDelete(`{{ route('delete_therapy_location', $value->id) }}`)" class="btn-delete">
+                                                  <i class="mdi mdi-delete" style="font-size: 24px; color:#fe7c96;"></i>
+                                              </button>
+                                          </td>
+                                      </tr>
+                                  @endforeach
+                              </tbody>
+                          </table>
+                          <br>
+                          <?php echo $therapyLocations->appends($url)->links(); ?>
+                      </div>
+                  </div>
+              </div>
+          </div>
         </div>
     </div>
 </div>
@@ -102,10 +145,30 @@ $menu_item_second = "list_therapy_location";
 <!-- End Modal Delete -->
 @endsection
 @section('script')
-    <script>        
-        function submitDelete(url) {
-            $('#deleteTherapyLocationModal').modal('show');
-            document.frmDelete.action = url;
-        }
-    </script>
+<script>
+  $(document).on("click", "#btn-filter", function(e){
+    var urlParamArray = new Array();
+    var urlParamStr = "";
+    if($('#filter_branch').val() != ""){
+    urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+    }
+    if($('#search').val() != ""){
+    urlParamArray.push("search=" + $('#search').val());
+    }
+    for (var i = 0; i < urlParamArray.length; i++) {
+    if (i === 0) {
+      urlParamStr += "?" + urlParamArray[i]
+    } else {
+      urlParamStr += "&" + urlParamArray[i]
+    }
+    }
+
+    window.location.href = "{{route('list_therapy_location')}}" + urlParamStr;
+  });
+
+  function submitDelete(url) {
+      $('#deleteTherapyLocationModal').modal('show');
+      document.frmDelete.action = url;
+  }
+</script>
 @endsection
