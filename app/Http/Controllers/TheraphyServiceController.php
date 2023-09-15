@@ -285,6 +285,15 @@ class TheraphyServiceController extends Controller
         $url = $request->all();
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
         $therapyLocations = TherapyLocation::where("status", true);
+        if ($request->has('filter_branch')) {
+            $therapyLocations = $therapyLocations->where('branch_id', $request->filter_branch);
+        }
+        if ($request->has('search')) {
+            $therapyLocations = $therapyLocations->where(function($query) use ($request) {
+                $query->where('name','LIKE', '%'.$request->search.'%')
+                    ->orWhere('address','LIKE', '%'.$request->search.'%');
+            });
+        }
         $countTherapyLocations = $therapyLocations->count();
         $therapyLocations = $therapyLocations->paginate(10);
 
