@@ -64,11 +64,12 @@ $menu_item_second = "list_commstype";
 											<td>{{$commtype->name}}</td>
 											<td>
 												<div>
-													<div class="mb-1">Takeaway : {{$commtype->takeaway ? 'Yes' : 'No'}}</div><br />
-													<div class="mb-1">Upgrade : {{$commtype->upgrade ? 'Yes' : 'No'}}</div><br />
-													<div class="mb-1">Nominal : Rp {{number_format($commtype->nominal)}}</div><br />
-													<div class="mb-1">Semangat Nominal : Rp {{number_format($commtype->smgt_nominal)}}</div><br />
-													<div class="mb-1">Description : {{$commtype->description}}</div><br />
+													<div class="mb-1"><b>Hadiah :</b> {{$commtype->prize ? 'Yes' : 'No'}}</div>
+													<div class="mb-1"><b>Takeaway :</b> {{$commtype->takeaway ? 'Yes' : 'No'}}</div>
+													<div class="mb-1"><b>Upgrade :</b> {{$commtype->upgrade ? 'Yes' : 'No'}}</div>
+													<div class="mb-1"><b>Nominal :</b> Rp {{number_format($commtype->nominal)}}</div>
+													<div class="mb-1"><b>Semangat Nominal :</b> Rp {{number_format($commtype->smgt_nominal)}}</div><br>
+													<div class="mb-1"><b>Description :</b> {{$commtype->description}}</div>
 												</div>
 											</td>
           									@if(Gate::check('detail-commission_type') || Gate::check('edit-commission_type'))
