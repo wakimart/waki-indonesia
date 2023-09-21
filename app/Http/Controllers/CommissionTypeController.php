@@ -60,6 +60,7 @@ class CommissionTypeController extends Controller
             'name' => 'required',
             'description' => 'required',
             'takeaway' => 'required',
+            'prize' => 'required',
             'upgrade' => 'required',
             'nominal' => 'required',
             'smgt_nominal' => 'required',
@@ -73,6 +74,7 @@ class CommissionTypeController extends Controller
                 $commissionType = new CommissionType();
                 $commissionType->name = $request->name;
                 $commissionType->description = $request->description;
+                $commissionType->prize = $request->prize;
                 $commissionType->takeaway = $request->takeaway;
                 $commissionType->upgrade = $request->upgrade;
                 $commissionType->nominal = str_replace(',', '', $request->nominal);

@@ -60,7 +60,7 @@ $menu_item_second = "add_commstype";
                             {{ csrf_field() }}
                               <div>
                                 <div class="row no-gutters">
-                                  <div class="form-group w-50">
+                                  <div class="form-group w-25">
                                     <label for="orderUpgrade" class="w-100">Upgrade ?</label>
                                     <div class="form-check-inline">
                                       <input class="form-check-input" type="radio" name="upgrade" id="orderUpgradeYes" value="1" required>
@@ -72,7 +72,19 @@ $menu_item_second = "add_commstype";
                                     </div>
                                   </div>
 
-                                  <div class="form-group w-50">
+                                  <div class="form-group w-25">
+                                    <label for="orderHadiah" class="w-100">Hadiah ?</label>
+                                    <div class="form-check-inline">
+                                      <input class="form-check-input" type="radio" name="prize" id="orderHadiahYes" value="1" required>
+                                      <label class="form-check-label mb-0" for="orderHadiahYes">Yes</label>
+                                    </div>
+                                    <div class="form-check-inline">
+                                      <input class="form-check-input" type="radio" name="prize" id="orderHadiahNo" value="0" required>
+                                      <label class="form-check-label mb-0" for="orderHadiahNo">No</label>
+                                    </div>
+                                  </div>
+
+                                  <div class="form-group w-25">
                                     <label for="orderTakeaway" class="w-100">Takeaway ?</label>
                                     <div class="form-check-inline">
                                       <input class="form-check-input" type="radio" name="takeaway" id="orderTakeawayYes" value="1" required>
