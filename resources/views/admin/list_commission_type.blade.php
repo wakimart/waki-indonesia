@@ -67,8 +67,8 @@ $menu_item_second = "list_commstype";
 													<div class="mb-1"><b>Hadiah :</b> {{$commtype->prize ? 'Yes' : 'No'}}</div>
 													<div class="mb-1"><b>Takeaway :</b> {{$commtype->takeaway ? 'Yes' : 'No'}}</div>
 													<div class="mb-1"><b>Upgrade :</b> {{$commtype->upgrade ? 'Yes' : 'No'}}</div>
-													<div class="mb-1"><b>Nominal :</b> Rp {{number_format($commtype->nominal)}}</div>
-													<div class="mb-1"><b>Semangat Nominal :</b> Rp {{number_format($commtype->smgt_nominal)}}</div><br>
+													<div class="mb-1"><b>Nominal Bonus :</b> Rp {{number_format($commtype->nominal)}}</div><br>
+													{{-- <div class="mb-1"><b>Semangat Nominal :</b> Rp {{number_format($commtype->smgt_nominal)}}</div><br> --}}
 													<div class="mb-1"><b>Description :</b> {{$commtype->description}}</div>
 												</div>
 											</td>
