@@ -985,29 +985,39 @@ class OrderController extends Controller
             $orderDetailOlds = OrderDetail::where('order_id', $order['id'])->get();
 
             $checkRegionOrder = in_array($order['distric'], Branch::where('id', $order->branch_id)->first()->regionDistrict()['district']);
-            if ($request->index_order_home_service != null) {
-                $getAppointment = json_decode($order['request_hs'], true)[$request->index_order_home_service];
-            } else if ($request->request_hs_date && $request->request_hs_time) {
-                $getAppointment = $request->request_hs_date." ".$request->request_hs_time;
-            }
-
-            if ($checkRegionOrder == false) {
-                // Request Acc Home Service
-                $order->update(['request_hs_acc' => $getAppointment, 'request_hs_cso_acc' => $request->homeservice_cso_id ? json_encode($request->homeservice_cso_id) : null]);
-            } else {
-                // Add Home Delivery
-                $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $request->index_order_home_service, $getAppointment, $request->homeservice_cso_id);
+            if($checkRegionOrder == false && $request->index_order_home_service == 'create'){
+                // add new home service
+                $index = null;
+                $appointment = $request->request_home_service_date." ".$request->request_home_service_time;
+                $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $index, $appointment, $request->choose_cso_home_service);
                 OrderHomeservice::create(['order_id' => $order->id, 'home_service_id' => $homeservice->id]);
-            }
+                // set null request hs in order
+                $order->request_hs = null;
+                $order->update();
+            }else{
+                if ($request->index_order_home_service != null) {
+                    $getAppointment = json_decode($order['request_hs'], true)[$request->index_order_home_service];
+                } else if ($request->request_hs_date && $request->request_hs_time) {
+                    $getAppointment = $request->request_hs_date." ".$request->request_hs_time;
+                }
 
-            if ($request->index_order_home_service != null) {
-                // Remove Used Request Home Service
-                $request_hs = json_decode($order->request_hs, true);
-                if(isset($request_hs[$request->index_order_home_service])) unset($request_hs[$request->index_order_home_service]);
-                $order['request_hs'] = json_encode(array_values($request_hs));
-                $order->save();
-            }
+                if ($checkRegionOrder == false) {
+                    // Request Acc Home Service
+                    $order->update(['request_hs_acc' => $getAppointment, 'request_hs_cso_acc' => $request->homeservice_cso_id ? json_encode($request->homeservice_cso_id) : null]);
+                } else {
+                    // Add Home Delivery
+                    $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $request->index_order_home_service, $getAppointment, $request->homeservice_cso_id);
+                    OrderHomeservice::create(['order_id' => $order->id, 'home_service_id' => $homeservice->id]);
+                }
 
+                if ($request->index_order_home_service != null) {
+                    // Remove Used Request Home Service
+                    $request_hs = json_decode($order->request_hs, true);
+                    if(isset($request_hs[$request->index_order_home_service])) unset($request_hs[$request->index_order_home_service]);
+                    $order['request_hs'] = json_encode(array_values($request_hs));
+                    $order->save();
+                }
+            }
             $dataChanges = array_diff(json_decode($order, true), json_decode($dataBefore, true));
                         
             $user = Auth::user();

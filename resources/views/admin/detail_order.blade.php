@@ -842,12 +842,45 @@
                                 @if($order_request_hs)
                                     <div class="form-group mb-3">
                                         <label>Pilihan Request Home Service</label>
-                                        <select class="form-control" name="index_order_home_service" required>
+                                        <select class="form-control" name="index_order_home_service" id="index_order_home_service" required>
                                             <option value="" selected disabled>Choose Request Home Service</option>
                                             @foreach ($order_request_hs as $key => $order_r_hs)
                                             <option value="{{ $key }}">{{ $order_r_hs }}</option>
                                             @endforeach
+                                            @if($checkRegionOrder == false)
+                                                <option value="create">Create</option>
+                                            @endif
                                         </select>
+                                    </div>
+                                    <div id="div-create-form" style="display: none">
+                                        <div id="cso-home-service-via-create-new-home-service" class="row">
+                                            <div class="form-group mb-3 col-10">
+                                                <label>Select CSO Home Service</label>
+                                                <select id="choose-cso-home-service" class="form-control choose-cso-home-service" name="choose_cso_home_service[]" style="width: 100%" >
+                                                    <option value="">Choose CSO Home Service</option>
+                                                    @foreach ($csos as $cso)
+                                                    <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="text-center col-2"
+                                                style="margin: auto">
+                                                <button id="add-cso-home-service"
+                                                    title="Add Cso"
+                                                    style="padding: 0.4em 0.7em;">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div id="additional-cso-home-service"></div>
+                                        <div class="form-group mb-3">
+                                            <label for="">Tanggal Janjian</label>
+                                            <input type="date" class="form-control" name="request_home_service_date" id="request-home-service-date"/>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label for="">Jam Janjian</label>
+                                            <input type="time" class="form-control" name="request_home_service_time" id="request-home-service-time"/>
+                                        </div>
                                     </div>
                                 @else
                                     <div id="homeservice-cso">
@@ -1937,6 +1970,59 @@
             }else{
                 $('#frmUpdateStatusPayment').submit();
             }
+        });
+
+        $('#index_order_home_service').on('change', function() {
+            if(this.value == 'create'){
+                $('#div-create-form').show(500)
+                $('#choose-cso-home-service').prop('required', true)
+                $('#request-home-service-date').prop('required', true)
+                $('#request-home-service-time').prop('required', true)
+            }else{
+                $('#div-create-form').hide(500)
+                $('#choose-cso-home-service').prop('required', false)
+                $('#request-home-service-date').prop('required', false)
+                $('#request-home-service-time').prop('required', false)
+            }
+        })
+        $(".choose-cso-home-service").select2({
+            theme: "bootstrap4",
+            placeholder: "Choose CSO Home Service",
+            dropdownParent: $('#modal-add-home-service .modal-body')
+        });
+        $('#add-cso-home-service').click(function(e){
+            e.preventDefault();
+            div = `
+                <div class="row cso-home-service-via-create-new-home-service">
+                    <div class="form-group mb-3 col-10">
+                        <label>Select CSO Home Service</label>
+                        <select class="form-control choose-cso-home-service" name="choose_cso_home_service[]"  style="width: 100%" required>
+                            <option value="">Choose CSO Home Service</option>
+                            @foreach ($csos as $cso)
+                            <option value="{{ $cso['id'] }}">{{ $cso['code'] }} - {{ $cso['name'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="text-center"
+                        style="margin: auto">
+                        <button class="delete-cso-home-service"
+                            title="Hapus CSO"
+                            style="padding: 0.4em 0.7em; background-color: red;">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>`;
+            $('#additional-cso-home-service').append(div);
+            $(".choose-cso-home-service").select2({
+                theme: "bootstrap4",
+                placeholder: "Choose CSO Home Service",
+                dropdownParent: $('#modal-add-home-service .modal-body')
+            });
+        });
+
+        $(document).on("click", ".delete-cso-home-service", function (e) {
+            e.preventDefault();
+            $(this).parents(".cso-home-service-via-create-new-home-service")[0].remove();
         });
     });
 
