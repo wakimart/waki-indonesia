@@ -82,7 +82,8 @@ $menu_item_second = "list_commstype";
 									@endforeach
           						</tbody>
 							</table>
-							<br />
+							<br>
+	                        {!! $datas->appends(\Request::except('page'))->render() !!}
 
         				</div>
       				</div>
