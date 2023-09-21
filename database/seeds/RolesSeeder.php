@@ -291,6 +291,9 @@ class RolesSeeder extends Seeder
                 'detail-order_commission' => true,
                 'edit-order_commission' => true,
                 'delete-order_commission' => true,
+
+                // Order Commission Khusus
+                'show_nominal-order_commission' => true,
                 
                 //Cso Commission
                 'list-cso_commission' => true,
@@ -575,6 +578,9 @@ class RolesSeeder extends Seeder
                 'detail-order_commission' => false,
                 'edit-order_commission' => false,
                 'delete-order_commission' => false,
+
+                // Order Commission Khusus
+                'show_nominal-order_commission' => false,
                 
                 //Cso Commission
                 'list-cso_commission' => false,
@@ -853,6 +859,9 @@ class RolesSeeder extends Seeder
                 'detail-order_commission' => false,
                 'edit-order_commission' => false,
                 'delete-order_commission' => false,
+
+                // Order Commission Khusus
+                'show_nominal-order_commission' => false,
                 
                 //Cso Commission
                 'list-cso_commission' => false,                
@@ -1132,6 +1141,9 @@ class RolesSeeder extends Seeder
                 'detail-order_commission' => false,
                 'edit-order_commission' => false,
                 'delete-order_commission' => false,
+
+                // Order Commission Khusus
+                'show_nominal-order_commission' => false,
                 
                 //Cso Commission
                 'list-cso_commission' => false,                
@@ -1410,6 +1422,9 @@ class RolesSeeder extends Seeder
                 'detail-order_commission' => false,
                 'edit-order_commission' => false,
                 'delete-order_commission' => false,
+
+                // Order Commission Khusus
+                'show_nominal-order_commission' => false,
                 
                 //Cso Commission
                 'list-cso_commission' => false,                
@@ -1688,6 +1703,9 @@ class RolesSeeder extends Seeder
                 'detail-order_commission' => false,
                 'edit-order_commission' => false,
                 'delete-order_commission' => false,
+
+                // Order Commission Khusus
+                'show_nominal-order_commission' => false,
                 
                 //Cso Commission
                 'list-cso_commission' => false,               
@@ -1972,6 +1990,9 @@ class RolesSeeder extends Seeder
                 'detail-order_commission' => false,
                 'edit-order_commission' => false,
                 'delete-order_commission' => false,
+
+                // Order Commission Khusus
+                'show_nominal-order_commission' => false,
                 
                 //Cso Commission
                 'list-cso_commission' => false,

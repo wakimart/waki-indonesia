@@ -750,6 +750,11 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(['delete-order_commission']);
         });
 
+        // ORDER COMMISSION KHUSUS
+        Gate::define('show_nominal-order_commission', function ($user) {
+            return $user->hasAccess(['show_nominal-order_commission']);
+        });
+
 
         //-- CSO COMMISSION --//
         Gate::define('list-cso_commission', function ($user) {
