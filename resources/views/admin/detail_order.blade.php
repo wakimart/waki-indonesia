@@ -278,7 +278,7 @@
                                 <input type="hidden" name="order_id" value="{{$order->id}}">
                                 <input type="hidden" name="cso_id" value="{{$order->cso_id}}">
                                 <div class="row no-gutters">
-                                    <div class="form-group w-50">
+                                    <div class="form-group" style="width: 30%">
                                         <label for="orderUpgrade" class="w-100">Order Upgrade ?</label>
                                         <div class="form-check-inline">
                                             <input class="form-check-input" type="radio" name="" id="orderUpgradeYes" value="" {{$isUpgrade == 1 ? 'checked' : ''}} disabled>
@@ -290,14 +290,26 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group w-50">
+                                    <div class="form-group" style="width: 30%">
+                                        <label for="orderPrize" class="w-100">Order Prize ?</label>
+                                        <div class="form-check-inline">
+                                            <input class="form-check-input" type="radio" name="" id="orderPrizeYes" value="" {{$isPrize == 1 ? 'checked' : ''}} disabled>
+                                            <label class="form-check-label mb-0" for="orderPrizeYes">Yes</label>
+                                        </div>
+                                        <div class="form-check-inline">
+                                            <input class="form-check-input" type="radio" name="" id="orderPrizeNo" value="" {{$isPrize == 0 ? 'checked' : ''}} disabled>
+                                            <label class="form-check-label mb-0" for="orderPrizeNo">No</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" style="width: 30%">
                                         <label for="orderTakeaway" class="w-100">Order Takeaway ?</label>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="" id="orderTakeawayYes" value="" {{$isTakeAway == 1 ? 'checked' : ''}} disabled>
+                                            <input class="form-check-input" type="radio" name="orderTakeaway" id="orderTakeawayYes" value="" {{$isTakeAway == 1 ? 'checked' : ''}} >
                                             <label class="form-check-label mb-0" for="orderTakeawayYes">Yes</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="" id="orderTakeawayNo" value="" {{$isTakeAway == 0 ? 'checked' : ''}} disabled>
+                                            <input class="form-check-input" type="radio" name="orderTakeaway" id="orderTakeawayNo" value="" {{$isTakeAway == 0 ? 'checked' : ''}} >
                                             <label class="form-check-label mb-0" for="orderTakeawayNo">No</label>
                                         </div>
                                     </div>
@@ -2438,5 +2450,16 @@
             }
         });
     })
+
+    $('#orderTakeawayYes').click(function () {
+        $('#orderTakeawayYes').attr('checked', true)
+        $('#orderTakeawayNo').attr('checked', false)
+        window.location.href += "&orderTakeaway=yes"
+    })
+    $('#orderTakeawayNo').click(function () {
+        $('#orderTakeawayNo').attr('checked', true)
+        $('#orderTakeawayYes').attr('checked', false)
+        window.location.href += "&orderTakeaway=no"
+    })    
 </script>
 @endsection
