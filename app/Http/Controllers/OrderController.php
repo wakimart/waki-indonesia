@@ -395,6 +395,7 @@ class OrderController extends Controller
         $bankAccounts = BankAccount::where('active', true)->get();
 
         $isUpgrade = 0;
+        $isPrize = 0;
         $isTakeAway = 0;
         foreach($order->orderDetail as $detail){
             if($detail->type == 'upgrade'){
@@ -402,12 +403,20 @@ class OrderController extends Controller
             }
 
             if($detail->type == 'prize'){
+                $isPrize = 1;
+            }
+
+            if($detail->type == 'takeaway'){
                 $isTakeAway = 1;
+            }else if($request['orderTakeaway'] == 'yes'){
+                $isTakeAway = 1;
+            }else{
+                $isTakeAway = 0;
             }
         }
 
-        $commissionTypes = CommissionType::where('active', true)->where('upgrade', $isUpgrade)->where('takeaway', $isTakeAway)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts', 'isUpgrade', 'isTakeAway', 'commissionTypes'));
+        $commissionTypes = CommissionType::where('active', true)->where('upgrade', $isUpgrade)->where('prize', $isPrize)->where('takeaway', $isTakeAway)->get();
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts', 'isUpgrade', 'isPrize', 'isTakeAway', 'commissionTypes'));
     }
 
     /**
