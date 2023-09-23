@@ -545,6 +545,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('add_home_service_survey');
         Route::get('/detail-home_service-survey/{id}', 'HomeServiceSurveyController@detail')
             ->name('detail_home_service_survey');
+
+        Route::get('/result-hs-survey', 'HomeServiceSurveyController@index')
+            ->name('result_hs_survey');
     });
 
     Route::group(['prefix' => 'therapy', 'middleware' => 'auth'], function() {

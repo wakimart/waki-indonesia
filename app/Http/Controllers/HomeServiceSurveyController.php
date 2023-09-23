@@ -32,7 +32,7 @@ class HomeServiceSurveyController extends Controller
 	                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
 	            }
 	            return response()->json(['errors' => $arr_Hasil]);
-	        
+
 	        }else{
 		    	$data = $request->all();
 
@@ -52,7 +52,7 @@ class HomeServiceSurveyController extends Controller
 
                 return redirect()->back()->with("success", "Surveys has been uploaded");
 	        }
-        
+
         } catch (Exception $ex) {
             DB::rollback();
             return redirect()->back()->with("errors", $ex->getMessage());
@@ -67,4 +67,10 @@ class HomeServiceSurveyController extends Controller
             return response()->json(['errors' => 'Survey tidak ditemukan']);
     	}
     }
+
+    public function index()
+    {
+        return view('admin.result_homeservice_survey');
+    }
+
 }

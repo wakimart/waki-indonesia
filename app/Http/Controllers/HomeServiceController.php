@@ -785,7 +785,7 @@ class HomeServiceController extends Controller
         }
 
         $display_tab_hss = ["all", "reschedule", "cancel"];
-        $result_tab_hss = [];    
+        $result_tab_hss = [];
         foreach ($display_tab_hss as $display_tab_hs) {
             $currentDayData = $this->getDayData(
                 $request->date,
@@ -898,12 +898,12 @@ class HomeServiceController extends Controller
                                         $statusRescColor = "style='color:green;'";
                                         $statusResc = "Approved";
                                     } else if ($before['meta']['status_acc'] == "false") {
-                                        $statusRescColor = "style='color:red;'";   
+                                        $statusRescColor = "style='color:red;'";
                                         $statusResc = "Rejected";
                                     }
                                     $rescAccBy = User::where('id', $before['meta']['acc_by'])->value('name');
                                     $statusResc .= " by " . $rescAccBy;
-                                }                                
+                                }
 
                                 $temp_resc = "Reschedule Appointment : " . $before['meta']['dateChange']['resc_acc'];
                                 if ($statusResc) $temp_resc .= "<span $statusRescColor> (" .  $statusResc . ")</span>";
@@ -919,7 +919,7 @@ class HomeServiceController extends Controller
                         }
                         $result .= "</p>";
                         $result .= $currentRescheduleAppointment;
-                        
+
                         // cancel description
                         $result .= "<p style='color:red'>";
                         $lastCancelData = HistoryUpdate::where([['type_menu', 'Home Service Cancel'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'desc')->first();
@@ -941,10 +941,10 @@ class HomeServiceController extends Controller
                     if($dayData->home_service_survey_id != null){
                         $result .= '<p style="border-top: 1px solid black; color: orange; font-size: initial;"><span class="font-weight-bold">Survey Rate : </span>';
                         $totalStar = HomeServiceSurvey::find($dayData->home_service_survey_id)->resultAverage();
-                        for ( $idxStar=0; $idxStar < $totalStar; $idxStar++ ) { 
+                        for ( $idxStar=0; $idxStar < $totalStar; $idxStar++ ) {
                             $result .= '<span class="mdi mdi-star"></span>';
                         }
-                        for ( $idxStar=0; $idxStar < (5 - $totalStar); $idxStar++ ) { 
+                        for ( $idxStar=0; $idxStar < (5 - $totalStar); $idxStar++ ) {
                             $result .= '<span class="mdi mdi-star-outline"></span>';
                         }
                         $result .= '<span> ('.$totalStar.'/5)</span></p>';
@@ -1255,7 +1255,7 @@ class HomeServiceController extends Controller
                 if ($acc_hs_type == "cancelhs") {
                     $titleNya = "Rejected - ACC Cancel [Home Service]";
                     $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Rejected";
-    
+
                     if($request->status_acc == "true"){
                         $titleNya = "Approved - ACC Cancel [Home Service]";
                         $messagesNya = "Acc Cancel Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Approved";
@@ -1266,7 +1266,7 @@ class HomeServiceController extends Controller
                 } else if ($acc_hs_type == "reschedulehs") {
                     $titleNya = "Rejected - ACC Reschedule [Home Service]";
                     $messagesNya = "Acc Reschedule Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Rejected";
-    
+
                     if($request->status_acc == "true"){
                         $titleNya = "Approved - ACC Reschedule [Home Service]";
                         $messagesNya = "Acc Reschedule Home Service for ".$val->type_homeservices." from customer ".$val->name.". By ".$val->branch['code']."-".$val->cso['name']." Approved";
@@ -1650,7 +1650,7 @@ class HomeServiceController extends Controller
         $resc_acc = $request->date." ".$request->time;
 
         $homeserviceNya = HomeService::find($request->id);
-        if ($homeserviceNya && $homeserviceNya->is_acc_resc != true) {        
+        if ($homeserviceNya && $homeserviceNya->is_acc_resc != true) {
             $appointmentBefore = $homeserviceNya->appointment;
 
             $homeserviceNya->is_acc_resc = true;
@@ -1675,7 +1675,7 @@ class HomeServiceController extends Controller
                 ->whereIn('role_users.role_id', [1,2,7])
                 ->leftjoin('role_users', 'users.id', '=',  'role_users.user_id')
                 ->get();
-            
+
             $this->NotifTo($userNya, $messagesNya, $titleNya);
             return redirect($request->url)->with("success", "Permintaan Acc Reschedule telah dikirim.");
         } else {
@@ -1730,10 +1730,10 @@ class HomeServiceController extends Controller
         $regions = Region::all();
 
         $layers = GeometryDistrict::select(
-                'gd.*', 
-                'ros.subdistrict_name', 
+                'gd.*',
+                'ros.subdistrict_name',
                 'rg.id as rg_id',
-                'rg.name as rg_name', 'rg.bg_color as rg_bg_color', 
+                'rg.name as rg_name', 'rg.bg_color as rg_bg_color',
                 DB::RAW('COUNT(DISTINCT(hs.code)) as count_hs')
             )
             ->from('geometry_districts as gd')
@@ -1746,18 +1746,18 @@ class HomeServiceController extends Controller
 
                 if ($request->has('filter_branch')) {
                     $filter_branch = Branch::find($request->filter_branch);
-                    $join->where('branch_id', $filter_branch['id']);        
+                    $join->where('branch_id', $filter_branch['id']);
                 }
 
                 if ($request->has('filter_cso')) {
                     $filter_cso = Cso::where("code", $request->filter_cso)->first();
-                    $join->where('cso_id', $filter_cso['id']);        
+                    $join->where('cso_id', $filter_cso['id']);
                 }
             })
             ->groupBy('gd.id')
             ->orderByRaw('count_hs')
             ->get();
-        
+
         return view('admin.list_areahomeservice', compact('branches', 'csos', 'startDate', 'endDate', 'regions', 'layers'));
     }
 
@@ -1774,7 +1774,7 @@ class HomeServiceController extends Controller
         }
 
         $distric = RajaOngkir_Subdistrict::find($request->distric);
-        
+
         $homeservices = HomeService::select(
                 "h.id AS hs_id",
                 "h.code AS hs_code",
@@ -1820,19 +1820,19 @@ class HomeServiceController extends Controller
                 "r.id",
                 "=",
                 "ru.role_id"
-            )    
+            )
             ->where('h.active', true)
             ->where('h.distric', $request->distric)
             ->whereBetween("h.appointment", [$startDate, $endDate]);
 
         if ($request->has('filter_branch')) {
             $filter_branch = Branch::find($request->filter_branch);
-            $homeservices->where('h.branch_id', $filter_branch['id']);        
+            $homeservices->where('h.branch_id', $filter_branch['id']);
         }
 
         if ($request->has('filter_cso')) {
             $filter_cso = Cso::where("code", $request->filter_cso)->first();
-            $homeservices->where('h.cso_id', $filter_cso['id']);        
+            $homeservices->where('h.cso_id', $filter_cso['id']);
         }
 
         $homeservices = $homeservices->groupBy('h.code')
@@ -1840,7 +1840,7 @@ class HomeServiceController extends Controller
             ->get();
 
         $homeservices = $this->printAreaListHsData($homeservices);
-        
+
         return response()->json([
             "status" => "success",
             "distric" => $distric,
@@ -1926,12 +1926,12 @@ class HomeServiceController extends Controller
                                 $statusRescColor = "style='color:green;'";
                                 $statusResc = "Approved";
                             } else if ($before['meta']['status_acc'] == "false") {
-                                $statusRescColor = "style='color:red;'";   
+                                $statusRescColor = "style='color:red;'";
                                 $statusResc = "Rejected";
                             }
                             $rescAccBy = User::where('id', $before['meta']['acc_by'])->value('name');
                             $statusResc .= " by " . $rescAccBy;
-                        }                                
+                        }
 
                         $temp_resc = "Reschedule Appointment : " . $before['meta']['dateChange']['resc_acc'];
                         if ($statusResc) $temp_resc .= "<span $statusRescColor> (" .  $statusResc . ")</span>";
