@@ -72,8 +72,9 @@
                           <p class="pInTable">Team WAKi Home Service akan menghubungi terlebih dahulu
                             sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
                             atau perubahan jadwal home service, dapat menghubungi WAKi
-                            Home Service Department kembali di nomor (+6281234511881) atau
-                            {{ $homeService->cso['name'] }}, {{ $homeService['cso_phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
+                            Home Service Department kembali di nomor (+6281234511881)
+                            {{ $homeService->cso ? " atau {$homeService->cso['name']} ({$homeService->cso['phone']})" : "" }} 
+                            {{ $homeService->cso2_id && $homeService->cso2_id != $homeService->cso_id ? " atau {$homeService->cso2['name']} ({$homeService->cso2['phone']})" : "" }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
                         @elseif($homeService->type_homeservices == "Soft Launching WAKimart Apps")
                             <p class="pInTable">Bapak/Ibu yang terhormat berkesempatan untuk menjadi member
                             WAKimart berikut dengan voucher "Salam Perkenalan"
@@ -85,8 +86,9 @@
                           <p class="pInTable">Team WAKi Soft Launching WAKimart Apps akan menghubungi terlebih dahulu
                             sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
                             atau perubahan jadwal Invitation Soft Launching WAKimart Apps, dapat menghubungi WAKi
-                            Soft Launching WAKimart Apps Department kembali di nomor (+6281234511881) atau
-                            {{ $homeService->cso['name'] }}, {{ $homeService['cso_phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
+                            Soft Launching WAKimart Apps Department kembali di nomor (+6281234511881)
+                            {{ $homeService->cso ? " atau {$homeService->cso['name']} ({$homeService->cso['phone']})" : "" }} 
+                            {{ $homeService->cso2_id && $homeService->cso2_id != $homeService->cso_id ? " atau {$homeService->cso2['name']} ({$homeService->cso2['phone']})" : "" }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
                         @else
                             <p class="pInTable">Tujuan {{$homeService->type_homeservices}} adalah untuk merapatkan hubungan antara
                             Bapak/Ibu dengan WAKi  dan supaya Bapak/Ibu lebih memahami
@@ -96,8 +98,9 @@
                           <p class="pInTable">Team WAKi {{$homeService->type_homeservices}} akan menghubungi terlebih dahulu
                             sebelum berangkat ke tempat Bapak/Ibu. Untuk informasi lebih lanjut
                             atau perubahan jadwal {{$homeService->type_homeservices}}, dapat menghubungi WAKi
-                            {{$homeService->type_homeservices}} Department kembali di nomor (+6281234511881) atau
-                            {{ $homeService->cso['name'] }}, {{ $homeService->cso['phone'] }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
+                            {{$homeService->type_homeservices}} Department kembali di nomor (+6281234511881)
+                            {{ $homeService->cso ? " atau {$homeService->cso['name']} ({$homeService->cso['phone']})" : "" }} 
+                            {{ $homeService->cso2_id && $homeService->cso2_id != $homeService->cso_id ? " atau {$homeService->cso2['name']} ({$homeService->cso2['phone']})" : "" }}, {{ $homeService->branch['code'] }} - {{ $homeService->branch['name'] }}.</p>
                         @endif
                   </td>
               </tr>

@@ -44,11 +44,25 @@
             <div class="row justify-content-center">
                 <table class="col-md-12">
                     <thead>
+                        <td>Status Pesanan</td>
                         <td>Kode Pesanan</td>
                         <td>Tanggal Pesanan</td>
                     </thead>
                     <tr>
-                        <td>{{ $order['code'] }}</td>
+                        <td class="text-center">
+                            @if ($order['status'] == \App\Order::$status['1'])
+                                <span class="badge badge-secondary">New</span>
+                            @elseif ($order['status'] == \App\Order::$status['2'])
+                                <span class="badge badge-primary">Process</span>
+                            @elseif ($order['status'] == \App\Order::$status['3'])
+                                <span class="badge badge-warning">Delivery</span>
+                            @elseif ($order['status'] == \App\Order::$status['4'])
+                                <span class="badge badge-success">Success</span>
+                            @elseif ($order['status'] == \App\Order::$status['5'])
+                                <span class="badge badge-danger">Reject</span>
+                            @endif
+                        </td>
+                        <td class="text-center">{{ $order['code'] }}</td>
                         <td class="right">{{ date("d/m/Y", strtotime($order['orderDate'])) }}</td>
                     </tr>
                 </table>
@@ -86,34 +100,52 @@
                         <td>Jumlah</td>
                     </thead>
 
-                    @foreach(json_decode($order['product']) as $promo)
+                    @foreach($order->orderDetail->where('type', 'pembelian') as $productBeli)
                         <tr>
-                            {{-- khusus Philipin --}}
-                            @if(is_numeric($promo->id))
-                                <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
+                            @if($productBeli['product_id'])
+                                <td>{{ $productBeli->product['code'] }} - {{ $productBeli->product['name'] }}</td>
+                            @elseif($productBeli['promo_id'])
+                                <td>{{ $productBeli->promo['code'] }} - {{ $productBeli->promo['name'] }}</td>
                             @else
-                                <td>{{ $promo->id }}</td>
+                                <td>{{ $productBeli['other'] }}</td>
                             @endif
-                            <td>{{ $promo->qty }}</td>
+                            <td>{{ $productBeli->qty }}</td>
                         </tr>
                     @endforeach
-                    @if($order['old_product'] != null)
-                        <thead style="background-color: #80808012 !important">
-                            <td colspan="2">Barang Lama</td>
-                        </thead>
-                        <tr>
-                            <td colspan="2">{{$order['old_product']}}</td>
-                        </tr>
-                    @endif
-                    @if($order['prize'] != null)
-                        <thead style="background-color: #80808012 !important">
-                            <td colspan="2">Barang Hadiah</td>
-                        </thead>
-                        <tr>
-                            <td colspan="2">{{$order['prize']}}</td>
-                        </tr>
-                    @endif
 
+                    @if(count($order->orderDetail->where('type', 'upgrade')) > 0)
+                        <thead style="background-color: #80808012 !important">
+                            <td>Barang Lama</td>
+                            <td>Jumlah</td>
+                        </thead>
+                    @endif
+                    @foreach($order->orderDetail->where('type', 'upgrade') as $productBeli)
+                        <tr>
+                            @if($productBeli['product_id'])
+                                <td>{{ $productBeli->product['code'] }} - {{ $productBeli->product['name'] }}</td>
+                            @else
+                                <td>{{ $productBeli['other'] }}</td>
+                            @endif
+                            <td>{{ $productBeli->qty }}</td>
+                        </tr>
+                    @endforeach
+
+                    @if(count($order->orderDetail->where('type', 'prize')) > 0)
+                        <thead style="background-color: #80808012 !important">
+                            <td>Barang Hadiah</td>
+                            <td>Jumlah</td>
+                        </thead>
+                    @endif
+                    @foreach($order->orderDetail->where('type', 'prize') as $productBeli)
+                        <tr>
+                            @if($productBeli['product_id'])
+                                <td>{{ $productBeli->product['code'] }} - {{ $productBeli->product['name'] }}</td>
+                            @else
+                                <td>{{ $productBeli['other'] }}</td>
+                            @endif
+                            <td>{{ $productBeli->qty }}</td>
+                        </tr>
+                    @endforeach
                 </table>
 
                 <table class="col-md-12">
@@ -135,9 +167,8 @@
                     <tr>
                         <td>BANK : </td>
                         <td>
-                            @foreach(json_decode($order['bank']) as $key=>$bank)
-                                {{ App\Order::$Banks[$bank->id] }} ({{ $bank->cicilan }}X)
-                                @if(sizeof(json_decode($order['bank'], true)) > $key+1) +  @endif
+                            @foreach($order->orderPayment as $paymentNya)
+                                {{ $paymentNya->bank['name'] }} ({{ $paymentNya['cicilan'] }}X) <br>
                             @endforeach
                         </td>
                     </tr>
@@ -239,28 +270,52 @@
                         <td>Quantity</td>
                     </thead>
 
-                    @foreach(json_decode($order['product']) as $promo)
+                    @foreach($order->orderDetail->where('type', 'pembelian') as $productBeli)
                         <tr>
-                            <td>{{ App\DeliveryOrder::$Promo[$promo->id]['code'] }} - {{ App\DeliveryOrder::$Promo[$promo->id]['name'] }} ( {{ App\DeliveryOrder::$Promo[$promo->id]['harga'] }} )</td>
-                            <td>{{ $promo->qty }}</td>
+                            @if($productBeli['product_id'])
+                                <td>{{ $productBeli->product['code'] }} - {{ $productBeli->product['name'] }}</td>
+                            @elseif($productBeli['promo_id'])
+                                <td>{{ $productBeli->promo['code'] }} - {{ $productBeli->promo['name'] }}</td>
+                            @else
+                                <td>{{ $productBeli['other'] }}</td>
+                            @endif
+                            <td>{{ $productBeli->qty }}</td>
                         </tr>
                     @endforeach
-                    @if($order['old_product'] != null)
+
+                    @if(count($order->orderDetail->where('type', 'upgrade')) > 0)
                         <thead style="background-color: #80808012 !important">
-                            <td colspan="2">Old Product</td>
+                            <td>Barang Lama</td>
+                            <td>Jumlah</td>
                         </thead>
-                        <tr>
-                            <td colspan="2">{{$order['old_product']}}</td>
-                        </tr>
                     @endif
-                    @if($order['prize'] != null)
+                    @foreach($order->orderDetail->where('type', 'upgrade') as $productBeli)
+                        <tr>
+                            @if($productBeli['product_id'])
+                                <td>{{ $productBeli->product['code'] }} - {{ $productBeli->product['name'] }}</td>
+                            @else
+                                <td>{{ $productBeli['other'] }}</td>
+                            @endif
+                            <td>{{ $productBeli->qty }}</td>
+                        </tr>
+                    @endforeach
+
+                    @if(count($order->orderDetail->where('type', 'prize')) > 0)
                         <thead style="background-color: #80808012 !important">
-                            <td colspan="2">Prize Product</td>
+                            <td>Barang Hadiah</td>
+                            <td>Jumlah</td>
                         </thead>
-                        <tr>
-                            <td colspan="2">{{$order['prize']}}</td>
-                        </tr>
                     @endif
+                    @foreach($order->orderDetail->where('type', 'prize') as $productBeli)
+                        <tr>
+                            @if($productBeli['product_id'])
+                                <td>{{ $productBeli->product['code'] }} - {{ $productBeli->product['name'] }}</td>
+                            @else
+                                <td>{{ $productBeli['other'] }}</td>
+                            @endif
+                            <td>{{ $productBeli->qty }}</td>
+                        </tr>
+                    @endforeach
 
                 </table>
 
@@ -283,9 +338,8 @@
                     <tr>
                         <td>Bank : </td>
                         <td>
-                            @foreach(json_decode($order['bank']) as $key=>$bank)
-                                {{ $bank->id }} ({{ $bank->cicilan }}X)
-                                @if(sizeof(json_decode($order['bank'], true)) > $key+1) +  @endif
+                            @foreach($order->orderPayment as $paymentNya)
+                                {{ $paymentNya->bank['name'] }} ({{ $paymentNya['cicilan'] }}X) <br>
                             @endforeach
                         </td>
                     </tr>

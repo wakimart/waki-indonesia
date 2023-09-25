@@ -14,4 +14,9 @@ class Region extends Model
     {
         return $this->hasMany('App\GeometryDistrict');
     }
+
+    public function branch()
+    {
+        return $this->hasMany('App\Branches');
+    }
 }

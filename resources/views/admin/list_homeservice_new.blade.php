@@ -6,14 +6,17 @@ $menu_item_second = "list_homeservice";
 
 @section('style')
 <link rel="stylesheet" href="{{ asset('css/admin/calendarorganizer.css?v=' . filemtime('css/admin/calendarorganizer.css')) }}">
+<link rel="stylesheet" href="raty.css">
+<script src="raty.js"></script>
+
 <style>
     .hs-filter a {
-      font-weight: 600;
-      font-size: 1.1em;
+        font-weight: 600;
+        font-size: 1.1em;
     }
     .hs-filter a.active {
-      background-color: #ffc107 !important;
-      color: white !important;
+        background-color: #ffc107 !important;
+        color: white !important;
     }
     .cjslib-day-indicator {
         color: #ffc107 !important;
@@ -41,30 +44,114 @@ $menu_item_second = "list_homeservice";
         -ms-user-select: none;
         user-select: none;
     }
-    .titleAppoin {
-        font-weight: bolder;
-    }
-    .timeContainerDiv{
-        flex: 1 !important;
-    }
+    .titleAppoin { font-weight: bolder; }
+    .timeContainerDiv{ flex: 1 !important; }
     .paragrapContainerDiv{
         flex-direction: column;
         align-items: normal !important;
     }
-    .iconContainerDiv{
-        flex: 1 !important;
-    }
+    .iconContainerDiv{ flex: 1 !important; }
     .cjslib-day-indicator {
-        color: #ffa000; background-color: #ffa000;
+        color: #ffa000;
+        background-color: #ffa000;
     }
-    .cjslib-indicator-type-numeric {
-        color: #ffffff;
+    .cjslib-indicator-type-numeric { color: #ffffff; }
+    .cjslib-day.cjslib-day-today > .cjslib-day-num { border-color: #ffa000 !important; }
+    .table-bordered th, .table-bordered td { border: 1px solid darkgray !important; }
+
+    .cancel-template {
+        list-style-type: none;
+        margin: 25px 0 0 0;
     }
-    .cjslib-day.cjslib-day-today > .cjslib-day-num {
-        border-color: #ffa000 !important;
+    .cancel-template li {
+        margin: 0 5px 0 0;
+        width: auto;
+        height: 45px;
+        position: relative;
     }
-    .table-bordered th, .table-bordered td {
-        border: 1px solid darkgray !important;
+    .cancel-template label,
+    .cancel-template input {
+        display: block;
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+    }
+    .cancel-template input[type="radio"] {
+        opacity: 0.01;
+        z-index: 100;
+    }
+    .cancel-template input[type="radio"]:checked+label,
+    .Checked+label { background: #2ecc71; }
+    .cancel-template label {
+        padding: 5px;
+        border: 1px solid #CCC;
+        cursor: pointer;
+        z-index: 90;
+    }
+    .cancel-template label:hover { background: #DDD; }
+    .ellipsis {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .signature-pad {
+        display: block;
+        margin: auto;
+        width: 320px;
+        height: 180px;
+        background-color: white;
+    }
+    @media (max-width:400px){
+      .signature-pad {
+          width: 250px !important;
+      }
+    }
+    @media (min-width:768px){
+      .signature-pad {
+          width: 470px !important;
+      }
+    }
+    .questiontext {
+        font-size: 13px;
+        line-height: 1.2;
+    }
+    .starlabel {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .hide { display: none; }
+    .clear {
+        float: none;
+        clear: both;
+    }
+    .rating {
+        unicode-bidi: bidi-override;
+        direction: rtl;
+    }
+    .rating > label {
+        padding: 0 !important;
+        margin: 0 !important;
+        cursor: pointer;
+        color: #000;
+        width: 1.5em;
+        font-size: 1.5em;
+        line-height: 1;
+    }
+    .rating > label:hover,
+    .rating > label:hover ~ label,
+    .rating > input.radio-btn:checked ~ label {
+        color: transparent;
+    }
+    .rating > label:hover:before,
+    .rating > label:hover ~ label:before,
+    .rating > input.radio-btn:checked ~ label:before,
+    .rating > input.radio-btn:checked ~ label:before {
+        content: "\2605";
+        color: #ffa500;
+        margin-left: -1rem;
+    }
+    .star_full {
+        content: "\2606";
+        color: #ffa500;
     }
 </style>
 @endsection
@@ -330,7 +417,6 @@ $menu_item_second = "list_homeservice";
                         if (
                             Auth::user()->roles[0]['slug'] !== 'branch'
                             && Auth::user()->roles[0]['slug'] !== 'cso'
-                            && Auth::user()->roles[0]['slug'] !== 'area-manager'
                             && Auth::user()->roles[0]["slug"] !== "admin-management"
                         ):
                         ?>
@@ -357,26 +443,28 @@ $menu_item_second = "list_homeservice";
                                             <span class="mdi mdi-file-document"></span>
                                             Export XLS
                                         </button>
-                                        <button id="btn-exportDate"
-                                            type="button"
-                                            class="btn btn-gradient-info m-1"
-                                            name="export"
-                                            data-toggle="modal"
-                                            data-target="#datePickerHomeServiceModal"
-                                            value="-">
-                                            <span class="mdi mdi-file-document"></span>
-                                            Export XLS with Start-End Date
-                                        </button>
-                                        <button id="btn-exportByInput"
-                                            type="button"
-                                            class="btn btn-gradient-info m-1"
-                                            name="export"
-                                            data-toggle="modal"
-                                            data-target="#datePickerByInput"
-                                            value="-">
-                                            <span class="mdi mdi-file-document"></span>
-                                            Export XLS by Input Date
-                                        </button>
+                                        @if(Gate::check('view-type-home_service') && Gate::check('view-phone-home_service'))
+                                            <button id="btn-exportDate"
+                                                type="button"
+                                                class="btn btn-gradient-info m-1"
+                                                name="export"
+                                                data-toggle="modal"
+                                                data-target="#datePickerHomeServiceModal"
+                                                value="-">
+                                                <span class="mdi mdi-file-document"></span>
+                                                Export XLS with Start-End Date
+                                            </button>
+                                            <button id="btn-exportByInput"
+                                                type="button"
+                                                class="btn btn-gradient-info m-1"
+                                                name="export"
+                                                data-toggle="modal"
+                                                data-target="#datePickerByInput"
+                                                value="-">
+                                                <span class="mdi mdi-file-document"></span>
+                                                Export XLS by Input Date
+                                            </button>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -725,11 +813,11 @@ $menu_item_second = "list_homeservice";
     </div>
     <!-- partial -->
 
-    <!-- Modal View -->
+    <!-- Modal Detail Appointment -->
     <div class="modal fade" id="viewHomeServiceModal" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header pb-0">
             <h5 class="modal-title">View Appointment</h5>
             <button type="button"
                 class="close"
@@ -739,7 +827,8 @@ $menu_item_second = "list_homeservice";
             </button>
           </div>
           <div class="modal-body">
-              <table style="margin: auto;">
+              <table style="margin: auto; font-size: 0.85rem;">
+                @if(Gate::check('view-type-home_service'))
                   <tr>
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Customer: </td>
                       <td id="view_type_customer" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
@@ -748,6 +837,7 @@ $menu_item_second = "list_homeservice";
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Type Home Service: </td>
                       <td id="view_type_homeservices" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                   </tr>
+                @endif
 
                   <tr><td style="padding-top: 1em;"></td></tr>
 
@@ -759,10 +849,13 @@ $menu_item_second = "list_homeservice";
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Nama: </td>
                       <td id="view-name" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                   </tr>
+
+                @if(Gate::check('view-phone-home_service'))
                   <tr style="margin-top: 0.5em">
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">No. Telp: </td>
                       <td id="view-phone" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                   </tr>
+                @endif
                   <tr style="margin-top: 0.5em">
                       <td style="width: 40%; text-align: right; font-weight: 600; vertical-align: baseline;">Provinsi: </td>
                       <td id="view-province" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
@@ -806,54 +899,121 @@ $menu_item_second = "list_homeservice";
                       <td id="view-time" style="width: 60%; text-align: left; padding-left: 0.5em;">-</td>
                   </tr>
               </table>
-          </div>
-          <div class="modal-footer">
-              @if(isset($_GET['id_hs']) && Auth::user()->inRole("head-admin"))
-                  <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
-                      @csrf
-                      <div class="form-group">
 
-                          <input type="hidden" id="hiddenInput" name="cancel" value="1" />
-                          <input type="hidden" id="input_id_hs_hidden" name="id" value="-" />
+              <div class="buttonContainer w-100 pt-3 d-flex justify-content-center flex-wrap">
+                @if(isset($_GET['id_hs']) && Gate::check('acc-cancel-home_service'))
+                    <form id="formUpdateStatusHS" method="POST" action="{{ route('update_homeService') }}" style="margin: auto;">
+                        @csrf
+                        <div class="form-group">
 
-                          <div style="text-align: center;">
-                              <h5>Are you sure want to cancel this Home Service?</h5>
-                              <p id="cancel_desc_view"></p>
-                              <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
-                              <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
-                          </div>
-                      </div>
-                  </form>
-              @else
-                  @if(Gate::check('add-service'))
-                      <a id="create_technician_schedule"
-                          href="">
-                          <button id="btn-share"
-                              type="button"
-                              class="btn btn-gradient-primary mr-2">
-                              Add Schedule
-                          </button>
-                      </a>
-                  @endif
-                  <a id="url_share"
-                      href=""
-                      data-action="share/whatsapp/share"
-                      target="_blank">
-                      <button id="btn-share"
-                          type="button"
-                          class="btn btn-gradient-primary mr-2">
-                          <span class="mdi mdi-whatsapp">
-                          </span>
-                          Share
-                      </button>
-                  </a>
-                  <button class="btn btn-light"
-                      data-dismiss="modal"
-                      aria-label="Close">
-                      Cancel
+                            <input type="hidden" id="hiddenInput" name="cancel" value="1" />
+                            <input type="hidden" id="input_id_hs_hidden" name="id" value="-" />
+
+                            <div style="text-align: center;">
+                                <h5>Are you sure want to cancel this Home Service?</h5>
+                                <p id="cancel_desc_view"></p>
+                                <button type="submit" class="btn btn-gradient-primary" name="status_acc" value="true">Yes</button>
+                                <button type="submit" class="btn btn-gradient-danger" name="status_acc" value="false">No</button>
+                            </div>
+                        </div>
+                    </form>
+                @else
+                    @if(Gate::check('add-service'))
+                        <a id="create_technician_schedule"
+                            href="">
+                            <button id="btn-share"
+                                type="button"
+                                class="btn btn-gradient-primary mr-2">
+                                Add Schedule
+                            </button>
+                        </a>
+                    @endif
+                    @if(Gate::check('view-type-home_service') && Gate::check('view-phone-home_service'))
+                        <a id="url_share"
+                            href=""
+                            data-action="share/whatsapp/share"
+                            target="_blank">
+                            <button id="btn-share"
+                                type="button"
+                                class="btn btn-gradient-primary mr-2">
+                                <span class="mdi mdi-whatsapp">
+                                </span>
+                                Share
+                            </button>
+                        </a>
+                    @endif
+                    <button class="btn btn-light"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        Cancel
+                    </button>
+                @endif
+                <div id="add_survey" class="w-100 text-center d-none">
+                  <button class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#surveyModal">
+                      Submit Survey
                   </button>
-              @endif
+                </div>
+              </div>
 
+              <div class="w-100 mt-2 surveyResult d-none">
+                <h5 class="modal-title">Hasil Survey</h5>
+                <ol class="mb-0">
+                  <li>
+                    <div class="questiontext">
+                      {{ $questHSSurvey[0] }}
+                    </div>
+                    <div class="rating" id="ratingq1" style="color: orange;">
+                      <span class="mdi mdi-star-outline"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="questiontext">
+                      {{ $questHSSurvey[1] }}
+                    </div>
+                    <div class="rating" id="ratingq2" style="color: orange;">
+                      <span class="mdi mdi-star-outline"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="questiontext">
+                      {{ $questHSSurvey[2] }}
+                    </div>
+                    <div class="rating" id="ratingq3" style="color: orange;">
+                      <span class="mdi mdi-star-outline"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="questiontext">
+                      {{ $questHSSurvey[3] }}
+                    </div>
+                    <div class="rating" id="ratingq4" style="color: orange;">
+                      <span class="mdi mdi-star-outline"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <span class="mdi mdi-star"></span>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                </ol>
+                <!-- display signature -->
+                <div id="displaySignature" class="text-center"></div>
+              </div>
           </div>
         </div>
       </div>
@@ -1174,8 +1334,15 @@ $menu_item_second = "list_homeservice";
                             data-msg="Mohon Isi Jam" />
                         <div class="validation"></div>
                     </div>
-
-                    <textarea class="form-control mt-3"
+                    <ul class="cancel-template">
+                        @foreach($rescheduleTemplates as $index => $val)
+                            <li>
+                                <input type="radio" id="reschedule_{{$index}}" name="reschedule_template" value="{{$index.$val}}"/>
+                                <label for="reschedule_{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <textarea class="form-control mt-3 d-none"
                         form="frmReschedule"
                         name="reschedule_desc"
                         id="reschedule_desc"
@@ -1228,8 +1395,15 @@ $menu_item_second = "list_homeservice";
                     <h5 style="text-align: center;">
                         Are you sure to Share Acc to Cancel this appointment?
                     </h5>
-
-                    <textarea class="form-control mt-3"
+                    <ul class="cancel-template">
+                        @foreach($cancelTemplates as $index => $val)
+                            <li>
+                                <input type="radio" id="cancel_{{$index}}" name="cancel_template" value="{{$index.$val}}"/>
+                                <label for="cancel_{{$index}}">{{strlen($index . $val) > 40 ? substr($index . $val,0,40)."..." : $index . $val}}</label>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <textarea class="form-control mt-3 d-none"
                         form="frmCancel"
                         name="cancel_desc"
                         id="cancel_desc"
@@ -1468,10 +1642,181 @@ $menu_item_second = "list_homeservice";
         </div>
     </div>
     <!-- End Modal Date Picker export By Input Xls -->
+
+    <!-- Modal Survey -->
+    <div class="modal fade" id="surveyModal" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header pb-0">
+            <h5 class="modal-title">Home Service Survey</h5>
+            <button type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form action="{{route('add_home_service_survey')}}" method="POST" enctype="multipart/form-data" id="signatureForm">
+            @csrf
+            <input type="hidden" name="home_service_id" id="hs_id_survey">
+              <div class="modal-body" style="overflow-y:auto;">
+                <ol>
+                  <li>
+                    <div class="questiontext">
+                      {{ $questHSSurvey[0] }}
+                    </div>
+                    <div class="rating">
+                      <input id="satisfy5" name="result_quest_1" type="radio" value="5" class="radio-btn hide">
+                      <label for="satisfy5">☆</label>
+                      <input id="satisfy4" name="result_quest_1" type="radio" value="4" class="radio-btn hide">
+                      <label for="satisfy4">☆</label>
+                      <input id="satisfy3" name="result_quest_1" type="radio" value="3" class="radio-btn hide">
+                      <label for="satisfy3">☆</label>
+                      <input id="satisfy2" name="result_quest_1" type="radio" value="2" class="radio-btn hide">
+                      <label for="satisfy2">☆</label>
+                      <input id="satisfy1" name="result_quest_1" type="radio" value="1" class="radio-btn hide" required>
+                      <label for="satisfy1">☆</label>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="questiontext">
+                      {{ $questHSSurvey[1] }}
+                    </div>
+                    <div class="rating">
+                      <input id="kind5" name="result_quest_2" type="radio" value="5" class="radio-btn hide">
+                      <label for="kind5">☆</label>
+                      <input id="kind4" name="result_quest_2" type="radio" value="4" class="radio-btn hide">
+                      <label for="kind4">☆</label>
+                      <input id="kind3" name="result_quest_2" type="radio" value="3" class="radio-btn hide">
+                      <label for="kind3">☆</label>
+                      <input id="kind2" name="result_quest_2" type="radio" value="2" class="radio-btn hide">
+                      <label for="kind2">☆</label>
+                      <input id="kind1" name="result_quest_2" type="radio" value="1" class="radio-btn hide" required>
+                      <label for="kind1">☆</label>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="questiontext">
+                      {{ $questHSSurvey[2] }}
+                    </div>
+                    <div class="rating">
+                      <input id="qna5" name="result_quest_3" type="radio" value="5" class="radio-btn hide">
+                      <label for="qna5">☆</label>
+                      <input id="qna4" name="result_quest_3" type="radio" value="4" class="radio-btn hide">
+                      <label for="qna4">☆</label>
+                      <input id="qna3" name="result_quest_3" type="radio" value="3" class="radio-btn hide">
+                      <label for="qna3">☆</label>
+                      <input id="qna2" name="result_quest_3" type="radio" value="2" class="radio-btn hide">
+                      <label for="qna2">☆</label>
+                      <input id="qna1" name="result_quest_3" type="radio" value="1" class="radio-btn hide" required>
+                      <label for="qna1">☆</label>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="questiontext">
+                      {{ $questHSSurvey[3] }}
+                    </div>
+                    <div class="rating">
+                      <input id="ontime5" name="result_quest_4" type="radio" value="5" class="radio-btn hide">
+                      <label for="ontime5">☆</label>
+                      <input id="ontime4" name="result_quest_4" type="radio" value="4" class="radio-btn hide">
+                      <label for="ontime4">☆</label>
+                      <input id="ontime3" name="result_quest_4" type="radio" value="3" class="radio-btn hide">
+                      <label for="ontime3">☆</label>
+                      <input id="ontime2" name="result_quest_4" type="radio" value="2" class="radio-btn hide">
+                      <label for="ontime2">☆</label>
+                      <input id="ontime1" name="result_quest_4" type="radio" value="1" class="radio-btn hide" required>
+                      <label for="ontime1">☆</label>
+                      <div class="clear"></div>
+                    </div>
+                  </li>
+                </ol>
+
+                <!-- signature pad -->
+                <div class="w-100 ">
+                  <div class="wrapper">
+                    <input type="hidden" name="online_signature" id="signature-data">
+                    <input type="hidden" name="url" value="{{ url()->full() }}" />
+                    <canvas id="signature-pad-1" class="signature-pad" width=470 height=200 style="border: 2px solid black"></canvas>
+                  </div>
+                </div>
+
+              </div>
+              <div class="modal-footer pt-0">
+                <div class="w-100 row m-0">
+                  <div class="w-75 text-left row m-0">
+                    <button class="btn btn-sm btn-danger mr-1" data-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </button>
+                    <button class="btn btn-sm btn-warning" id="clear-survey">
+                        Clear
+                    </button>
+                  </div>
+                  <div class="w-25 text-right">
+                    <button class="btn btn-sm btn-success" id="save-survey">
+                        Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal Survey -->
+
+
 </div>
 @endsection
 
 @section('script')
+<script type="text/javascript">
+    var signature_pad = []
+    this["canvas_1"] = $("#signature-pad-1")[0];
+    if(window.devicePixelRatio >= 2){
+        this["canvas_1"].width = 255
+    }
+    signature_pad['1'] = new SignaturePad(this["canvas_1"], {});
+    document.getElementById('clear-survey').addEventListener('click', function (e) {
+        e.preventDefault();
+        for (var i = 5; i >= 1; i--) {
+            $('#satisfy'+i).prop('checked', false);
+            $('#kind'+i).prop('checked', false);
+            $('#qna'+i).prop('checked', false);
+            $('#ontime'+i).prop('checked', false);
+        }
+        signature_pad[1].clear();
+    });
+    document.getElementById('save-survey').addEventListener('click', function (e) {
+        e.preventDefault();
+        let checkValid = $("#signatureForm")[0].checkValidity();
+
+        if (signature_pad[1].isEmpty()) {
+            return alert("Please provide a signature first !");
+        }
+        else if(!checkValid){
+            return alert("Please complete the surveys first !");
+        }
+        else {
+            $('#signature-data').val(signature_pad[1].toDataURL("image/png"));
+            $('#signatureForm').submit();
+        }
+    });
+
+    $('#surveyModal').on('shown.bs.modal', function (e) {
+        for (var i = 5; i >= 1; i--) {
+            $('#satisfy'+i).prop('checked', false);
+            $('#kind'+i).prop('checked', false);
+            $('#qna'+i).prop('checked', false);
+            $('#ontime'+i).prop('checked', false);
+        }
+        signature_pad[1].clear();
+    });
+</script>
+
 <script type="application/javascript">
 $(document).ready(function(){
    $('.hs-filter a').on("click", function(event) {
@@ -1499,12 +1844,30 @@ $(document).ready(function(){
     //end load modal Acc Cancel HS
 
     $('#frmReschedule').on('submit', function(event){
+        var textarea = $('#reschedule_desc').val()
+        var indexReschedule = []
+        @foreach($rescheduleTemplates as $index => $val)
+            if('{{$index}}' !== 'Other'){
+                indexReschedule.push('{{$index}}')
+            }
+        @endforeach
+        if(indexReschedule.includes(textarea.substr(0,3))){
+            return true
+        }
+        if(textarea.length < 160){
+            alert('You need to enter at least 160 characters')
+            event.preventDefault();
+            return false
+        }
+
         if ($("#edit-date-old").val() == $("#edit-date").val() && $("#edit-time-old").val() == $("#edit-time").val()) {
             event.preventDefault();
             alert("Please change reschedule date and time");
         }
     });
 });
+
+
 
 {{-- Mendapatkan CSRF Token --}}
 function getCSRF() {
@@ -1785,7 +2148,7 @@ function clickView(btn) {
 
         return response.json();
     }).then(function (response) {
-        const result = response.result;
+        const result = response.result;console.log(result);
 
         const appointmentDate = new Date(result.appointment);
 
@@ -1799,11 +2162,15 @@ function clickView(btn) {
             + ":"
             + ("0" + (appointmentDate.getMinutes())).slice(-2);
 
-        document.getElementById("view_type_customer").innerHTML = result.type_customer;
-        document.getElementById("view_type_homeservices").innerHTML = result.type_homeservices;
+        @if(Gate::check('view-type-home_service'))
+            document.getElementById("view_type_customer").innerHTML = result.type_customer;
+            document.getElementById("view_type_homeservices").innerHTML = result.type_homeservices;
+        @endif
         document.getElementById("view-no_member").innerHTML = result.no_member;
         document.getElementById("view-name").innerHTML = result.name;
-        document.getElementById("view-phone").innerHTML = (result.phone).toString();
+        @if(Gate::check('view-phone-home_service'))
+            document.getElementById("view-phone").innerHTML = (result.phone).toString();
+        @endif
         document.getElementById("view-province").innerHTML = result.province_name;
         document.getElementById("view-city").innerHTML = result.city_name;
         document.getElementById("view-distric").innerHTML = result.district_name;
@@ -1813,6 +2180,7 @@ function clickView(btn) {
         document.getElementById("view-cso2").innerHTML = result.cso2_code_name;
         document.getElementById("view-date").innerHTML = dateString;
         document.getElementById("view-time").innerHTML = timeString;
+        document.getElementById("hs_id_survey").value = result.id;
 
         @if(Gate::check('add-service'))
             if (result.technician_schedule) {
@@ -1823,13 +2191,11 @@ function clickView(btn) {
             }
         @endif
 
-        @if(isset($_GET['id_hs']))
+        @if(isset($_GET['id_hs']) && Gate::check('acc-cancel-home_service'))
             $("#input_id_hs_hidden").val(id_hs);
             document.getElementById("cancel_desc_view").innerHTML = result.cancel_desc;
             $("#viewHomeServiceModal").modal("show");
-        @elseif(isset($_GET['id_detail_hs']))
-            $("#viewHomeServiceModal").modal("show");
-        @else
+        @elseif(Gate::check('view-type-home_service') && Gate::check('view-phone-home_service'))
             document.getElementById("url_share").setAttribute(
                 "href",
                 "whatsapp://send?text=<?php echo route('homeServices_success'); ?>"
@@ -1837,6 +2203,35 @@ function clickView(btn) {
                 + result.code
             );
         @endif
+
+        $('#add_survey').removeClass('d-none');
+        $('.surveyResult').addClass('d-none');
+        if(result.home_service_survey != null){
+            $('#add_survey').addClass('d-none');
+            $('.surveyResult').removeClass('d-none');
+
+            //change score on survey
+            let resultQS = [];
+            resultQS.push(result.home_service_survey.result_quest_1);
+            resultQS.push(result.home_service_survey.result_quest_2);
+            resultQS.push(result.home_service_survey.result_quest_3);
+            resultQS.push(result.home_service_survey.result_quest_4);
+
+            for (var i = 0; i < resultQS.length; i++) {
+                let resultInnerHtml = "";
+                for (var j = 0; j < 5 - resultQS[i]; j++) {
+                    resultInnerHtml += "<span class=\"mdi mdi-star-outline\"></span>";
+                }
+                for (var j = 0; j < resultQS[i]; j++) {
+                    resultInnerHtml += "<span class=\"mdi mdi-star\"></span>";
+                }
+                $('#ratingq' + (i+1))[0].innerHTML = resultInnerHtml;
+            }
+            let displaySignature = '<img class="img-fluid" style="max-height: 50px;" src="{{asset('sources/home_service_surveys/')}}/' + result.home_service_survey.online_signature + '" />';
+            $('#displaySignature').html(displaySignature);
+        }
+
+        $("#viewHomeServiceModal").modal("show");
     }).catch(function (error) {
         console.error(error);
     });
@@ -2198,5 +2593,51 @@ function setDistrict(e) {
         consol.error(error);
     })
 }
+
+$('#frmCancel').on('submit', function(event){
+    var textarea = $('#cancel_desc').val()
+    var indexCancel = []
+    @foreach($cancelTemplates as $index => $val)
+        if('{{$index}}' !== 'Other'){
+            indexCancel.push('{{$index}}')
+        }
+    @endforeach
+    if(indexCancel.includes(textarea.substr(0,3))){
+        return true
+    }
+    if(textarea.length < 160){
+        alert('You need to enter at least 160 characters')
+        event.preventDefault();
+        return false
+    }
+})
+
+processKeyUp = function(event) {
+    if (window.event){
+        event = window.event;
+    }
+    if(event.keyCode==32){
+        var val = document.getElementById(event.explicitOriginalTarget.id);
+        val.value = val.value.replace(/ +(?= )/g,'');
+    }
+};
+document.getElementById("cancel_desc").onkeyup=processKeyUp;
+document.getElementById("reschedule_desc").onkeyup=processKeyUp;
+
+$('input[type=radio][name=cancel_template]').change(function() {
+    if(this.value == "Other"){
+        $('#cancel_desc').removeClass('d-none').val('')
+    }else{
+        $('#cancel_desc').addClass('d-none').val(this.value)
+    }
+});
+
+$('input[type=radio][name=reschedule_template]').change(function() {
+    if(this.value == "Other"){
+        $('#reschedule_desc').removeClass('d-none').val('')
+    }else{
+        $('#reschedule_desc').addClass('d-none').val(this.value)
+    }
+});
 </script>
 @endsection

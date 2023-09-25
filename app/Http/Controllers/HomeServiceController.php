@@ -12,6 +12,7 @@ use App\Exports\HomeServicesCompareExport;
 use App\GeometryDistrict;
 use App\HistoryUpdate;
 use App\HomeService;
+use App\HomeServiceSurvey;
 use App\Http\Controllers\gCalendarController;
 use App\Order;
 use App\RajaOngkir_Subdistrict;
@@ -254,6 +255,9 @@ class HomeServiceController extends Controller
         // );
         $currentDayData = $this->printDayData($request);
         $currentDayData = json_decode($currentDayData->getContent(), true)['msg'];
+        $cancelTemplates = HomeService::$cancelTemplates;
+        $rescheduleTemplates = HomeService::$rescheduleTemplates;
+        $questHSSurvey = HomeServiceSurvey::$allQuest;
 
         return view(
             "admin.list_homeservice_new",
@@ -261,7 +265,10 @@ class HomeServiceController extends Controller
                 "currentMonthDataCount",
                 "currentDayData",
                 "branches",
-                "csos"
+                "csos",
+                "cancelTemplates",
+                "rescheduleTemplates",
+                "questHSSurvey"
             )
         );
     }
@@ -320,8 +327,16 @@ class HomeServiceController extends Controller
             $cso_id = Cso::where('code', $filterCSO)->first();
 
             $currentMonthDataCount = $currentMonthDataCount->where(
-                "cso_id",
-                $cso_id->id
+                function ($query) use ($cso_id) {
+                    $query->where(
+                        "cso_id",
+                        $cso_id->id
+                    )
+                    ->orWhere(
+                        "cso2_id",
+                        $cso_id->id
+                    );
+                }
             );
         }
 
@@ -574,7 +589,10 @@ class HomeServiceController extends Controller
             "c.name AS cso_name",
             "r.slug AS role_slug",
             "h.created_at AS created_at",
-            "h.updated_at AS updated_at"
+            "h.updated_at AS updated_at",
+            "o.code as order_code",
+            "o.id as order_id",
+            "hsv.id as home_service_survey_id"
         )
         ->from("home_services AS h")
         ->leftJoin(
@@ -607,6 +625,33 @@ class HomeServiceController extends Controller
             "=",
             "ru.role_id"
         )
+        ->leftJoin(
+            "order_details as od",
+            "od.home_service_id",
+            "=",
+            "h.id"
+        )
+        ->leftJoin(
+            "order_homeservices as oh",
+            "oh.home_service_id",
+            "=",
+            "h.id"
+        )
+        ->leftJoin(
+            "home_service_surveys as hsv",
+            "hsv.home_service_id",
+            "=",
+            "h.id"
+        )
+        ->leftJoin(
+            "orders AS o",
+            function ($join){
+                $join->orOn('od.order_id', '=', 'o.id');
+                $join->orOn('o.home_service_id', '=', 'h.id');
+                $join->orOn('oh.order_id', '=', 'o.id');
+            }
+        )
+        ->groupBy("h.id")
         ->where("h.active", true);
 
         if ($isAdminManagement) {
@@ -659,8 +704,16 @@ class HomeServiceController extends Controller
             $cso_id = Cso::where('code', $filterCSO)->first();
 
             $currentDayData = $currentDayData->where(
-                "h.cso_id",
-                $cso_id->id
+                function ($query) use ($cso_id) {
+                    $query->where(
+                        "h.cso_id",
+                        $cso_id->id
+                    )
+                    ->orWhere(
+                        "h.cso2_id",
+                        $cso_id->id
+                    );
+                }
             );
         }
 
@@ -747,7 +800,7 @@ class HomeServiceController extends Controller
             $isAdminManagement = true;
         }
 
-        $display_tab_hss = ["all", "reschedule"];
+        $display_tab_hss = ["all", "reschedule", "cancel"];
         $result_tab_hss = [];    
         foreach ($display_tab_hss as $display_tab_hs) {
             $currentDayData = $this->getDayData(
@@ -793,21 +846,41 @@ class HomeServiceController extends Controller
                         . '<td>';
 
                     if (!$isAdminManagement) {
-                        $result .= '<p class="titleAppoin">'
-                        . '<a href="'
-                        . route('homeServices_success')
-                        . '?code='
-                        . $dayData->hs_code
-                        . '" target="_blank">'
-                        . $dayData->hs_code
-                        . '</a>'
-                        . '</p>';
+                        if(Auth::user()->hasPermission('view-phone-home_service')){
+                            $result .= '<p class="titleAppoin">'
+                                . '<a href="'
+                                . route('homeServices_success')
+                                . '?code='
+                                . $dayData->hs_code
+                                . '" target="_blank">'
+                                . $dayData->hs_code
+                                . '</a>'
+                                . '</p>';
+                        }
+                        else{
+                            $result .= '<p class="titleAppoin">'
+                                . $dayData->hs_code
+                                . '</p>';
+                        }
+                    }
+
+                    if($dayData->order_id){
+                        $result .= '<p class="titleAppoin mt-0">'
+                                . '<a href="'
+                                . route('order_success')
+                                . '?code='
+                                . $dayData->order_code
+                                . '" target="_blank">'
+                                . 'Order: '
+                                . $dayData->order_code
+                                . '</a>'
+                                . '</p>';
                     }
 
                     $result .= '<p class="descAppoin">';
 
                     if (!$isAdminManagement) {
-                        $result .= $dayData->customer_name . ' - ' . $dayData->customer_phone
+                        $result .= $dayData->customer_name . ' - ' . ((Auth::user()->hasPermission('view-phone-home_service')) ? $dayData->customer_phone : '')
                             . '<br>';
                     }
 
@@ -862,11 +935,38 @@ class HomeServiceController extends Controller
                         }
                         $result .= "</p>";
                         $result .= $currentRescheduleAppointment;
+                        
+                        // cancel description
+                        $result .= "<p style='color:red'>";
+                        $lastCancelData = HistoryUpdate::where([['type_menu', 'Home Service Cancel'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'desc')->first();
+                        if(!empty($lastCancelData)){
+                            $result .= '<br>Request Cancel Appointment ('. $lastCancelData['meta']['createdAt'] . ')<br>';
+                        }
+                        $cancelAllData = HistoryUpdate::where([['type_menu', 'Home Service Cancel'], ['menu_id', $dayData['hs_id']]])->orderBy('id', 'desc')->get();
+                        foreach($cancelAllData as $index => $cancel){
+                            if(isset($cancel['meta']['acc_by'])){
+                                $userCancel = User::where('id', $cancel['meta']['acc_by'])->value('name');
+                                $result .= "Cancel Appointment Rejected (" . $cancel['meta']['updated_at'] . " by " . $userCancel . ")<br>";
+                            }
+                        }
+                        $result .= "</p>";
                     }
 
-                    $result .= '</p>'
-                        . '</td>';
+                    $result .= '</p>';
 
+                    if($dayData->home_service_survey_id != null){
+                        $result .= '<p style="border-top: 1px solid black; color: orange; font-size: initial;"><span class="font-weight-bold">Survey Rate : </span>';
+                        $totalStar = HomeServiceSurvey::find($dayData->home_service_survey_id)->resultAverage();
+                        for ( $idxStar=0; $idxStar < $totalStar; $idxStar++ ) { 
+                            $result .= '<span class="mdi mdi-star"></span>';
+                        }
+                        for ( $idxStar=0; $idxStar < (5 - $totalStar); $idxStar++ ) { 
+                            $result .= '<span class="mdi mdi-star-outline"></span>';
+                        }
+                        $result .= '<span> ('.$totalStar.'/5)</span></p>';
+                    }
+
+                    $result .= '</td>';
 
                     if (!$isAdminManagement) {
                         $result .= '<td style="text-align: center">';
@@ -1150,6 +1250,7 @@ class HomeServiceController extends Controller
             $data['cso_code_name'] = $data->cso['code'].' - '.$data->cso['name'];
             $data['cso2_code_name'] = $data->cso2['code'].' - '.$data->cso2['name'];
             $data['branch_code_name'] = $data->branch['code'].' '.$data->branch['name'];
+            $data->homeServiceSurvey;
             return response()->json(['result' => $data]);
         }else{
             return response()->json(['result' => 'Gagal!!']);
@@ -1223,6 +1324,15 @@ class HomeServiceController extends Controller
                 }
                 $homeService->is_acc = false;
                 $homeService->save();
+
+                $before = HistoryUpdate::where([['type_menu', 'Home Service Cancel'], ['menu_id', $homeService->id]])->orderBy('id', 'desc')->first();
+                $before_meta = $before['meta'];
+                $before_meta['acc_by'] = Auth::user()['id'];
+                $before_meta['status_acc'] = $request->status_acc;
+                $before_meta['updated_at'] = date("Y-m-d H:i:s");
+                $before->meta = $before_meta;
+                $before->save();
+
             } else if ($acc_hs_type == "reschedulehs") {
                 $titleNya = "Rejected - ACC Reschedule [Home Service]";
                 $messagesNya = "Acc Reschedule Home Service for ".$homeService->type_homeservices." from customer ".$homeService->name.". By ".$homeService->branch['code']."-".$homeService->cso['name']." Rejected";
@@ -1533,6 +1643,16 @@ class HomeServiceController extends Controller
         $homeserviceNya->cancel_desc = $request->cancel_desc;
         $homeserviceNya->save();
         //end update is_acc
+
+        $user = Auth::user();
+        $historyUpdate= [];
+        $historyUpdate['type_menu'] = "Home Service Cancel";
+        $historyUpdate['method'] = "Cancel";
+        $historyUpdate['meta'] = ['user'=>$user['id'],'createdAt' => date("Y-m-d H:i:s")];
+        $historyUpdate['user_id'] = $user['id'];
+        $historyUpdate['menu_id'] = $homeserviceNya->id;
+
+        $createData = HistoryUpdate::create($historyUpdate);
 
         if(sizeof($fcm_tokenNya) > 0)
         {
@@ -1869,6 +1989,36 @@ class HomeServiceController extends Controller
         }
 
         return $result;
+    }
+
+    //Add Home Service From Order Delivery
+    public static function addHomeServiceFromOrderDelivery($order, $index_request_hs, $getAppointment, $homeservice_cso_id)
+    {
+        $data['code'] = "HS/".strtotime(date("Y-m-d H:i:s"))."/".substr($order['phone'], -4);
+        $data['no_member'] = $order['no_member'];
+        $data['name'] = $order['name'];
+        $data['address'] = $order['address'];
+        $data['province'] = $order['province'];
+        $data['city'] = $order['city'];
+        $data['distric'] = $order['distric'];
+        $data['phone'] = $order['phone'];
+        $data['branch_id'] = $order['branch_id'];
+        $data['cso_id'] = $order['cso_id'];
+        if ($index_request_hs != null && $order['70_cso_id'] != $order['30_cso_id']) {
+            $data['cso_id'] = $order['70_cso_id'];
+            $data['cso2_id'] = $order['30_cso_id'];
+        } else if ($homeservice_cso_id) {
+            if (isset($homeservice_cso_id[0])) $data['cso_id'] = $homeservice_cso_id[0];
+            if (isset($homeservice_cso_id[1])) { $data['cso2_id'] = $homeservice_cso_id[1]; }
+        }
+        $data['cso_phone'] = Cso::where('id', $data['cso_id'])->first()['phone'];
+        $data['appointment'] = $getAppointment;
+        $data['type_homeservices'] = 'Home Delivery';
+        $data['type_customer'] = $order['customer_type'];
+        $homeservice = HomeService::create($data);
+        return $homeservice;
+        // $order->home_service_id = $homeservice['id'];
+        // $order->save();
     }
 
     //KHUSUS API APPS

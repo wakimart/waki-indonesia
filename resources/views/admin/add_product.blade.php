@@ -15,7 +15,6 @@ $menu_item_second = "add_product";
         background-repeat: no-repeat;
         display: inline-block;
     }
-
     .del {
         position: absolute;
         top: 0px;

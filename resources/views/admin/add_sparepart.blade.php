@@ -14,37 +14,23 @@ $menu_item_second = "add_sparepart";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea {
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     @media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
+		#desktop{ display: none; }
+		#mobile{ display: block; }
 	}
-
 	@media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
+		#desktop{ display: block; }
+		#mobile{ display: none; }
 	}
 
 </style>

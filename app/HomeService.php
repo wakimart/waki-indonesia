@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class HomeService extends Model
 {
+    static $cancelTemplates = ['A. ' => 'Customer sudah di closing', 'B. ' => 'Customer tidak berminat', 'C. ' => 'Customer keluar kota', 'D. ' => 'Customer sakit', 'Other' => ''];
+    static $rescheduleTemplates = ['A. ' => 'Customer keluar kota', 'B. ' => 'Customer sakit', 'Other' => ''];
+
     protected $fillable = [
         'code', 'no_member', 'name', 'address', 'phone', 'city', 'cso_id', 'branch_id', 'cso_phone', 'appointment', 'cso2_id', 'active', 'cash', 'cash_description', 'description', 'type_customer', 'type_homeservices', 'distric', 'province','image', 'personalhomecare_id',
         'is_acc_resc', 'resc_desc', 'resc-acc'
@@ -65,5 +68,13 @@ class HomeService extends Model
     public function technicianSchedule()
     {
         return $this->hasOne('App\TechnicianSchedule');
+    }
+    public function allOrder()
+    {
+        return $this->belongsToMany(Order::class, 'order_homeservices');
+    }
+
+    public function homeServiceSurvey(){
+        return $this->hasOne('App\HomeServiceSurvey');
     }
 }

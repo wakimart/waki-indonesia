@@ -84,6 +84,28 @@ $menu_item_page = "order";
                                 <input type="text" class="form-control" id="order-code" name="order_code" value="{{ $orders['code'] }}" readonly="">
                                 <div class="validation"></div>
                             </div>
+                            @if(Auth::user()->inRole("head-admin"))
+                            <div class="form-group">
+                                <label for="orderDate">Waktu Order</label>
+                                <input type="date"
+                                    class="form-control"
+                                    name="orderDate"
+                                    id="orderDate"
+                                    placeholder="Tanggal Order"
+                                    value="{{ $orders['orderDate'] }}"
+                                    required
+                                    data-msg="Mohon Isi Tanggal" />
+                                <div class="validation"></div>
+                                <span class="invalid-feedback">
+                                    <strong></strong>
+                                </span>
+                            </div>
+                            @endif
+                            <div class="form-group">
+                                <label for="temp no">Temp No</label>
+                                <input type="text" class="form-control" name="temp_no" value="{{ $orders['temp_no'] }}">
+                                <div class="validation"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -627,11 +649,13 @@ $menu_item_page = "order";
                                                     </option>
                                                 @endfor
                                                 <option class="other_valCicilan"
-                                                    value="18">
+                                                    value="18"
+                                                    @if($payment['cicilan'] == 18) selected @endif>
                                                     18X
                                                 </option>
                                                 <option class="other_valCicilan"
-                                                    value="24">
+                                                    value="24"
+                                                    @if($payment['cicilan'] == 24) selected @endif>
                                                     24X
                                                 </option>
                                             </select>
@@ -732,8 +756,63 @@ $menu_item_page = "order";
                         </div>
                     </div>
                 </div>
+                <div class="col-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <button type="button"
+                                class="btn btn-gradient-primary mr-2"
+                                data-toggle="modal"
+                                data-target="#modal-delivery-by-cso">
+                                Request Delivery by CSO
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- modal Request Delivery by CSO -->
+<div class="modal fade" role="dialog" tabindex="-1" id="modal-delivery-by-cso">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Request Delivery by CSO</h4>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @php $order_request_hs = json_decode($orders['request_hs'], true) ?? []; @endphp
+                @for($i=0; $i<5; $i++)
+                <div class="form-group">
+                    <label for=""><b>Option HS {{ $i+1 }}</b></label><br/>
+                    <label for="">Tanggal Janjian</label>
+                    <input type="date" form="actionUpdate" class="form-control" id="request_hs_date_{{ $i }}" name="request_hs_date_{{ $i }}"
+                        value="{{ isset($order_request_hs[$i]) ? date('Y-m-d', strtotime($order_request_hs[$i])) : '' }}" />
+                    <span class="invalid-feedback"><strong></strong></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="">Jam Janjian</label>
+                    <input type="time" form="actionUpdate" class="form-control" name="request_hs_time_{{ $i }}" id="request_hs_time_{{ $i }}"
+                        value="{{ isset($order_request_hs[$i]) ? date('H:i', strtotime($order_request_hs[$i])) : '' }}"/>
+                    <span class="invalid-feedback"><strong></strong></span>
+                </div>
+                @endfor
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gradient-primary"
+                    type="button"
+                    data-dismiss="modal">
+                    Ok
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 <!-- Error modal -->
@@ -762,15 +841,15 @@ $menu_item_page = "order";
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
-    // callback for find waki-indonesia 0ffline (local or ngrok)
-var urlOffline = "http://localhost:8001"
+// callback for find waki-indonesia 0ffline (local or ngrok)
+var urlOffline = "{{ env('OFFLINE_URL_2') }}"
 $.ajax({
     url:'https://waki-indonesia-offline.office/cms-admin/login',
     error: function(){
-        urlOffline = "http://localhost:8001"
+        urlOffline = "{{ env('OFFLINE_URL_2') }}"
     },
     success: function(){
-        urlOffline = "http://localhost:8001"
+        urlOffline = "{{ env('OFFLINE_URL') }}"
     }
 });
 let promoOption = `<option selected disabled value="">Choose Product</option>`;

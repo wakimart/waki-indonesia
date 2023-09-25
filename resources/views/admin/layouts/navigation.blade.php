@@ -149,6 +149,49 @@
 </li>
 @endif
 
+@if(Gate::check('browse-therapy_service') || Gate::check('browse-therapy_service_location'))
+<li class="{{isset($menu_item_page) && $menu_item_page == 'theraphy_service'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#theraphy_service-dd" aria-expanded="false" aria-controls="theraphy_service-dd">
+    <span class="menu-title">Theraphy Service</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-home-map-marker menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'theraphy_service'? 'show': '' }}" id="theraphy_service-dd">
+    <ul class="nav flex-column">
+    @if(Gate::check('add-therapy_service'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_theraphy_service' ? 'active': '' }}" href="{{ route('add_theraphy_service')}}">Add Theraphy Service</a></li>
+    @endif
+    @if(Gate::check('check-therapy_service'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'check_theraphy_service' ? 'active': '' }}" href="{{ route('check_theraphy_service')}}">Check Theraphy Service</a></li>
+    @endif
+    @if(Gate::check('browse-therapy_service'))
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_theraphy_service' ? 'active': '' }}" href="{{ route('list_theraphy_service')}}">List Theraphy Service</a></li>
+    @endif
+
+      @if(Gate::check('browse-therapy_service_location') || Gate::check('add-therapy_service_location'))
+      <li class="nav-item {{isset($menu_item_second) && ($menu_item_second == 'add_therapy_location' || $menu_item_second == 'list_therapy_location') ? 'active': '' }}">
+      	<a class="nav-link" data-toggle="collapse" href="#theraphy_service_location-dd" aria-expanded="false" aria-controls="theraphy_service_location-dd">
+      		<span class="menu-title">Therapy Location</span>
+      		<i class="menu-arrow"></i>
+      	</a>
+  		<div class="collapse {{isset($menu_item_second) && ($menu_item_second == 'add_therapy_location' || $menu_item_second == 'list_therapy_location') ? 'show': '' }}" id="theraphy_service_location-dd">
+  			<ul class="nav flex-column sub-menu">
+			  @if(Gate::check('add-therapy_service_location'))
+			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_therapy_location' ? 'active': '' }}" href="{{ route('add_therapy_location')}}">Add Therapy Location</a></li>
+		      @endif
+			  @if(Gate::check('browse-therapy_service_location'))
+			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_therapy_location' ? 'active': '' }}" href="{{ route('list_therapy_location')}}">List Therapy Location</a></li>	
+			  @endif
+  			</ul>
+  		</div>
+      </li>
+      @endif
+
+    </ul>
+  </div>
+</li>
+@endif
+
 @if(Gate::check('add-phc-product') || Gate::check('browse-phc-product') || Gate::check('add-personal-homecare') || Gate::check('browse-personal-homecare') || Gate::check('add-public-homecare') || Gate::check('browse-public-homecare'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'product_homecare' || isset($menu_item_page) && $menu_item_page == 'personal_homecare' || isset($menu_item_page) && $menu_item_page == 'public_homecare' ? 'active': '' }}">
   <a class="nav-link" data-toggle="collapse" href="#homeCare-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'product_homecare' || isset($menu_item_page) && $menu_item_page == 'personal_homecare' || isset($menu_item_page) && $menu_item_page == 'public_homecare' ? 'true': '' }}" aria-controls="homeCare-dd">
@@ -310,6 +353,41 @@
                 <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_form_takeaway' ? 'active' : '' }}"
                     href="{{ route('list_submission_form', ["filter_type" => "takeaway"]) }}">
                     List Submission - Takeaway
+                </a>
+            </li>
+        @endif
+        </ul>
+    </div>
+</li>
+@endif
+
+@if (Gate::check('add-submission_video_photo') || Gate::check('browse-submission_video_photo'))
+<li class="nav-item {{ isset($menu_item_page) && $menu_item_page == 'submission_video_photo' ? 'active': '' }}">
+    <a class="nav-link"
+        data-toggle="collapse"
+        href="#submission_video_photo-dd"
+        aria-expanded="{{ isset($menu_item_page) && $menu_item_page == 'submission_video_photo' ? 'true': '' }}"
+        aria-controls="submission_video_photo-dd">
+        <span class="menu-title">Submission Video & Photo</span>
+        <i class="menu-arrow"></i>
+        <i class="mdi mdi-account-card-details menu-icon"></i>
+    </a>
+    <div class="collapse {{ isset($menu_item_page) && $menu_item_page == 'submission_video_photo' ? 'show' : '' }}"
+        id="submission_video_photo-dd">
+        <ul class="nav flex-column sub-menu">
+        @if (Gate::check('add-submission_video_photo'))
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'add_submission_video_photo' ? 'active' : '' }}"
+                    href="{{ route('add_submission_video_photo')}}">
+                    Add Submmission Video & Photo
+                </a>
+            </li>
+        @endif
+        @if (Gate::check('browse-submission_video_photo'))
+            <li class="nav-item">
+                <a class="nav-link {{ isset($menu_item_second) && $menu_item_second == 'list_submission_video_photo' ? 'active' : '' }}"
+                    href="{{ route('list_submission_video_photo') }}">
+                    List Submission Video & Photo
                 </a>
             </li>
         @endif

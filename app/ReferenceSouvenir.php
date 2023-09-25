@@ -22,6 +22,7 @@ class ReferenceSouvenir extends Model
         "wakimart_link",
         "order_code",
         "order_image",
+        "theraphy_service_id",
     ];
 
     public function reference()
@@ -51,5 +52,10 @@ class ReferenceSouvenir extends Model
             return $result;
         }
         return null;
+    }
+
+    public function theraphyService()
+    {
+        return $this->belongsTo('App\TheraphyService');
     }
 }

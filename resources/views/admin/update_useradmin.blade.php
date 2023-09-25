@@ -411,6 +411,24 @@ $menu_item_page = "user";
                                             Delete Order
                                         </label>
                                     </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="order_hs">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="order_hs" />
+                                            Order Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="acc-order_hs">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="acc-order_hs" />
+                                            Acc Order Home Service
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -436,12 +454,30 @@ $menu_item_page = "user";
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-primary"
+                                            for="change-status_order_stock_request_pending">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_stock_request_pending" />
+                                            Change Status Order Request Stock
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
                                         <label class="form-check-label text-warning"
                                             for="change-status_order_delivery">
                                             <input class="form-check-input"
                                                 type="checkbox"
                                                 id="change-status_order_delivery" />
                                             Change Status Order Delivery
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-primary"
+                                            for="change-status_order_delivered">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="change-status_order_delivered" />
+                                            Change Status Order Delivered
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
@@ -600,6 +636,22 @@ $menu_item_page = "user";
                                                 type="checkbox"
                                                 id="acc-cancel-home_service" />
                                             Cancel Acc Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="view-phone-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="view-phone-home_service" />
+                                            View Phone Home Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label" for="view-type-home_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="view-type-home_service" />
+                                            View Type Home Service
                                         </label>
                                     </div>
                                 </div>
@@ -1422,6 +1474,138 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+                            <div class="form-group" id="group-submission-video-photo">
+                                <span style="display: block;">SUBMISSION VIDEO & PHOTO</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-submission_video_photo"
+                                                value="add-submission_video_photo" />
+                                            Add Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="browse-submission_video_photo"
+                                                value="browse-submission_video_photo" />
+                                            Browse Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="detail-submission_video_photo"
+                                                value="detail-submission_video_photo" />
+                                            Detail Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-submission_video_photo"
+                                                value="edit-submission_video_photo" />
+                                            Edit Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-submission_video_photo"
+                                                value="delete-submission_video_photo" />
+                                            Delete Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-success"
+                                            for="change-status-approved-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-approved-submission_video_photo"
+                                                value="change-status-approved-submission_video_photo" />
+                                            Change Status Approved Submission Video & Photo
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline text-danger">
+                                        <label class="form-check-label"
+                                            for="change-status-rejected-submission_video_photo">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-rejected-submission_video_photo"
+                                                value="change-status-rejected-submission_video_photo" />
+                                            Change Status Rejected Submission Video & Photo
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-submission-video-photo">
+                                <span style="display: block;">SUBMISSION VIDEO & PHOTO DETAIL</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="add-submission_video_photo_detail"
+                                                value="add-submission_video_photo_detail" />
+                                            Add Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="edit-submission_video_photo_detail"
+                                                value="edit-submission_video_photo_detail" />
+                                            Edit Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="delete-submission_video_photo_detail"
+                                                value="delete-submission_video_photo_detail" />
+                                            Delete Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label text-success"
+                                            for="change-status-approved-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-approved-submission_video_photo_detail"
+                                                value="change-status-approved-submission_video_photo_detail" />
+                                            Change Status Approved Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline text-danger">
+                                        <label class="form-check-label"
+                                            for="change-status-rejected-submission_video_photo_detail">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                id="change-status-rejected-submission_video_photo_detail"
+                                                value="change-status-rejected-submission_video_photo_detail" />
+                                            Change Status Rejected Submission Video & Photo Detail
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group" id="group-phc-product">
                                 <span style="display: block;">PERSONAL HOMECARE PRODUCT</span>
                                 <div class="div-CheckboxGroup">
@@ -1852,6 +2036,108 @@ $menu_item_page = "user";
                                                 type="checkbox"
                                                 id="delete-data_therapy" />
                                             Delete Data Therapy
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">THERAPY SERVICE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-therapy_service" />
+                                            Add Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-therapy_service" />
+                                            Browse Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="check-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="check-therapy_service" />
+                                            Check Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="detail-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="detail-therapy_service" />
+                                            Detail Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-therapy_service" />
+                                            Edit Therapy Service
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-therapy_service">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-therapy_service" />
+                                            Delete Therapy Service
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group" id="group-product">
+                                <span style="display:block;">THERAPY SERVICE</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add-therapy_service_location">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add-therapy_service_location" />
+                                            Add Therapy Service Location
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="browse-therapy_service_location">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="browse-therapy_service_location" />
+                                            Browse Therapy Service Location
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="edit-therapy_service_location">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="edit-therapy_service_location" />
+                                            Edit Therapy Service Location
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="delete-therapy_service_location">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="delete-therapy_service_location" />
+                                            Delete Therapy Service Location
                                         </label>
                                     </div>
                                 </div>

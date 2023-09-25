@@ -8,9 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
+    #intro {padding-top: 2em;}
     button{
         background: #1bb1dc;
         border: 0;
@@ -29,10 +27,7 @@
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
-	.check label{
-		width: 25em;
-	}
+	  .check label{width: 25em;}
 </style>
 @endsection
 
@@ -241,7 +236,7 @@
                         </div>
 
                         <div id="tambahan_productservice"></div>
-                        {{-- ++++++++++++++ ======== ++++++++++++++ --}}			                    
+                        {{-- ++++++++++++++ ======== ++++++++++++++ --}}
                     </div>
 
                     <input type="hidden" id="hs_id" name="hs_id" value="{{ $autofill['id'] ?? '' }}">
@@ -352,7 +347,7 @@
         @if (isset($_GET['hs_id']))
             $('#province').val("{{ $autofill['province'] }}").change();
         @endif
-        
+
 		var idService = 0;
 		var detailProductService = 0;
 		var counter_service = 1;
@@ -445,7 +440,7 @@
 	        e.preventDefault();
 	        frmAdd = _("actionAdd");
 	        frmAdd = new FormData(document.getElementById("actionAdd"));
-	        frmAdd.enctype = "multipart/form-data";       
+	        frmAdd.enctype = "multipart/form-data";
 
 	        for (var i = 0; i < idService + 1 ; i++) {
 	        	var product = $("#product_service-" + i).val();
@@ -512,7 +507,7 @@
 	            }
 	            alert(hasil['errors']);
 	        }
-	        else{ 
+	        else{
 	            alert("Input Success !!!");
 	            var route_to_list = "{{route('list_technician_schedule')}}";
 	           	window.location.href = route_to_list;

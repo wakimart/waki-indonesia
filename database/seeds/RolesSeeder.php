@@ -39,6 +39,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
         		'edit-order' => true,
                 'delete-order' => true,
+                'order_hs' => true,
+                'acc-order_hs' => true,
 
                 //Update Order Status
                 'change-status_order'=> true,
@@ -46,6 +48,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => true,
                 'change-status_order_success' => true,
                 'change-status_order_reject' => true,
+                'change-status_order_stock_request_pending' => true,
+                'change-status_order_stock_request_success' => true,
+                'change-status_order_delivered' => true,
 
                 //Update Order Payment Status
                 'change-status_payment' => true,
@@ -66,6 +71,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,
@@ -177,6 +184,22 @@ class RolesSeeder extends Seeder
                 "edit-submission" => true,
                 "delete-submission" => true,
 
+                // Submission Video Photo (Head Admin)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Head Admin)
+                "add-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Head Admin)
                 "add-sparepart" => true,
                 "browse-sparepart" => true,
@@ -240,6 +263,21 @@ class RolesSeeder extends Seeder
                 'browse-bank' => true,
         		'edit-bank' => true,
                 'delete-bank' => true,
+
+                //Therapy Service (Head Admin)
+                'add-therapy_service' => true,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => true,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => true,
+                'delete-therapy_service' => true,
+
+                //Therapy Service Location (Head Admin)
+                'add-therapy_service_location' => true,
+                'browse-therapy_service_location' => true,
+                'edit-therapy_service_location' => true,
+                'delete-therapy_service_location' => true,
+
             ]),
         ]);
 
@@ -266,6 +304,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
         		'edit-order' => true,
                 'delete-order' => true,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -273,6 +313,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -293,6 +336,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,
@@ -404,6 +449,22 @@ class RolesSeeder extends Seeder
                 "edit-submission" => false,
                 "delete-submission" => false,
 
+                // Submission Video Photo (Admin)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Admin)
+                "add-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Admin)
                 "add-sparepart" => true,
                 "browse-sparepart" => true,
@@ -466,7 +527,21 @@ class RolesSeeder extends Seeder
                 'add-bank' => false,
                 'browse-bank' => false,
                 'edit-bank' => false,
-                'delete-bank' => false,                
+                'delete-bank' => false,
+
+                //Therapy Service (Admin)
+                'add-therapy_service' => true,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => true,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => true,
+                'delete-therapy_service' => true,
+
+                //Therapy Service Location (Admin)
+                'add-therapy_service_location' => true,
+                'browse-therapy_service_location' => true,
+                'edit-therapy_service_location' => true,
+                'delete-therapy_service_location' => true,
         	]),
         ]);
 
@@ -493,6 +568,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => true,
                 'delete-order' => true,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -500,6 +577,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -520,6 +600,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => false,
@@ -625,6 +707,22 @@ class RolesSeeder extends Seeder
                 "edit-submission" => false,
                 "delete-submission" => false,
 
+                // Submission Video Photo (CSO)
+                "add-submission_video_photo" => true,
+                "browse-submission_video_photo" => true,
+                "detail-submission_video_photo" => true,
+                "edit-submission_video_photo" => true,
+                "delete-submission_video_photo" => true,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (CSO)
+                "add-submission_video_photo_detail" => true,
+                "edit-submission_video_photo_detail" => true,
+                "delete-submission_video_photo_detail" => true,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (CSO)
                 "add-sparepart" => false,
                 "browse-sparepart" => false,
@@ -687,7 +785,21 @@ class RolesSeeder extends Seeder
                 'add-bank' => false,
                 'browse-bank' => false,
                 'edit-bank' => false,
-                'delete-bank' => false,                
+                'delete-bank' => false,
+
+                //Therapy Service (CSO)
+                'add-therapy_service' => true,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => true,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => true,
+                'delete-therapy_service' => true,
+
+                //Therapy Service Location (CSO)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
                 
             ]),
         ]);
@@ -715,6 +827,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => true,
                 'delete-order' => true,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -722,6 +836,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
                 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -742,6 +859,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => false,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => false,
@@ -847,6 +966,22 @@ class RolesSeeder extends Seeder
                 "edit-submission" => true,
                 "delete-submission" => true,
 
+                // Submission Video Photo (Branch)
+                "add-submission_video_photo" => true,
+                "browse-submission_video_photo" => true,
+                "detail-submission_video_photo" => true,
+                "edit-submission_video_photo" => true,
+                "delete-submission_video_photo" => true,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Branch)
+                "add-submission_video_photo_detail" => true,
+                "edit-submission_video_photo_detail" => true,
+                "delete-submission_video_photo_detail" => true,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Branch)
                 "add-sparepart" => false,
                 "browse-sparepart" => false,
@@ -910,6 +1045,20 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Therapy Service (Branch)
+                'add-therapy_service' => true,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => true,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => true,
+                'delete-therapy_service' => true,
+
+                //Therapy Service Location (Branch)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
             ]),
         ]);
 
@@ -936,6 +1085,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => false,
                 'delete-order' => false,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -943,6 +1094,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -963,6 +1117,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => true,
                 'acc-cancel-home_service' => true,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,
@@ -1068,6 +1224,22 @@ class RolesSeeder extends Seeder
                 "edit-submission" => true,
                 "delete-submission" => true,
 
+                // Submission Video Photo (Area Manager)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Area Manager)
+                "add-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Area Manager)
                 "add-sparepart" => false,
                 "browse-sparepart" => false,
@@ -1131,6 +1303,20 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Therapy Service (CSO)
+                'add-therapy_service' => false,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => false,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => false,
+                'delete-therapy_service' => false,
+
+                //Therapy Service Location (CSO)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
             ]),
         ]);
 
@@ -1157,6 +1343,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => false,
                 'delete-order' => false,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -1164,6 +1352,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -1184,6 +1375,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,
@@ -1289,6 +1482,22 @@ class RolesSeeder extends Seeder
                 "edit-submission" => false,
                 "delete-submission" => false,
 
+                // Submission Video Photo (Head Manager)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Head Manager)
+                "add-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Head Manager)
                 "add-sparepart" => false,
                 "browse-sparepart" => false,
@@ -1352,6 +1561,20 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Therapy Service (CSO)
+                'add-therapy_service' => false,
+                'browse-therapy_service' => true,
+                'check-therapy_service' => false,
+                'detail-therapy_service' => true,
+                'edit-therapy_service' => false,
+                'delete-therapy_service' => false,
+
+                //Therapy Service Location (CSO)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
             ]),
         ]);
 
@@ -1378,6 +1601,8 @@ class RolesSeeder extends Seeder
                 'detail-order' => true,
                 'edit-order' => false,
                 'delete-order' => false,
+                'order_hs' => false,
+                'acc-order_hs' => false,
 
                 //Update Order Status
                 'change-status_order'=> false,
@@ -1385,6 +1610,9 @@ class RolesSeeder extends Seeder
                 'change-status_order_delivery' => false,
                 'change-status_order_success' => false,
                 'change-status_order_reject' => false,
+                'change-status_order_stock_request_pending' => false,
+                'change-status_order_stock_request_success' => false,
+                'change-status_order_delivered' => false,
 
                 //Update Order Payment Status
                 'change-status_payment' => false,
@@ -1405,6 +1633,8 @@ class RolesSeeder extends Seeder
                 'acc-view-home_service' => true,
                 'acc-reschedule-home_service' => false,
                 'acc-cancel-home_service' => false,
+                'view-phone-home_service' => true,
+                'view-type-home_service' => true,
 
                 //Area Home Service
                 'browse-area_home_service' => true,
@@ -1516,6 +1746,22 @@ class RolesSeeder extends Seeder
                 "edit-submission" => false,
                 "delete-submission" => false,
 
+                // Submission Video Photo (Admin Management)
+                "add-submission_video_photo" => false,
+                "browse-submission_video_photo" => false,
+                "detail-submission_video_photo" => false,
+                "edit-submission_video_photo" => false,
+                "delete-submission_video_photo" => false,
+                "change-status-approved-submission_video_photo" => false,
+                "change-status-rejected-submission_video_photo" => false,
+
+                // Submission Video Photo Detail (Admin Management)
+                "add-submission_video_photo_detail" => false,
+                "edit-submission_video_photo_detail" => false,
+                "delete-submission_video_photo_detail" => false,
+                "change-status-approved-submission_video_photo_detail" => false,
+                "change-status-rejected-submission_video_photo_detail" => false,
+
                 // Sparepart (Admin Management)
                 "add-sparepart" => true,
                 "browse-sparepart" => true,
@@ -1579,6 +1825,20 @@ class RolesSeeder extends Seeder
                 'browse-bank' => false,
                 'edit-bank' => false,
                 'delete-bank' => false, 
+
+                //Therapy Service (Admin Management)
+                'add-therapy_service' => false,
+                'browse-therapy_service' => false,
+                'check-therapy_service' => false,
+                'detail-therapy_service' => false,
+                'edit-therapy_service' => false,
+                'delete-therapy_service' => false,
+
+                //Therapy Service Location (Admin Management)
+                'add-therapy_service_location' => false,
+                'browse-therapy_service_location' => false,
+                'edit-therapy_service_location' => false,
+                'delete-therapy_service_location' => false,
             ]),
         ]);
     }

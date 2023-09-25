@@ -10334,7 +10334,8 @@ code {
 
 /* Footer */
 .footer {
-  background: #f2edf3;
+  background: #fff;
+  /* background: #f2edf3; */
   border-top: 1px solid #e7dee9;
   padding: 30px 1rem;
   transition: all 0.25s ease;
@@ -13068,6 +13069,7 @@ dl {
   padding: 0;
   width: 260px;
   z-index: 11;
+  box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 8%);
   transition: width 0.25s ease, background 0.25s ease;
   -webkit-transition: width 0.25s ease, background 0.25s ease;
   -moz-transition: width 0.25s ease, background 0.25s ease;

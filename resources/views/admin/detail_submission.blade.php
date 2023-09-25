@@ -13,22 +13,18 @@ $menu_item_second = "detail_submission_form";
     #intro {
         padding-top: 2em;
     }
-
     table {
         margin: 1em;
         font-size: 14px;
     }
-
     .table-responsive table{
         display: inline-table;
         table-layout:fixed;
         overflow:scroll;
     }
-
     .table-responsive table td{
         word-wrap:break-word;
     }
-
     .table-responsive table .form-control {
         height: 32px;
         line-height: 32px;
@@ -36,55 +32,41 @@ $menu_item_second = "detail_submission_form";
         border-radius: 2px;
         margin-bottom: 0;
     }
-
     .table-responsive table .form-control.error {
         border-color: #f50000;
         border: 1px solid red;
     }
-
-    .table-responsive table td .save {
-        display: none;
-    }
-
+    .table-responsive table td .save {display: none;}
     table thead {
         background-color: #8080801a;
         text-align: center;
     }
-
     table td {
         border: 0.5px #8080801a solid;
         padding: 0.5em;
-
     }
-
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
+    .center {text-align: center;}
+    .right {}
     .pInTable {
         margin-bottom: 6pt !important;
         font-size: 10pt;
     }
-
     select.form-control {
         color: black !important;
     }
+    .content-wrapper{ background:transparent !important;}
 </style>
 @endsection
 
 @section('content')
 @if ($deliveryOrder['code'] !== null)
     <section id="intro" class="clearfix">
-        <div class="container">
+        <div class="content-wrapper">
             <div class="row justify-content-center">
                 <h2>SUBMISSION SUCCESS</h2>
             </div>
             <div class="row justify-content-center">
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td class="right">Submission Date</td>
                     </thead>
@@ -95,7 +77,7 @@ $menu_item_second = "detail_submission_form";
                     </tr>
                 </table>
 
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td colspan="2">Customer Data</td>
                     </thead>
@@ -129,7 +111,7 @@ $menu_item_second = "detail_submission_form";
                     </tr>
                 </table>
 
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td colspan="2">Detail Order</td>
                     </thead>
@@ -182,7 +164,7 @@ $menu_item_second = "detail_submission_form";
                     @endforeach
                 </table>
 
-                <table class="col-md-12">
+                <table class="w-100">
                     <thead>
                         <td>Sales Branch</td>
                         <td>Sales Code</td>
@@ -205,7 +187,7 @@ $menu_item_second = "detail_submission_form";
                     <?php for ($i = 0; $i < 10; $i++): ?>
                         <form method="POST" id="edit-form_{{ $i }}"></form>
                     <?php endfor; ?>
-                    <table class="col-md-12">
+                    <table class="w-100">
                         <thead>
                             <td colspan="9">Reference</td>
                         </thead>
@@ -281,7 +263,7 @@ $menu_item_second = "detail_submission_form";
                 </div>
 
                 <div class="table-responsive">
-                    <table class="col-md-12">
+                    <table class="w-100">
                         <thead>
                             <td colspan="9">Reference</td>
                         </thead>
@@ -356,7 +338,8 @@ $menu_item_second = "detail_submission_form";
                 <h2>SUBMISSION HISTORY LOG</h2>
             </div>
             <div class="row justify-content-center">
-                <table class="col-md-12">
+              <div class="table-responsive">
+                <table class="w-100">
                     <thead>
                         <td>No.</td>
                         <td>Action</td>
@@ -390,6 +373,7 @@ $menu_item_second = "detail_submission_form";
                         @endforeach
                     @endif
                 </table>
+              </div>
             </div>
         </div>
     </section>

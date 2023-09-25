@@ -204,6 +204,10 @@ if (
                                                 @endfor
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td>Wakimart Link</td>
+                                            <td>{{ $submission->wakimart_link }}</td>
+                                        </tr>
                                     </table>
                                 </div>
 
@@ -253,9 +257,10 @@ if (
                                                 <td>Phone</td>
                                                 <td>Province</td>
                                                 <td>City</td>
-                                                <td>Link HS</td>
-                                                <td>Order</td>
-                                                <td>Wakimart Link</td>
+                                                <td>Link Therapy</td>
+                                                {{-- <td>Link HS</td> --}}
+                                                {{-- <td>Order</td> --}}
+                                                {{-- <td>Wakimart Link</td> --}}
                                                 <td>Souvenir</td>
                                                 <td>Status</td>
                                                 <td>Deliv. Status</td>
@@ -264,7 +269,7 @@ if (
                                                 @endif
                                                 <td>Edit</td>
                                                 <td>Delete</td>
-                                                <td>Signature</td>
+                                                {{-- <td>Signature</td> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -308,37 +313,46 @@ if (
                                                         );
                                                     }
                                                     ?>
-                                                    <td class="text-center"
+                                                    {{-- <td class="text-center"
                                                         id="link-hs_{{ $key }}"
                                                         data-hs="{{ !empty($reference->link_hs) ? implode(", ", $link_hs) : "" }}"
                                                         style="overflow-x: auto;">
                                                         @if (!empty($reference->link_hs))
                                                             @foreach ($link_hs as $value)
-                                                                @if (is_numeric($value))
+                                                                @if (is_numeric($value)) --}}
                                                                     <?php
-                                                                    $hs = HomeService::select("code", "appointment")->where("id", $value)->first();
+                                                                    // $hs = HomeService::select("code", "appointment")->where("id", $value)->first();
 
-                                                                    $hs_code = str_replace("%2F", "/", $hs->code);
+                                                                    // $hs_code = str_replace("%2F", "/", $hs->code);
                                                                     ?>
-                                                                    <a id="link-hs-href_{{ $value }}"
+                                                                    {{-- <a id="link-hs-href_{{ $value }}"
                                                                         data-hs={{ $hs->code }}
                                                                         href="{{ route("admin_list_homeService", ["filter_search" => $hs_code, "isSubmission" => "true", "appointment" => $hs->appointment]) }}"
                                                                         target="_blank">
                                                                         <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: #2daaff;"></i>
-                                                                    </a>
-                                                                @else
+                                                                    </a> --}}
+                                                                {{-- @else
                                                                     <a id="link-hs-href_{{ $key }}"
                                                                         href="{{ $value }}"
                                                                         target="_blank">
                                                                         <i class="mdi mdi-numeric-{{ $i }}-box" style="font-size: 24px; color: red;"></i>
                                                                     </a>
-                                                                @endif
-                                                                <?php $i++; ?>
-                                                            @endforeach
+                                                                @endif --}}
+                                                                <?php //$i++; ?>
+                                                            {{-- @endforeach
                                                         @endif
+                                                    </td> --}}
+                                                    <td class="text-center"
+                                                        id="link-tservice_{{ $key }}"
+                                                        data-tservice="{{ $reference->reference_souvenir->theraphy_service_id != null ? $reference->reference_souvenir->theraphy_service_id : "" }}"
+                                                        data-tservice-code="{{ $reference->reference_souvenir->theraphy_service_id != null ? $reference->reference_souvenir->theraphyService['code'] : "" }}"
+                                                        style="overflow-x: auto;">
+                                                        <a href="{{ route('check_theraphy_service', ['code' => $reference->reference_souvenir->theraphyService['code'] ?? '']) }}" target="_blank">
+                                                            {{ $reference->reference_souvenir->theraphyService['code'] ?? '' }}
+                                                        </a>
                                                     </td>
 
-                                                    <td class="text-center"
+                                                    <td class="text-center d-none"
                                                         id="order_{{ $key }}"
                                                         data-order="{{ $reference->order_id }}"
                                                         data-ordercode="{{ $reference->order_code }}"
@@ -378,7 +392,7 @@ if (
                                                         }
                                                         @endphp
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="text-center d-none">
                                                         <a href="{{ $reference->wakimart_link }}" target="_blank">{{ $reference->wakimart_link }}</a>
                                                     </td>
                                                     <td id="souvenir_{{ $key }}"
@@ -435,7 +449,7 @@ if (
                                                             <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                         </button>
                                                     </td>
-                                                    <td class="text-center">
+                                                    <td class="text-center d-none">
                                                         @if($reference->reference_souvenir->status == 'success' &&  $reference->online_signature == '')
                                                             <button class="btn" style="padding: 0" onclick="createSignature({{ $reference->id }})">
                                                                 <i class="mdi mdi-pencil-box-outline" style="font-size: 24px; color: #32a852;"></i>                                                
@@ -756,7 +770,7 @@ if (
                             @endforeach
                         </select>
                     </div> --}}
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="edit-link-hs">Home Service</label>
                         <input type="hidden"
                             id="edit-link-hs"
@@ -773,8 +787,25 @@ if (
                             Choose Home Service
                         </button>
                         <input type="hidden" id="hs-row-count" value="0" />
-                    </div>
+                    </div> --}}
                     <div class="form-group">
+                        <label for="edit-link-tservice">Therapy Service</label>
+                        <input type="hidden"
+                            id="edit-link-tservice"
+                            name="theraphy_service_id"
+                            value="" />
+                        <div id="link-tservice-container"></div>
+                        <br>
+                        <button class="btn btn-gradient-info"
+                            type="button"
+                            id="btn_choose_tservice"
+                            data-originbutton="btn_choose_tservice"
+                            data-toggle="modal"
+                            data-target="#choose-tservice">
+                            Choose Therapy Service
+                        </button>
+                    </div>
+                    <div class="form-group d-none">
                         <label for="edit-order">Order</label>
                         <input type="hidden"
                             id="edit-order"
@@ -796,7 +827,7 @@ if (
                             value=""
                             placeholder="Order DO" />
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <label for="edit-order">Upload Images</label>
                         <label style="float: right">(Max: 3)</label>
                         <div class="clearfix"></div>
@@ -824,7 +855,7 @@ if (
                         @endfor
                         <div id="edit-order-image-del"></div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group d-none">
                         <input type="text"
                             class="form-control"
                             id="edit-wakimart-link"
@@ -849,7 +880,7 @@ if (
     </div>
 </div>
 
-<div class="modal fade"
+{{-- <div class="modal fade"
     id="choose-hs"
     tabindex="-1"
     role="dialog"
@@ -875,7 +906,7 @@ if (
                         class="form-control"
                         id="hs-filter-date"
                         name="date"
-                        value="<?php echo date("Y-m-d"); ?>"/>
+                        value="--}}<?php // echo date("Y-m-d"); ?>{{--"/>
 
                     <form target="_blank" id="make-new-hs" action="{{ route('admin_add_homeService') }}" style="text-align: center;">
                         <button name="reference_id" id="btn_add_hs_reference" value="186" class='btn btn-gradient-primary btn-sm' type='submit' style="width: 100%; margin: 1em 0em 0em 0em;" >New Home Service</button>
@@ -889,6 +920,53 @@ if (
                             <td>Choose</td>
                         </thead>
                         <tbody id="table-hs"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> --}}
+<div class="modal fade"
+    id="choose-tservice"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Choose Therapy Service
+                </h5>
+                <button type="button"
+                    class="close"
+                    id="choose-tservice-close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="edit-phone">Search Code</label>
+                    <input type="text"
+                        class="form-control"
+                        id="tservice-filter-search"
+                        name="search" />
+                    <div style="text-align: center;">
+                        <button type="button" id="btn_check_tservice" class="btn btn-gradient-primary btn-sm" style="width: 100%; margin: 1em 0em 0em 0em;">Check Code</button>
+                    </div>
+                    <form target="_blank" id="make-new-tservice" action="{{ route('add_theraphy_service') }}" style="text-align: center;">
+                        <button name="reference_id" id="btn_add_tservice_reference" value="186" class='btn btn-gradient-warning btn-sm' type='submit' style="width: 100%; margin: 1em 0em 0em 0em;" >New Therapy Service</button>
+                    </form>
+                </div>
+                <div style="overflow-y: auto; height: 20em;">
+                    <table class="col-md-12" style="margin: 1em 0em;">
+                        <thead>
+                            <td>Code</td>
+                            <td>Detail</td>
+                            <td>Choose</td>
+                        </thead>
+                        <tbody id="table-tservice"></tbody>
                     </table>
                 </div>
             </div>
@@ -974,6 +1052,20 @@ if (
                         <tbody id="append_tbody_hs">
 
                         </tbody>
+                    </table>
+                </div>
+                <div id="div_detailtservice" class="form-group d-none">
+                    <table id="table-detail-tservice" style="margin: 1em 0em; width:100%">
+                        <thead>
+                            <td>Therapy Code</td>
+                            <td>Detail</td>
+                        </thead>
+                        <tbody id="append_tbody_tservice">
+
+                        </tbody>
+                    </table>
+                    <table id="append_tservice_schedule" style="margin: 1em 0em; width:100%">
+                        
                     </table>
                 </div>
                 <div id="div_detailorder" class="form-group d-none">
@@ -1395,10 +1487,13 @@ function loadDataPerRef(ref_id) {
     .done(function( result ) {
         // Empty data
         $('#div_detailhs').addClass('d-none');
+        $('#div_detailtservice').addClass('d-none');
         $('#div_detailorder').addClass('d-none');
         $("#div_detailorder_code").addClass('d-none');
         $('#div_wakimartlink').addClass('d-none');
         $('#append_tbody_hs').empty();
+        $('#append_tbody_tservice').empty();
+        $('#append_tservice_schedule').empty();
         $('#append_tbody_order').empty();
         $('#append_tbody_wakimart_link').empty();
         $('#append_tbody_other').empty();
@@ -1408,7 +1503,8 @@ function loadDataPerRef(ref_id) {
             var data = JSON.parse(result);
             var data_refs = data['data_refs'];// Reference souvenir
             var data_ref = data['data_ref']; // Reference
-            var data_hs = data['data_hs'];
+            var data_hs = null; //data['data_hs'];
+            var data_tservice = data['data_tservice'];
             var data_order = data['data_order'];
             var data_souvenir = data['data_souvenir'];
             // var data_prize = data['data_prize'];
@@ -1449,6 +1545,39 @@ function loadDataPerRef(ref_id) {
                     }
 
                 }
+            }
+
+            if (data_tservice != null) {
+                $('#div_detailtservice').removeClass('d-none');
+                $("#append_tbody_tservice").html(`
+                    <tr>
+                        <td>`+data_tservice[0]['code']+`</td>
+                        <td>`
+                            +data_tservice[0]['name']+`<br>`
+                            +data_tservice[0]['phone']+`<br>`
+                            +data_tservice[0]['address']+
+                        `</td>
+                    </tr>
+                `)
+                var tservice_sch = '';
+                var tservice_sch_head = '';
+                var tservice_sch_body = '';
+                var tservice_sign_in = data_tservice[0]['theraphy_sign_in'];
+                for (var i = 0; i < tservice_sign_in.length; i++) {
+                    if (i%9==0) {
+                        tservice_sch_head = '<thead><tr>';
+                        tservice_sch_body = '<tbody><tr>';
+                    }
+                    
+                    tservice_sch_head += `<td class="text-center">`+(i+1)+`</td>`;
+                    tservice_sch_body += `<td class="text-center">`+tservice_sign_in[i]['therapy_date']+`</td>`
+
+                    if ((i+1)%9==0 || i==(tservice_sign_in.length -1)) {
+                        if (tservice_sch_head != '') tservice_sch += tservice_sch_head + '</tr></thead>';
+                        if (tservice_sch_body != '') tservice_sch += tservice_sch_body + '</tr></tbody>';
+                    }
+                }
+                $("#append_tservice_schedule").html(tservice_sch);
             }
 
             //detail Order
@@ -1627,8 +1756,10 @@ function clearModal() {
     document.getElementById("edit-city").value = "";
     document.getElementById("edit-souvenir").selectedIndex = 0;
     // document.getElementById("edit-prize").selectedIndex = 0;
-    document.getElementById("edit-link-hs").value = "";
-    document.getElementById("link-hs-container").innerHTML = "";
+    // document.getElementById("edit-link-hs").value = "";
+    // document.getElementById("link-hs-container").innerHTML = "";
+    document.getElementById("edit-link-tservice").value = "";
+    document.getElementById("link-tservice-container").innerHTML = "";
     document.getElementById("edit-order").value = "";
     document.getElementById("edit-order-code").value = "";
     // document.getElementById("btn_choose_order").innerHTML = "Choose Order";
@@ -1667,6 +1798,8 @@ function clickEdit(e) {
     const city = document.getElementById("city_" + refSeq).getAttribute("data-city");
     const souvenir = document.getElementById("souvenir_" + refSeq).getAttribute("data-souvenir");
     // const prize = document.getElementById("prize_" + refSeq).dataset.prize;
+    const link_tservice = document.getElementById("link-tservice_" + refSeq).getAttribute("data-tservice");
+    const link_tservice_code = document.getElementById("link-tservice_" + refSeq).getAttribute("data-tservice-code");
 
     function linkHS() {
         try {
@@ -1700,7 +1833,8 @@ function clickEdit(e) {
 
     document.getElementById("edit-form").setAttribute("action", actionUpdate);
     document.getElementById("edit-id").value = id;
-    document.getElementById("btn_add_hs_reference").value = id;
+    // document.getElementById("btn_add_hs_reference").value = id;
+    document.getElementById("btn_add_tservice_reference").value = id;
     document.getElementById("edit-name").value = name;
     document.getElementById("edit-age").value = age;
     document.getElementById("edit-phone").value = phone;
@@ -1714,7 +1848,7 @@ function clickEdit(e) {
     document.getElementById("edit-souvenir").value = souvenir;
     // document.getElementById("edit-prize").value = prize;
 
-    document.getElementById("hs-row-count").value = hsArray.length;
+    // document.getElementById("hs-row-count").value = hsArray.length;
     hsArray.forEach(function (value, index) {
         const divRow = document.createElement("div");
         divRow.id = `hs-row_${index}`;
@@ -1739,7 +1873,15 @@ function clickEdit(e) {
         divRow.appendChild(buttonRemove);
         document.getElementById("link-hs-container").appendChild(divRow);
     });
-    document.getElementById("edit-link-hs").value = hsArray.join(", ");
+    // document.getElementById("edit-link-hs").value = hsArray.join(", ");
+    document.getElementById("edit-link-tservice").value = link_tservice;
+    if (link_tservice_code) {
+        document.getElementById("link-tservice-container").innerHTML = `
+            <div class="form-row">
+                <input type="text" class="form-control col-8" disabled readonly value="`+link_tservice_code+`"/>
+                <button type="button" class="btn btn-gradient-danger col-4" onclick="removeTService(this)">Remove</button>
+            </div>`;
+    }
 
     document.getElementById("edit-order").value = orderId();
     // document.getElementById("btn_choose_order").innerHTML = orderCode() || "Choose Waki Order";
@@ -1897,52 +2039,100 @@ $(document).ready(function () {
     });
 
     // KHUSUS UNTUK HS
-    $("#choose-hs").on('shown.bs.modal', function (event) {
+    // $("#choose-hs").on('shown.bs.modal', function (event) {
+    //     // $("#edit-reference").modal('hide');
+    //     originButton = event.relatedTarget.dataset.originbutton;
+
+    //     let submission_id = "{{ $submission->id }}";
+    //     let date = $('#hs-filter-date').val();
+
+    //     getHsSubmission(date, submission_id, originButton);
+    // });
+
+    // $("#choose-hs").on('hidden.bs.modal', function () {
+    //     $('#btn_add_hs_reference').val("");
+    // });
+
+    // $('#hs-filter-date').on('change', function (e) {
+    //     let submission_id = "{{ $submission->id }}";
+    //     let date = $('#hs-filter-date').val();
+    //     getHsSubmission(date, submission_id, originButton);
+    // });
+
+    // function getHsSubmission(date, submission_id, originButton) {
+    //     $('#table-hs').html("");
+    //     $.get('{{ route("list_hs_submission") }}', { date: date, submission_id: submission_id })
+    //         .done(function (result) {
+    //             if (result.hs.length > 0) {
+    //                 let hsNya = result.hs;
+
+    //                 $.each(hsNya, function (key, value) {
+    //                     let JamNya = new Date(value.appointment);
+
+    //                     let isiNya = "<tr><td>" + JamNya.getHours() + ":" + (JamNya.getMinutes() < 10 ? '0' : '') + JamNya.getMinutes() + "</td><td>" +
+    //                     "<b>Name</b>: " + value.name + "<br>" +
+    //                     "<b>Phone</b>: " + value.phone + "<br>" +
+    //                     "<b>Address</b>: " + value.address + "<br>";
+
+    //                     if (originButton === "btn_choose_hs") {
+    //                         isiNya += "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsNya(" + value.id + ", \"" + value.code + "\")'>Choose This</button></td></tr>";
+    //                     } else {
+    //                         isiNya += `</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsForEdit(${value.id}, "${value.code}", "${originButton}")'>Choose This</button></td></tr>`;
+    //                     }
+
+    //                     $('#table-hs').append(isiNya);
+    //                 });
+    //             } else {
+    //                 let isiNya = "<tr><td colspan='3' style='text-align: center;'>No Data</td></tr>";
+    //                 $('#table-hs').append(isiNya);
+    //             }
+    //         });
+    // }
+
+    // KHUSUS UNTUK THERAPY SERVICE
+    $("#choose-tservice").on('shown.bs.modal', function (event) {
         // $("#edit-reference").modal('hide');
         originButton = event.relatedTarget.dataset.originbutton;
 
         let submission_id = "{{ $submission->id }}";
-        let date = $('#hs-filter-date').val();
+        // let search = $('#tservice-filter-search').val();
 
-        getHsSubmission(date, submission_id, originButton);
+        // getHsSubmission(search, submission_id, originButton);
     });
 
-    $("#choose-hs").on('hidden.bs.modal', function () {
-        $('#btn_add_hs_reference').val("");
+    $("#choose-tservice").on('hidden.bs.modal', function () {
+        $('#btn_add_tservice_reference').val("");
     });
 
-    $('#hs-filter-date').on('change', function (e) {
+    $('#btn_check_tservice').on('click', function (e) {
         let submission_id = "{{ $submission->id }}";
-        let date = $('#hs-filter-date').val();
-        getHsSubmission(date, submission_id, originButton);
+        let search = $('#tservice-filter-search').val();
+        getTserviceSubmission(search, submission_id, originButton);
     });
 
-    function getHsSubmission(date, submission_id, originButton) {
-        $('#table-hs').html("");
-        $.get('{{ route("list_hs_submission") }}', { date: date, submission_id: submission_id })
+    function getTserviceSubmission(search, submission_id, originButton) {
+        $('#table-tservice').html("");
+        $.get('{{ route("list_tservice_submission") }}', { search: search, submission_id: submission_id })
             .done(function (result) {
-                if (result.hs.length > 0) {
-                    let hsNya = result.hs;
+                if (result.tservice.length > 0) {
+                    let tserviceNya = result.tservice;
 
-                    $.each(hsNya, function (key, value) {
-                        let JamNya = new Date(value.appointment);
-
-                        let isiNya = "<tr><td>" + JamNya.getHours() + ":" + (JamNya.getMinutes() < 10 ? '0' : '') + JamNya.getMinutes() + "</td><td>" +
+                    $.each(tserviceNya, function (key, value) {
+                        let isiNya = "<tr><td>" + value.code + "</td><td>" +
                         "<b>Name</b>: " + value.name + "<br>" +
-                        "<b>Phone</b>: " + value.phone + "<br>" +
-                        "<b>Address</b>: " + value.address + "<br>";
+                        "<b>Phone</b>: " + value.phone + "<br>";
 
-                        if (originButton === "btn_choose_hs") {
-                            isiNya += "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsNya(" + value.id + ", \"" + value.code + "\")'>Choose This</button></td></tr>";
+                        if (originButton === "btn_choose_tservice") {
+                            isiNya += "</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectTserviceNya(" + value.id + ", \"" + value.code + "\")'>Choose This</button></td></tr>";
                         } else {
-                            isiNya += `</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectHsForEdit(${value.id}, "${value.code}", "${originButton}")'>Choose This</button></td></tr>`;
+                            // isiNya += `</td><td><button class='btn btn-gradient-info btn-sm' type='button' onclick='selectTserviceForEdit(${value.id}, "${value.code}", "${originButton}")'>Choose This</button></td></tr>`;
                         }
 
-                        $('#table-hs').append(isiNya);
+                        $('#table-tservice').append(isiNya);
                     });
                 } else {
                     let isiNya = "<tr><td colspan='3' style='text-align: center;'>No Data</td></tr>";
-                    $('#table-hs').append(isiNya);
+                    $('#table-tservice').append(isiNya);
                 }
             });
     }
@@ -2062,55 +2252,71 @@ $(document).ready(function () {
     }
 });
 
-function selectHsNya(id, code) {
-    let linkHsArray = [];
+// function selectHsNya(id, code) {
+//     let linkHsArray = [];
 
-    if (document.getElementById("edit-link-hs").value) {
-        linkHsArray = (document.getElementById("edit-link-hs").value).split(", ");
-    }
+//     if (document.getElementById("edit-link-hs").value) {
+//         linkHsArray = (document.getElementById("edit-link-hs").value).split(", ");
+//     }
 
-    linkHsArray.push(id);
-    document.getElementById("edit-link-hs").value = linkHsArray.join(", ");
+//     linkHsArray.push(id);
+//     document.getElementById("edit-link-hs").value = linkHsArray.join(", ");
 
-    let hsRow = document.getElementById("hs-row-count").value;
+//     let hsRow = document.getElementById("hs-row-count").value;
 
-    const divRow = document.createElement("div");
-    divRow.id = `hs-row_${hsRow}`;
-    divRow.className = "form-row";
+//     const divRow = document.createElement("div");
+//     divRow.id = `hs-row_${hsRow}`;
+//     divRow.className = "form-row";
 
-    const hsTextInput = document.createElement("input");
-    hsTextInput.type = "text";
-    hsTextInput.className = "form-control col-8";
-    hsTextInput.disabled = true;
-    hsTextInput.readOnly = true;
-    hsTextInput.value = code;
+//     const hsTextInput = document.createElement("input");
+//     hsTextInput.type = "text";
+//     hsTextInput.className = "form-control col-8";
+//     hsTextInput.disabled = true;
+//     hsTextInput.readOnly = true;
+//     hsTextInput.value = code;
 
-    const buttonRemove = document.createElement("button");
-    buttonRemove.type = "button";
-    buttonRemove.className = "btn btn-gradient-danger col-4";
-    buttonRemove.innerHTML = "Remove";
-    buttonRemove.setAttribute("data-hs", id);
-    buttonRemove.setAttribute("data-sequence", hsRow);
-    buttonRemove.setAttribute("onclick", "removeHS(this)");
+//     const buttonRemove = document.createElement("button");
+//     buttonRemove.type = "button";
+//     buttonRemove.className = "btn btn-gradient-danger col-4";
+//     buttonRemove.innerHTML = "Remove";
+//     buttonRemove.setAttribute("data-hs", id);
+//     buttonRemove.setAttribute("data-sequence", hsRow);
+//     buttonRemove.setAttribute("onclick", "removeHS(this)");
 
-    divRow.appendChild(hsTextInput);
-    divRow.appendChild(buttonRemove);
-    document.getElementById("link-hs-container").appendChild(divRow);
+//     divRow.appendChild(hsTextInput);
+//     divRow.appendChild(buttonRemove);
+//     document.getElementById("link-hs-container").appendChild(divRow);
 
-    hsRow++;
-    document.getElementById("hs-row-count").value = hsRow;
+//     hsRow++;
+//     document.getElementById("hs-row-count").value = hsRow;
 
-    $("#choose-hs").modal('hide');
+//     $("#choose-hs").modal('hide');
+// }
+
+// function removeHS(e) {
+//     const linkHsArray = (document.getElementById("edit-link-hs").value).split(", ");
+//     const reconstructedHsArray = linkHsArray.filter(function (value) {
+//         return value !== e.dataset.hs;
+//     });
+//     document.getElementById("edit-link-hs").value = reconstructedHsArray.join(", ");
+
+//     document.getElementById(`hs-row_${e.dataset.sequence}`).remove();
+// }
+
+function selectTserviceNya(id, code) {
+    document.getElementById("edit-link-tservice").value = id;
+    document.getElementById("link-tservice-container").innerHTML = `
+        <div class="form-row">
+            <input type="text" class="form-control col-8" disabled readonly value="`+code+`"/>
+            <button type="button" class="btn btn-gradient-danger col-4" onclick="removeTService(this)">Remove</button>
+        </div>`;
+
+    $("#choose-tservice").modal('hide');
 }
 
-function removeHS(e) {
-    const linkHsArray = (document.getElementById("edit-link-hs").value).split(", ");
-    const reconstructedHsArray = linkHsArray.filter(function (value) {
-        return value !== e.dataset.hs;
-    });
-    document.getElementById("edit-link-hs").value = reconstructedHsArray.join(", ");
-
-    document.getElementById(`hs-row_${e.dataset.sequence}`).remove();
+function removeTService(e) {
+    document.getElementById("edit-link-tservice").value = "";
+    document.getElementById(`link-tservice-container`).innerHTML = "";
 }
 
 function selectOrderNya(id, code) {

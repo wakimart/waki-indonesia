@@ -224,6 +224,13 @@ $menu_item_second = "list_acceptance_form";
 
 	              			<div class="form-group">
 								<label for=""><h2>Product Upgrade</h2></label><br/>
+
+		              			<div class="form-group">
+					                <label for="">No. DO</label>
+					                <input type="text" class="form-control" id="bill_do" name="bill_do" placeholder="No DO" data-msg="Mohon Isi Nomor DO" value="{{ $acceptance['bill_do'] }}" required>
+					                <div class="validation"></div>
+		              			</div>
+
 	                			<label for="">New Product</label>
 	                			<select class="form-control" id="newproduct_id" name="newproduct_id" data-msg="Mohon Pilih Product Baru" required>
 									<option selected disabled value="">Pilihan Product</option>

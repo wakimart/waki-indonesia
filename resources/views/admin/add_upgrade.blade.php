@@ -8,9 +8,7 @@
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
+    #intro {padding-top: 2em;}
     button{
         background: #1bb1dc;
         border: 0;
@@ -29,92 +27,50 @@
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     #regForm {
-	  background-color: #ffffff;
-	  margin: 100px auto;
-	  padding: 40px;
-	  width: 70%;
-	  min-width: 300px;
-	}
-
-	/* Style the input fields */
-	/*input {
-	  padding: 10px;
-	  width: 100%;
-	  font-size: 17px;
-	  font-family: Raleway;
-	  border: 1px solid #aaaaaa;
-	}*/
-
-	/* Mark input boxes that gets an error on validation: */
-	input.invalid {
-	  background-color: #ffdddd;
-	}
-
-	/* Hide all steps by default: */
-	.tab {
-	  display: none;
-	}
-
-	/* Make circles that indicate the steps of the form: */
-	.step {
-	  height: 15px;
-	  width: 15px;
-	  margin: 0 2px;
-	  background-color: #bbbbbb;
-	  border: none;
-	  border-radius: 50%;
-	  display: inline-block;
-	  opacity: 0.5;
-	}
-
-	/* Mark the active step: */
-	.step.active {
-	  opacity: 1;
-	}
-
-	/* Mark the steps that are finished and valid: */
-	.step.finish {
-	  background-color: #4CAF50;
-	}
-
-   .div-CheckboxGroup {
-	  border:solid 1px rgba(128, 128, 128, 0.32941);
-	  padding:0px 10px ;
-	  border-radius:3px;
-	}
-
-	input[type='checkbox'], input[type='radio']{
-		margin-left: 0px !important;
-	}
-
-	table {
+    	  background-color: #ffffff;
+    	  margin: 100px auto;
+    	  padding: 40px;
+    	  width: 70%;
+    	  min-width: 300px;
+  	}
+  	input.invalid { background-color: #ffdddd; }
+  	.tab { display: none; }
+  	.step {
+    	  height: 15px;
+    	  width: 15px;
+    	  margin: 0 2px;
+    	  background-color: #bbbbbb;
+    	  border: none;
+    	  border-radius: 50%;
+    	  display: inline-block;
+    	  opacity: 0.5;
+  	}
+  	.step.active { opacity: 1; }
+  	.step.finish { background-color: #4CAF50; }
+    .div-CheckboxGroup {
+    	  border:solid 1px rgba(128, 128, 128, 0.32941);
+    	  padding:0px 10px ;
+    	  border-radius:3px;
+  	}
+  	input[type='checkbox'], input[type='radio']{
+  		  margin-left: 0px !important;
+  	}
+  	table {
         margin: 1em;
         font-size: 14px;
     }
-
     table thead {
         background-color: #8080801a;
         text-align: center;
     }
-
     table td {
         border: 0.5px #8080801a solid;
         padding: 0.5em;
-    }
-
-    .center {
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
-    .justify-content-center{
-    	padding: 0em 1em;
-    }
+    } 
+    .center { text-align: center; }
+    .right { text-align: right; }
+    .justify-content-center{ padding: 0em 1em; }
 </style>
 @endsection
 

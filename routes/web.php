@@ -38,15 +38,18 @@ Route::get('/thankyou-personal-homecare/{id}', 'PersonalHomecareController@thank
 Route::get('/public-homecare/{id}', 'PublicHomecareController@puhForm')->name('public_homecare');
 Route::get('/thankyou-public-homecare/{id}', 'PublicHomecareController@thankyouForm')->name('thankyou_puh');
 
+//Therapy Service
+Route::get('/therapy-service/{id}', 'TheraphyServiceController@publicTherapyDetail')->name('therapy_service_share');
+
 //Service Product
-Route::get('/service', 'ServiceController@indexUser')->name('service');
+// Route::get('/service', 'ServiceController@indexUser')->name('service');
 Route::get('/trackservice/{id}', 'ServiceController@trackService')->name('track_service');
 
 //DO Register
-Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
-Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
+// Route::get('/deliveryorder', 'DeliveryOrderController@index')->name('delivery_order');
+// Route::post('/deliveryorder', 'DeliveryOrderController@store')->name('store_delivery_order');
 Route::get('/register-success', 'DeliveryOrderController@successorder')->name('successorder');
-Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
+// Route::get('/templistregwaki1995', 'DeliveryOrderController@listDeliveryOrder')->name('listDeliveryOrder');
 
 //Order
 // Route::get('/order', 'OrderController@index')->name('add_order');
@@ -55,8 +58,8 @@ Route::get('/order-success', 'OrderController@successorder')->name('order_succes
 //Route::get('/templistorderwaki1995', 'OrderController@listOrder')->name('list_order');
 
 //Home service
-Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeServices');
-Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
+// Route::get('/homeservice', 'HomeServiceController@index')->name('add_homeServices');
+// Route::post('/homeservice', 'HomeServiceController@store')->name('store_home_service');
 Route::get('/homeservice-success', 'HomeServiceController@successRegister')->name('homeServices_success');
 
 // Service
@@ -92,6 +95,8 @@ Route::get("/fetchPrize", "PrizeController@fetchPrize")->name("fetchPrize");
 Route::get("/fetchProductService", "ProductServiceController@fetchProductService")->name("fetchProductService");
 
 Route::get("/changeStatusHS", "SubmissionController@firstRunStatus");
+Route::get("/check_submission_video_photo_branch", "SubmissionVideoPhotoController@checkBrancSubmission")
+    ->name("check_submission_video_photo_branch");
 
 //KHUSUS WEB SERVICE APPS (for non CSRF)
 Route::group(['prefix' => 'api-apps'], function () {
@@ -120,10 +125,10 @@ Route::group(['prefix' => 'api-apps'], function () {
         return RajaOngkir::FetchAllDistrictAPI($city);
     }); //fetching all district from province
 	Route::group(['prefix' => 'homeservice'], function () {
-	    Route::post('add','HomeServiceController@addApi'); //add home service
-		Route::post('update','HomeServiceController@updateApi'); //update home service
+	    // Route::post('add','HomeServiceController@addApi'); //add home service
+		// Route::post('update','HomeServiceController@updateApi'); //update home service
 		Route::post('reportHomeService','HomeServiceController@reportHomeService'); //reportHomeService home service
-	    Route::post('delete','HomeServiceController@deleteApi'); //delete home service
+	    // Route::post('delete','HomeServiceController@deleteApi'); //delete home service
 	    Route::post('list','HomeServiceController@listApi'); //list home service
 		Route::get('view/{id}','HomeServiceController@viewApi'); //view home service
 		Route::get('reportHomeService/{id}', 'HomeServiceController@singleReportHomeService'); //get reportHomeService home service
@@ -133,33 +138,33 @@ Route::group(['prefix' => 'api-apps'], function () {
 	});
 
 	Route::group(['prefix' => 'register'], function () {
-	    Route::post('add','DeliveryOrderController@addApi'); //add register DO
+	    // Route::post('add','DeliveryOrderController@addApi'); //add register DO
 	    Route::post('list','DeliveryOrderController@listApi'); //list register DO
-		Route::post('update','DeliveryOrderController@updateApi'); //update register DO
+		// Route::post('update','DeliveryOrderController@updateApi'); //update register DO
 		Route::get('view/{id}','DeliveryOrderController@viewApi'); //view single register DO
-		Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
+		// Route::post('delete','DeliveryOrderController@deleteApi'); //delete register DO
 	});
 
 	Route::group(['prefix' => 'order'], function () {
-	    Route::post('add','OrderController@addApi'); //add order
+	    // Route::post('add','OrderController@addApi'); //add order
 		Route::post('list','OrderController@listApi'); //list order
-		Route::post('update','OrderController@updateApi'); //update order
+		// Route::post('update','OrderController@updateApi'); //update order
 		Route::get('view/{id}','OrderController@viewApi'); //view single order
-		Route::post('delete','OrderController@deleteApi'); //delete order
+		// Route::post('delete','OrderController@deleteApi'); //delete order
 	});
 
 	Route::group(['prefix' => 'acceptance'], function () {
-	    Route::post('add','AcceptanceController@addApi'); //add acceptance
+	    // Route::post('add','AcceptanceController@addApi'); //add acceptance
 		Route::post('list','AcceptanceController@listApi'); //list acceptance
-		Route::post('update','AcceptanceController@updateApi'); //update acceptance
+		// Route::post('update','AcceptanceController@updateApi'); //update acceptance
 		Route::get('view/{id}','AcceptanceController@viewApi'); //view single acceptance
-		Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
+		// Route::post('delete','AcceptanceController@deleteApi'); //delete acceptance
 	});
 
     // Submission form API
     Route::group(["prefix" => "submission"], function () {
         // Create submission API
-        Route::post("add", "SubmissionController@addApi");
+        // Route::post("add", "SubmissionController@addApi");
 
         // Show submission list API
         Route::post("list_submission", "SubmissionController@listApi");
@@ -168,24 +173,24 @@ Route::group(['prefix' => 'api-apps'], function () {
         Route::post("detail", "SubmissionController@detailApi");
 
         // Update submission API
-        Route::post("update", "SubmissionController@updateApi");
+        // Route::post("update", "SubmissionController@updateApi");
 
         // Delete submission API
-        Route::post("delete", "SubmissionController@deleteApi");
+        // Route::post("delete", "SubmissionController@deleteApi");
     });
 
     // Reference API
     Route::group(["prefix" => "reference"], function () {
         // Create reference API
-        Route::post("/add/mgm", "ReferenceController@storeReferenceMGM");
-        Route::post("/add/referensi", "ReferenceController@storeReferensi");
+        // Route::post("/add/mgm", "ReferenceController@storeReferenceMGM");
+        // Route::post("/add/referensi", "ReferenceController@storeReferensi");
 
         // List reference API
         Route::post("list_reference", "ReferenceController@listApi");
 
         // Update reference API
-        Route::post("/update/mmg", "ReferenceController@updateMGMApi");
-        Route::post("/update/referensi", "ReferenceController@updateApi");
+        // Route::post("/update/mmg", "ReferenceController@updateMGMApi");
+        // Route::post("/update/referensi", "ReferenceController@updateApi");
     });
 
     // Promo API
@@ -292,6 +297,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update', 'UserAdminController@update')
             ->name('update_useradmin')
             ->middleware('can:edit-user');
+        Route::post('/delete_multiple', 'UserAdminController@deleteMultiple')
+            ->name('delete_multiple');
         //Delete UserAdmin
         Route::post('/{userAdminNya}', 'UserAdminController@destroy')
             ->name('delete_useradmin');
@@ -351,7 +358,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::delete('/delete_regispromo/{id}', 'RegistrationPromotionController@admin_DeleteRegistrationPromo')
             ->name('delete_regispromo')
             ->middleware('can:delete-deliveryorder');
-        	    
+
     });
 
     Route::group(['prefix' => 'order', 'middleware' => 'auth'], function() {
@@ -383,6 +390,17 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/update_status_order', 'OrderController@updateStatusOrder')
             ->name('update_status_order')
             ->middleware('can:change-status_order');
+        //Update Order Delivered Image
+        Route::post('/update_delivered_image_order', 'OrderController@updateDeliveredImage')
+            ->name('update_delivered_image_order')
+            ->middleware('can:change-status_order');
+        //Add Order Home Service
+        Route::post('/order_hs', 'OrderController@orderHS')
+            ->name('order_hs')
+            ->middleware('can:order_hs');
+        Route::post('/acc_order_hs', 'OrderController@accOrderHs')
+            ->name('acc_order_hs')
+            ->middleware('can:acc-order_hs');
         //Store Order Payment
         Route::post('/store_order_payment', 'OrderController@storeOrderPayment')
             ->name('store_order_payment')
@@ -442,6 +460,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/export_order_report_cso', 'OrderController@admin_ExportOrderReportCso')
             ->name('admin_export_order_report_cso')
             ->middleware('can:browse-order_report_cso');
+
+        Route::get('/check_order_code', 'OrderController@checkOrderCode')
+            ->name('check_order_code');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {
@@ -518,6 +539,45 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/print_area_list_hs', 'HomeServiceController@printAreaListHs')
             ->name('print_area_list_hs')
             ->middleware('can:browse-area_home_service');
+
+        // Survey utk Homeservice
+        Route::post('/add-home_service-survey', 'HomeServiceSurveyController@store')
+            ->name('add_home_service_survey');
+        Route::get('/detail-home_service-survey/{id}', 'HomeServiceSurveyController@detail')
+            ->name('detail_home_service_survey');
+    });
+
+    Route::group(['prefix' => 'therapy', 'middleware' => 'auth'], function() {
+        //Add Absent Off
+        Route::get('/', 'TheraphyServiceController@create')
+            ->name('add_theraphy_service');
+            // ->middleware('can:add-therapy_service');
+        Route::post('/', 'TheraphyServiceController@store')
+            ->name('store_theraphy_service');
+            // ->middleware('can:add-therapy_service');
+        Route::get('/check', 'TheraphyServiceController@check')
+            ->name('check_theraphy_service');
+            // ->middleware('can:check-therapy_service');
+        Route::post('/store-check-in', 'TheraphyServiceController@storeCheckIn')
+            ->name('store_check_in_theraphy_service');
+            // ->middleware('can:store_check_in-therapy_service');
+        Route::get('/list', 'TheraphyServiceController@list')
+            ->name('list_theraphy_service');
+        Route::get('/detail/{id}', 'TheraphyServiceController@detail')->name('detail_theraphy_service');
+        Route::post('add-therapy-service-souvenir', 'TheraphyServiceController@addTherapyServiceSouvenir')->name('add_therapy_service_souvenir');
+        Route::get('/edit/{id}', 'TheraphyServiceController@edit')->name('edit_theraphy_service');
+        Route::match(['put', 'patch'],'/update/{id}', 'TheraphyServiceController@update')->name('update_theraphy_service');
+        Route::match(['put', 'patch'],'/update-status/{id}', 'TheraphyServiceController@updateStatus')->name('update_status_theraphy_service');
+        Route::delete('/delete/{id}', 'TheraphyServiceController@destroy')->name('delete_theraphy_service');
+
+        // therapy location
+        Route::get('/add-therapy-location', 'TheraphyServiceController@createTherapyLocation')->name('add_therapy_location');
+        Route::post('/store-therapy-location', 'TheraphyServiceController@storeTherapyLocation')->name('store_therapy_location');
+        Route::get('/list-therapy-location', 'TheraphyServiceController@listTherapyLocation')->name('list_therapy_location');
+        Route::get('/edit-therapy-location/{id}', 'TheraphyServiceController@editTherapyLocation')->name('edit_therapy_location');
+        Route::match(['put', 'patch'],'/update-therapy-location/{id}', 'TheraphyServiceController@updateTherapyLocation')->name('update_therapy_location');
+        Route::delete('/delete-therapy-location/{id}', 'TheraphyServiceController@destroyTherapyLocation')->name('delete_therapy_location');
+        Route::get('/get-therapy-location-data-by-branch/{branch_id}', 'TheraphyServiceController@getTherapyLocationDataByBranch')->name('get_therapy_location_data_by_branch');
     });
 
     Route::group(['prefix' => 'service','middleware' => 'auth'], function() {
@@ -581,7 +641,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name("update_fail_repair")
             ->middleware("can:edit-service");
     });
-    
+
     Route::group(['prefix' => 'technician_schedule', 'middleware' => 'auth'], function() {
         //Add Technician Schedule
         Route::get('/', 'TechnicianScheduleController@create')
@@ -982,7 +1042,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/import_data_sourcing', 'DataSourcingController@importDataSourcing')
             ->name('import_data_sourcing')
             ->middleware('can:add-data_sourcing');
-        
+
         // Create Import Data Sourcing
         Route::post('/import_data_sourcing', 'DataSourcingController@storeImportDataSourcing')
             ->name('store_import_data_sourcing')
@@ -1004,7 +1064,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/list', 'DataTherapyController@index')
             ->name('list_data_therapy')
             ->middleware('can:browse-data_therapy');
-        
+
         //Detail Data Therapy
         Route::get('/detail', 'DataTherapyController@show')
             ->name('detail_data_therapy')
@@ -1024,7 +1084,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::post('/delete', 'DataTherapyController@destroy')
             ->name('delete_data_therapy')
             ->middleware('can:delete-data_therapy');
-        
+
         //Export XLS Data Therapy
         Route::get('/export_to_xls', 'DataTherapyController@export_to_xls')
             ->name('export_data_therapy')
@@ -1117,6 +1177,64 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // add online signature
         Route::post("/online_signature", "ReferenceController@addOnlineSignature")
             ->name("online_signature.add");
+
+        // List Therapy Service (Khusus untuk Submission Reference)
+        Route::get("/list_tservice_submission", "ReferenceController@ListTServiceforSubmission")
+            ->name("list_tservice_submission");
+    });
+
+    Route::group(['prefix' => 'submission_video_photo', 'middleware' => 'auth'], function() {
+        //Add Form Submission Video Photo
+        Route::get('/', 'SubmissionVideoPhotoController@create')
+            ->name('add_submission_video_photo')
+            ->middleware('can:add-submission_video_photo');
+
+        //Create Submission Video Photo
+        Route::post('/', 'SubmissionVideoPhotoController@store')
+            ->name('store_submission_video_photo')
+            ->middleware('can:add-submission_video_photo');
+
+        //List Submission Video Photo
+        Route::get('/list', 'SubmissionVideoPhotoController@index')
+            ->name('list_submission_video_photo')
+            ->middleware('can:browse-submission_video_photo');
+
+        //Detail Submission Video Photo
+        Route::get('/detail', 'SubmissionVideoPhotoController@show')
+            ->name('detail_submission_video_photo')
+            ->middleware('can:detail-submission_video_photo');
+
+        //Edit Submission Video Photo
+        Route::get('/edit/', 'SubmissionVideoPhotoController@edit')
+            ->name('edit_submission_video_photo')
+            ->middleware('can:edit-submission_video_photo');
+
+        //Update Submission Video Photo
+        Route::post('/update/', 'SubmissionVideoPhotoController@update')
+            ->name('update_submission_video_photo')
+            ->middleware('can:edit-submission_video_photo');
+
+        //Delete Submission Video Photo
+        Route::post('/delete', 'SubmissionVideoPhotoController@destroy')
+            ->name('delete_submission_video_photo')
+            ->middleware('can:delete-submission_video_photo');
+
+        //Update Status Submission Video Photo
+        Route::post("/update_status", "SubmissionVideoPhotoController@updateStatus")
+            ->name("update_status_submission_video_photo");
+
+        //Store Submission Video Photo Detail
+        Route::post('/store_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@store')
+            ->name('store_submission_video_photo_detail');
+        //Update Submission Video Photo Detail
+        Route::post('/update_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@update')
+            ->name('update_submission_video_photo_detail');
+        //Delete Submission Video Photo Detail
+        Route::post('/delete_submission_video_photo_detail', 'SubmissionVideoPhotoDetailController@destroy')
+            ->name('delete_submission_video_photo_detail');
+        //Update Status Submission Video Photo Detail
+        Route::post("/update_status_detail", "SubmissionVideoPhotoDetailController@updateStatus")
+            ->name("update_status_submission_video_photo_detail");
     });
 
     Route::group(["prefix" => "acceptance", "middleware" => "auth"], function () {

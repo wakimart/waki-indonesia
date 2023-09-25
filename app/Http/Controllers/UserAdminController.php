@@ -35,7 +35,7 @@ class UserAdminController extends Controller
             $users = $users->where("username", "like", "%" . $request->username . "%");
         }
 
-        $users = $users->paginate(10);
+        $users = $users->paginate(20);
         return view(
             'admin.list_useradmin',
             compact(
@@ -322,6 +322,11 @@ class UserAdminController extends Controller
             $user['active'] = false;
             $user->save();
 
+            if($user->cso){
+                $user->cso['active'] = false;
+                $user->cso->save();
+            }
+
             $historyUpdate['type_menu'] = "User Admin";
             $historyUpdate['method'] = "Update";
             $historyUpdate["meta"] = json_encode(["dataChange" => $user->getChanges()]);
@@ -330,7 +335,43 @@ class UserAdminController extends Controller
             $createData = HistoryUpdate::create($historyUpdate);
 
             DB::commit();
+            return redirect()->back();
+        }
+        catch (Exception $e) {
+            DB::rollback();
             return redirect()->route('list_useradmin');
+        }
+    }
+
+    public function deleteMultiple(Request $request)
+    {
+        if (empty($request->user_ids)) {
+            return redirect()
+                ->back()
+                ->with("danger", "Data not found.");
+        }
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($request->user_ids as $id) {
+                $user = User::find($id);
+                $user['active'] = false;
+                $user->save();
+
+                $user->cso['active'] = false;
+                $user->cso->save();
+    
+                $historyUpdate['type_menu'] = "User Admin";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate["meta"] = json_encode(["dataChange" => $user->getChanges()]);
+                $historyUpdate['user_id'] = Auth::user()['id'];
+                $historyUpdate['menu_id'] = $user->id;
+                $createData = HistoryUpdate::create($historyUpdate);
+            }
+
+            DB::commit();
+            return redirect()->back();
         }
         catch (Exception $e) {
             DB::rollback();

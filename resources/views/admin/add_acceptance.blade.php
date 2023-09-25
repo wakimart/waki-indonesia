@@ -6,56 +6,36 @@ $menu_item_second = "add_acceptance_form";
 
 @section('style')
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
-    button{
-        background: #1bb1dc;
-        border: 0;
-        border-radius: 3px;
-        padding: 8px 30px;
-        color: #fff;
-        transition: 0.3s;
-    }
-    .validation{
-        color: red;
-        font-size: 9pt;
-    }
-    input, select, textarea{
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        border: 1px solid #dce1ec !important;
-        font-size: 14px !important;
-    }
-
-    #regForm {
-	  background-color: #ffffff;
-	  margin: 100px auto;
-	  padding: 40px;
-	  width: 70%;
-	  min-width: 300px;
-	}
-
-	/* Style the input fields */
-	/*input {
-	  padding: 10px;
-	  width: 100%;
-	  font-size: 17px;
-	  font-family: Raleway;
-	  border: 1px solid #aaaaaa;
-	}*/
-
-	/* Mark input boxes that gets an error on validation: */
-	input.invalid {
-	  background-color: #ffdddd;
-	}
-
-	/* Hide all steps by default: */
-	.tab {
-	  display: none;
-	}
-
-	/* Make circles that indicate the steps of the form: */
+  #intro {
+      padding-top: 2em;
+  }
+  button{
+      background: #1bb1dc;
+      border: 0;
+      border-radius: 3px;
+      padding: 8px 30px;
+      color: #fff;
+      transition: 0.3s;
+  }
+  .validation{
+      color: red;
+      font-size: 9pt;
+  }
+  input, select, textarea{
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      border: 1px solid #dce1ec !important;
+      font-size: 14px !important;
+  }
+  #regForm {
+  	  background-color: #ffffff;
+  	  margin: 100px auto;
+  	  padding: 40px;
+  	  width: 70%;
+  	  min-width: 300px;
+  }
+	input.invalid { background-color: #ffdddd; }
+	.tab { display: none; }
 	.step {
 	  height: 15px;
 	  width: 15px;
@@ -66,47 +46,28 @@ $menu_item_second = "add_acceptance_form";
 	  display: inline-block;
 	  opacity: 0.5;
 	}
-
-	/* Mark the active step: */
 	.step.active {
 	  opacity: 1;
 	}
-
-	/* Mark the steps that are finished and valid: */
 	.step.finish {
 	  background-color: #4CAF50;
 	}
-
    .div-CheckboxGroup {
 	  border:solid 1px rgba(128, 128, 128, 0.32941);
 	  padding:0px 10px ;
 	  border-radius:3px;
 	}
-
 	input[type='checkbox'], input[type='radio']{
 		margin-left: 0px !important;
 	}
-
 	@media (max-width: 768px){
-		#desktop{
-			display: none;
-		}
-
-		#mobile{
-			display: block;
-		}
+		#desktop{ display: none; }
+		#mobile{ display: block; }
 	}
-
 	@media (min-width: 768px){
-		#desktop{
-			display: block;
-		}
-
-		#mobile{
-			display: none;
-		}
+		#desktop{ display: block; }
+		#mobile{ display: none; }
 	}
-
 </style>
 @endsection
 
@@ -114,7 +75,7 @@ $menu_item_second = "add_acceptance_form";
 <div class="main-panel">
   	<div class="content-wrapper">
 		<!-- header mobile -->
-    	<div id="mobile">
+  	<div id="mobile">
 			<h3 class="text-center">Add Acceptance</h3>
 			<div class="row">
 				<nav aria-label="breadcrumb">
@@ -124,7 +85,7 @@ $menu_item_second = "add_acceptance_form";
 					</ol>
 				</nav>
 		  	</div>
-	  	</div>
+  	</div>
 
 		<!-- header desktop -->
 		<div id="desktop">
@@ -136,7 +97,7 @@ $menu_item_second = "add_acceptance_form";
 						  <li class="breadcrumb-item active" aria-current="page">Add Acceptance</li>
 					</ol>
 				</nav>
-		  	</div>
+	  	</div>
 		</div>
 	    <div class="row">
 	      	<div class="col-12 grid-margin stretch-card">
@@ -212,7 +173,14 @@ $menu_item_second = "add_acceptance_form";
 	              			</div>
 
 	              			<div class="form-group">
-								<label for=""><h2>Product Upgrade</h2></label><br/>
+								<label for=""><h2>Product Upgrade</h2></label><br/>	
+
+		              			<div class="form-group">
+					                <label for="">No. DO</label>
+					                <input type="text" class="form-control" id="bill_do" name="bill_do" placeholder="No DO" data-msg="Mohon Isi Nomor DO" required>
+					                <div class="validation"></div>
+		              			</div>
+
 	                			<label for="">New Product</label>
 	                			<select class="form-control" id="newproduct_id" name="newproduct_id" data-msg="Mohon Pilih Product Baru" required>
 									<option selected disabled value="">Pilihan Product</option>
@@ -516,6 +484,7 @@ $menu_item_second = "add_acceptance_form";
         				$("#actionAdd").find("textarea[name="+key+"]").next().find("strong").text(hasil['errors'][key]);
         			}
         		}
+        		console.log(hasil);
                 alert("Terdapat kesalahan pada inputan ! \n"+hasil['errors']['errorInfo'][2]);
         	}
         	else{

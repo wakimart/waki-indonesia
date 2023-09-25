@@ -11,7 +11,6 @@ $menu_item_second = "add_deliveryorder";
     #intro {
         padding-top: 2em;
     }
-
     button {
         background: #1bb1dc;
         border: 0;
@@ -20,19 +19,16 @@ $menu_item_second = "add_deliveryorder";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation {
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea{
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     #regForm {
         background-color: #ffffff;
         margin: 100px auto;
@@ -40,8 +36,6 @@ $menu_item_second = "add_deliveryorder";
         width: 70%;
         min-width: 300px;
     }
-
-    /* Style the input fields */
     input {
         padding: 10px;
         width: 100%;
@@ -49,16 +43,12 @@ $menu_item_second = "add_deliveryorder";
         font-family: Raleway;
         border: 1px solid #aaaaaa;
     }
-
-    /* Mark input boxes that gets an error on validation: */
     input.invalid {
         background-color: #ffdddd;
     }
-
     .select2-selection__rendered {
         line-height: 45px !important;
     }
-
     .select2-container .select2-selection--single {
         height: 45px !important;
     }

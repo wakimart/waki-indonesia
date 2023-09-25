@@ -63,7 +63,7 @@
 
 
   <!--==========================Clients Section============================-->
-  <section id="clients" class="wow fadeInUp">
+  <!-- <section id="clients" class="wow fadeInUp">
     <div class="container">
 
       <header class="section-header">
@@ -76,7 +76,8 @@
       </header>
 
     </div>
-  </section><!-- #clients -->
+  </section> -->
+  <!-- #clients -->
 
 
 <main id="main">

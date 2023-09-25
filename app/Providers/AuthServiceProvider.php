@@ -74,6 +74,12 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-order', function ($user) {
             return $user->hasAccess(['delete-order']);
         });
+        Gate::define('order_hs', function ($user) {
+            return $user->hasAccess(['order_hs']);
+        });
+        Gate::define('acc-order_hs', function ($user) {
+            return $user->hasAccess(['acc-order_hs']);
+        });
 
         //-- UPDATE ORDER STATUS --//
         Gate::define('change-status_order', function ($user) {
@@ -90,6 +96,15 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('change-status_order_reject', function ($user) {
             return $user->hasAccess(['change-status_order_reject']);
+        });
+        Gate::define('change-status_order_stock_request_pending', function ($user) {
+            return $user->hasAccess(['change-status_order_stock_request_pending']);
+        });
+        Gate::define('change-status_order_stock_request_success', function ($user) {
+            return $user->hasAccess(['change-status_order_stock_request_success']);
+        });
+        Gate::define('change-status_order_delivered', function ($user) {
+            return $user->hasAccess(['change-status_order_delivered']);
         });
 
         //-- UPDATE ORDER STATUS --//
@@ -138,6 +153,12 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('acc-cancel-home_service', function ($user) {
             return $user->hasAccess(['acc-cancel-home_service']);
+        });
+        Gate::define('view-phone-home_service', function ($user) {
+            return $user->hasAccess(['view-phone-home_service']);
+        });
+        Gate::define('view-type-home_service', function ($user) {
+            return $user->hasAccess(['view-type-home_service']);
         });
 
         //-- AREA HOME SERVICE --//
@@ -512,6 +533,62 @@ class AuthServiceProvider extends ServiceProvider
             return $user->hasAccess(["delete-submission"]);
         });
 
+        //-- SUBMISSION Video & Photo --//
+        // Add Submission Video & Photo
+        Gate::define("add-submission_video_photo", function ($user) {
+            return $user->hasAccess(["add-submission_video_photo"]);
+        });
+        // Browse Submission Video & Photo
+        Gate::define("browse-submission_video_photo", function ($user) {
+            return $user->hasAccess(["browse-submission_video_photo"]);
+        });
+        // View detail Submission Video & Photo
+        Gate::define("detail-submission_video_photo", function ($user) {
+            return $user->hasAccess(["detail-submission_video_photo"]);
+        });
+        // Edit Submission Video & Photo
+        Gate::define("edit-submission_video_photo", function ($user) {
+            return $user->hasAccess(["edit-submission_video_photo"]);
+        });
+        // Delete Submission Video & Photo
+        Gate::define("delete-submission_video_photo", function ($user) {
+            return $user->hasAccess(["delete-submission_video_photo"]);
+        });
+        // Change Status Approved Submission Video & Photo
+        Gate::define("change-status-approved-submission_video_photo", function ($user) {
+            return $user->hasAccess(["change-status-approved-submission_video_photo"]);
+        });
+        // Change Status Rejected Submission Video & Photo
+        Gate::define("change-status-rejected-submission_video_photo", function ($user) {
+            return $user->hasAccess(["change-status-rejected-submission_video_photo"]);
+        });
+
+        //-- SUBMISSION Vide & Photo Detail --//
+        // Add Submission Video & Photo Detail
+        Gate::define("add-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["add-submission_video_photo_detail"]);
+        });
+        // View detail Submission Video & Photo Detail
+        Gate::define("detail-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["detail-submission_video_photo_detail"]);
+        });
+        // Edit Submission Video & Photo Detail
+        Gate::define("edit-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["edit-submission_video_photo_detail"]);
+        });
+        // Delete Submission Video & Photo Detail
+        Gate::define("delete-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["delete-submission_video_photo_detail"]);
+        });
+        // Change Status Approved Submission Video & Photo Detail
+        Gate::define("change-status-approved-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["change-status-approved-submission_video_photo_detail"]);
+        });
+        // Change Status Rejected Submission Video & Photo Detail
+        Gate::define("change-status-rejected-submission_video_photo_detail", function ($user) {
+            return $user->hasAccess(["change-status-rejected-submission_video_photo_detail"]);
+        });
+
         //-- SPAREPART --//
         // Add sparepart
         Gate::define("add-sparepart", function ($user) {
@@ -636,6 +713,40 @@ class AuthServiceProvider extends ServiceProvider
         // Product status
         Gate::define("change-status-product-publichomecare", function ($user) {
             return $user->hasAccess(["change-status-product-publichomecare"]);
+        });
+
+        //-- Therapy Service --//
+        Gate::define('add-therapy_service', function ($user) {
+            return $user->hasAccess(['add-therapy_service']);
+        });
+        Gate::define('browse-therapy_service', function ($user) {
+            return $user->hasAccess(['browse-therapy_service']);
+        });
+        Gate::define('check-therapy_service', function ($user) {
+            return $user->hasAccess(['check-therapy_service']);
+        });
+        Gate::define('detail-therapy_service', function ($user) {
+            return $user->hasAccess(['detail-therapy_service']);
+        });
+        Gate::define('edit-therapy_service', function ($user) {
+            return $user->hasAccess(['edit-therapy_service']);
+        });
+        Gate::define('delete-therapy_service', function ($user) {
+            return $user->hasAccess(['delete-therapy_service']);
+        });
+
+        //-- Therapy Service Location--//
+        Gate::define('add-therapy_service_location', function ($user) {
+            return $user->hasAccess(['add-therapy_service_location']);
+        });
+        Gate::define('browse-therapy_service_location', function ($user) {
+            return $user->hasAccess(['browse-therapy_service_location']);
+        });
+        Gate::define('edit-therapy_service_location', function ($user) {
+            return $user->hasAccess(['edit-therapy_service_location']);
+        });
+        Gate::define('delete-therapy_service_location', function ($user) {
+            return $user->hasAccess(['delete-therapy_service_location']);
         });
     }
 }

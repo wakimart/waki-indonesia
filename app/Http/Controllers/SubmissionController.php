@@ -21,6 +21,7 @@ use App\Souvenir;
 use App\SubmissionDeliveryorder;
 use App\SubmissionImage;
 use App\SubmissionPromo;
+use App\TheraphyService;
 use App\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -624,7 +625,8 @@ class SubmissionController extends Controller
                 "city",
                 "district",
                 "address",
-                "branch_id"
+                "branch_id",
+                "wakimart_link"
             ));
             $csoId = Cso::where('code', $request->cso_id)->first()['id'];
             $submission->cso_id = $csoId;
@@ -803,6 +805,12 @@ class SubmissionController extends Controller
             $get_hs = HomeService::whereIn('id', json_decode($reference_souvenirs[0]['link_hs'], true))->get();
         }
 
+        $get_tservice = null;
+        if ($reference_souvenirs[0]['theraphy_service_id'] != null) {
+            $get_tservice = TheraphyService::with('theraphySignIn')
+                ->where('id', $reference_souvenirs[0]['theraphy_service_id'])->get();
+        }
+
         $get_souvenir = null;
         if ($reference_souvenirs[0]['souvenir_id'] != null) {
             $get_souvenir = Souvenir::where('id', $reference_souvenirs[0]['souvenir_id'])->get();
@@ -834,6 +842,7 @@ class SubmissionController extends Controller
         $data['data_refs'] = $reference_souvenirs; // Reference souvenir
         $data['data_ref'] = $reference; // References
         $data['data_hs'] = $get_hs;
+        $data['data_tservice'] = $get_tservice;
         $data['data_souvenir'] = $get_souvenir;
         $data['data_order'] = $get_order;
         $data['data_prize'] = $get_prize;
@@ -1606,7 +1615,8 @@ class SubmissionController extends Controller
             "submissions.district AS district_id",
             "raja_ongkir__subdistricts.subdistrict_name AS district",
             "submissions.created_at AS created_at",
-            "submissions.status AS status_reference"
+            "submissions.status AS status_reference",
+            "submissions.wakimart_link AS wakimart_link"
         )
         ->leftJoin("branches", "submissions.branch_id", "=", "branches.id")
         ->leftJoin("csos", "submissions.cso_id", "=", "csos.id")

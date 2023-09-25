@@ -11,6 +11,7 @@ use App\ReferenceSouvenir;
 use App\Souvenir;
 use App\HomeService;
 use App\Order;
+use App\TheraphyService;
 use App\User;
 use Carbon\Carbon;
 use Exception;
@@ -100,6 +101,7 @@ class ReferenceController extends Controller
                 "order_id",
                 "prize_id",
                 "wakimart_link",
+                "theraphy_service_id"
             ));
             $referenceSouvenir->link_hs = json_encode(
                 explode(", ", $request->link_hs),
@@ -263,7 +265,8 @@ class ReferenceController extends Controller
                     "status_prize",
                     "delivery_status_prize",
                     "wakimart_link",
-                    "order_code"
+                    "order_code",
+                    "theraphy_service_id"
                 ));
     
                 if (!empty($request->link_hs)) {
@@ -957,5 +960,26 @@ class ReferenceController extends Controller
             File::deleteDirectory(public_path('sources/online_signature/' . $filename));        
             return redirect($request->url)->with("error", $e->getMessage());           
         }
+    }
+
+    public function ListTServiceforSubmission(Request $request)
+    {
+        if($request->has('submission_id')){
+            $branch_id = \App\Submission::find($request->submission_id)->branch['id'];
+        }
+        else{
+            $branch_id = $request->branch_id;
+        }
+
+        $therapyservices = TheraphyService::where('active', true)
+            ->where('branch_id', $branch_id);
+
+        if ($request->search != null) {
+            $therapyservices->where('code', $request->search);
+        }
+        
+        $therapyservices  = $therapyservices->get();
+        $data = ['tservice' => $therapyservices];
+        return response()->json($data, 200);
     }
 }

@@ -9,10 +9,7 @@ $menu_item_second = "add_submission_takeaway";
 
 @section('style')
 <style type="text/css">
-    #intro {
-        padding-top: 2em;
-    }
-
+    #intro {padding-top: 2em;}
     button{
         background: #1bb1dc;
         border: 0;
@@ -21,19 +18,16 @@ $menu_item_second = "add_submission_takeaway";
         color: #fff;
         transition: 0.3s;
     }
-
     .validation{
         color: red;
         font-size: 9pt;
     }
-
     input, select, textarea{
         border-radius: 0 !important;
         box-shadow: none !important;
         border: 1px solid #dce1ec !important;
         font-size: 14px !important;
     }
-
     #regForm {
       background-color: #ffffff;
       margin: 100px auto;
@@ -41,8 +35,6 @@ $menu_item_second = "add_submission_takeaway";
       width: 70%;
       min-width: 300px;
     }
-
-    /* Style the input fields */
     input {
       padding: 10px;
       width: 100%;
@@ -50,22 +42,15 @@ $menu_item_second = "add_submission_takeaway";
       font-family: Raleway;
       border: 1px solid #aaaaaa;
     }
-
-    /* Mark input boxes that gets an error on validation: */
     input.invalid {
       background-color: #ffdddd;
     }
-
     .invalid {
         border: 1px solid red !important;
     }
-
-    /* Hide all steps by default: */
     .tab {
       display: none;
     }
-
-    /* Make circles that indicate the steps of the form: */
     .step {
       height: 15px;
       width: 15px;
@@ -76,20 +61,13 @@ $menu_item_second = "add_submission_takeaway";
       display: inline-block;
       opacity: 0.5;
     }
-
-    /* Mark the active step: */
     .step.active {
       opacity: 1;
     }
-
-    /* Mark the steps that are finished and valid: */
     .step.finish {
       background-color: #4CAF50;
     }
-
-    select {
-      color: black !important;
-    }
+    select {color: black !important;}
 </style>
 @endsection
 
