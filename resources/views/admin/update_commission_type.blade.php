@@ -103,19 +103,19 @@ $menu_item_second = "list_commstype";
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="">Nominal</label>
+                                    <label for="">Nominal Bonus</label>
                                     <input type="text"
                                         class="form-control"
                                         name="nominal"
                                         autocomplete="off"
                                         data-type="currency"
-                                        placeholder="Nominal"
+                                        placeholder="Nominal Bonus"
                                         value="{{number_format($commissionType->nominal)}}"
                                         required/>
                                     <div class="validation"></div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group d-none">
                                     <label for="">Nominal Semangat</label>
                                     <input type="text"
                                         class="form-control"
@@ -123,7 +123,7 @@ $menu_item_second = "list_commstype";
                                         autocomplete="off"
                                         data-type="currency"
                                         placeholder="Semangat Nominal"
-                                        value="{{number_format($commissionType->smgt_nominal)}}"
+                                        value="{{number_format($commissionType->smgt_nominal)}}" 
                                         required/>
                                     <div class="validation"></div>
                                 </div>

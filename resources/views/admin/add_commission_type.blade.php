@@ -118,24 +118,24 @@ $menu_item_second = "add_commstype";
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="">Nominal</label>
+                                    <label for="">Nominal Bonus</label>
                                     <input type="text"
                                         class="form-control"
                                         name="nominal"
                                         autocomplete="off"
                                         data-type="currency"
-                                        placeholder="Nominal" required/>
+                                        placeholder="Nominal Bonus" required/>
                                     <div class="validation"></div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group d-none">
                                     <label for="">Nominal Semangat</label>
                                     <input type="text"
                                         class="form-control"
                                         name="smgt_nominal"
                                         autocomplete="off"
                                         data-type="currency"
-                                        placeholder="Semangat Nominal" required/>
+                                        placeholder="Semangat Nominal" value="0" required/>
                                     <div class="validation"></div>
                                 </div>
 
