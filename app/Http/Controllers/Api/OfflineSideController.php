@@ -381,6 +381,26 @@ class OfflineSideController extends Controller
                 }
                 $orderDetail->save();
             }
+            //pembentukan array takeaway
+            if (isset($data['takeaway'])) {
+                $orderDetail = $orderDetailOlds->filter(function ($item) {
+                    return $item->type == OrderDetail::$Type['4'];
+                })->first();
+                if (!$orderDetail) {
+                    $orderDetail = new OrderDetail;
+                }
+                $orderDetail->product_id = null;
+                $orderDetail->other = null;
+                $orderDetail->order_id = $orders['id'];
+                $orderDetail->type = OrderDetail::$Type['4'];
+                $orderDetail->qty = $data['takeaway_qty'] ?? 1;
+                if ($data['takeaway'] == "other") {
+                    $orderDetail->other = $data['takeaway_other'];
+                } else {
+                    $orderDetail->product_id = $data['takeaway'];
+                }
+                $orderDetail->save();
+            }
 
             //pembentukan array Bank
             $index = 0;

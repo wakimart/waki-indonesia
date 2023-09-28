@@ -2454,12 +2454,12 @@
     $('#orderTakeawayYes').click(function () {
         $('#orderTakeawayYes').attr('checked', true)
         $('#orderTakeawayNo').attr('checked', false)
-        window.location.href += "&orderTakeaway=yes"
+        window.location.href = "{{url()->current().'?code='.$order->code}}"+'&orderTakeaway=yes'
     })
     $('#orderTakeawayNo').click(function () {
         $('#orderTakeawayNo').attr('checked', true)
         $('#orderTakeawayYes').attr('checked', false)
-        window.location.href += "&orderTakeaway=no"
+        window.location.href = "{{url()->current().'?code='.$order->code}}"+'&orderTakeaway=no'
     })    
 </script>
 @endsection
