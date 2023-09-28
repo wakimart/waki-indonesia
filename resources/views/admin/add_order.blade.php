@@ -511,6 +511,58 @@ $menu_item_second = "add_order";
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="form-group">
+                                            <label for="">Takeaway Product</label>
+                                            <select class="form-control"
+                                                id="takeaway"
+                                                name="takeaway"
+                                                data-msg="Please choose takeaway product">
+                                                <option selected disabled value="">
+                                                    Choose Takeaway Product
+                                                </option>
+
+                                                @foreach($products as $product)
+                                                <option value="{{ $product->id }}">
+                                                    {{ $product->code }}
+                                                    - ({{ $product->name }})
+                                                    - Rp {{ number_format($product->price) }}
+                                                </option>
+                                                @endforeach
+
+                                                <option value="other">
+                                                    OTHER
+                                                </option>
+                                            </select>
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="">Qty Takeaway Product</label>
+                                            <input type="number"
+                                                class="form-control"
+                                                name="takeaway_qty"
+                                                id="takeaway_qty"
+                                                placeholder="Qty"
+                                                data-msg="Please fill in the number of takeaway products" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="text" style="display: none"
+                                                class="form-control"
+                                                name="takeaway_other"
+                                                id="takeaway_other"
+                                                placeholder="Takeaway Product Name"
+                                                data-msg="Please fill in takeaway product"
+                                                style="text-transform: uppercase;" />
+                                            <div class="validation"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -875,7 +927,7 @@ let promoOption = `<option selected disabled value="">Choose Product</option>`;
 let quantityOption = "";
 
 document.addEventListener("DOMContentLoaded", function () {
-    $("#product_0, #old_product, #prize").select2({
+    $("#product_0, #old_product, #prize, #takeaway").select2({
         theme: "bootstrap4",
     });
 
@@ -1292,7 +1344,7 @@ document.addEventListener("DOMContentLoaded", function () {
             $(this).hide();
         });
 
-        $("#old_product, #prize").change(function() {
+        $("#old_product, #prize, #takeaway").change(function() {
             element = $(this);
             if (element.val() == "other") {
                 $("#" + element.attr('id') + "_other").show();

@@ -218,6 +218,20 @@ class OrderController extends Controller
                 $orderDetail->save();
             }
 
+            //pembentukan array takeaway
+            if (isset($data['takeaway'])) {
+                $orderDetail = new OrderDetail;
+                $orderDetail->order_id = $order['id'];
+                $orderDetail->type = OrderDetail::$Type['4'];
+                $orderDetail->qty = $data['takeaway_qty'] ?? 1;
+                if ($data['takeaway'] == "other") {
+                    $orderDetail->other = $data['takeaway_other'];
+                } else {
+                    $orderDetail->product_id = $data['takeaway'];
+                }
+                $orderDetail->save();
+            }
+
             //pembentukan array Bank
             $index = 0;
             foreach ($data as $key => $value) {
@@ -432,6 +446,8 @@ class OrderController extends Controller
                 ->where('type', OrderDetail::$Type['3'])->first();
             $orderDetails['prize'] = OrderDetail::where('order_id', $orders['id'])
                 ->where('type', OrderDetail::$Type['2'])->first();
+            $orderDetails['takeaway'] = OrderDetail::where('order_id', $orders['id'])
+                ->where('type', OrderDetail::$Type['4'])->first();
             $arr_price = [];
             return view('admin.update_order', compact('orders','promos', 'products', 'from_know','branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks', 'orderDetails', 'arr_price'));
         }else{
@@ -583,6 +599,29 @@ class OrderController extends Controller
                     $orderDetail->other = $data['prize_other'];
                 } else {
                     $orderDetail->product_id = $data['prize'];
+                }
+                $orderDetail->save();
+            }
+
+            //pembentukan array takeaway
+            if (isset($data['takeaway'])) {
+                // $orderDetail = OrderDetail::where("order_id", $orders['id'])
+                //     ->where("type", OrderDetail::$Type['2'])->first();
+                $orderDetail = $orderDetailOlds->filter(function ($item) {
+                    return $item->type == OrderDetail::$Type['4'];
+                })->first();
+                if (!$orderDetail) {
+                    $orderDetail = new OrderDetail;
+                }
+                $orderDetail->product_id = null;
+                $orderDetail->other = null;
+                $orderDetail->order_id = $orders['id'];
+                $orderDetail->type = OrderDetail::$Type['4'];
+                $orderDetail->qty = $data['takeaway_qty'] ?? 1;
+                if ($data['takeaway'] == "other") {
+                    $orderDetail->other = $data['takeaway_other'];
+                } else {
+                    $orderDetail->product_id = $data['takeaway'];
                 }
                 $orderDetail->save();
             }
