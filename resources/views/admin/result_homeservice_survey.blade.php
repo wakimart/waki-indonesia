@@ -1,9 +1,40 @@
 <?php
     use App\Order;
+    $menu_item_page = "homeservice";
+    $menu_item_second = "survey_homeservice";
 ?>
 @extends('admin.layouts.template')
 
 @section('style')
+<style>
+.questiontext {
+    font-size: 13px;
+    line-height: 1.2;
+}
+.starlabel {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.hide { display: none; }
+.rating {
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    font-size: 2rem;
+}
+.rating > label {
+    padding: 0 !important;
+    margin: 0 !important;
+    cursor: pointer;
+    color: #000;
+    width: 1.5em;
+    font-size: 1em;
+    line-height: 1;
+}
+.numRating {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+</style>
 
 @endsection
 
@@ -76,12 +107,87 @@
                                     <option value="" selected="">
                                         All Branch
                                     </option>
-
                                 </select>
                                 <div class="validation"></div>
                             </div>
                         </div>
                         <div class="clearfix"></div>
+                        <div class="p-2">
+                          <ol class="mb-0">
+                            <li>
+                              <div class="questiontext">
+                                {{ $questHSSurvey[0] }}
+                              </div>
+                              <div class="d-flex">
+                                <div class="rating" id="ratingq1" style="color: orange;">
+                                  <span class="mdi mdi-star-outline"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <div class="clear"></div>
+                                </div>
+                                <div class="d-flex align-items-center ml-3">
+                                  <span class="numRating">4.7/5</span>
+                                </div>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="questiontext">
+                                {{ $questHSSurvey[1] }}
+                              </div>
+                              <div class="d-flex">
+                                <div class="rating" id="ratingq1" style="color: orange;">
+                                  <span class="mdi mdi-star-outline"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <div class="clear"></div>
+                                </div>
+                                <div class="d-flex align-items-center ml-3">
+                                  <span class="numRating">4.7/5</span>
+                                </div>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="questiontext">
+                                {{ $questHSSurvey[2] }}
+                              </div>
+                              <div class="d-flex">
+                                <div class="rating" id="ratingq1" style="color: orange;">
+                                  <span class="mdi mdi-star-outline"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <div class="clear"></div>
+                                </div>
+                                <div class="d-flex align-items-center ml-3">
+                                  <span class="numRating">4.7/5</span>
+                                </div>
+                              </div>
+                            </li>
+                            <li>
+                              <div class="questiontext">
+                                {{ $questHSSurvey[3] }}
+                              </div>
+                              <div class="d-flex">
+                                <div class="rating" id="ratingq1" style="color: orange;">
+                                  <span class="mdi mdi-star-outline"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <span class="mdi mdi-star"></span>
+                                  <div class="clear"></div>
+                                </div>
+                                <div class="d-flex align-items-center ml-3">
+                                  <span class="numRating">4.7/5</span>
+                                </div>
+                              </div>
+                            </li>
+                          </ol>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -218,6 +324,31 @@ document.addEventListener('DOMContentLoaded', function () {
       },
     };
 
+    /*Datanya langsung dalam persentase kalau ke chart biar lebih gampang*/
+    var dataRank = {
+      labels: ["F37", "F40", "F84", "F33", "F00", "F01"],
+      datasets: [{
+        data: [90, 50, 85, 70, 22, 10],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 159, 64, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)'
+        ],
+        borderWidth: 1,
+        fill: false
+      }]
+    };
     var optionsRank = {
       responsive: true,
       indexAxis: 'y',
@@ -265,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var rankChart = new Chart(rankChartCanvas, {
         type: 'bar',
         plugins: [ChartDataLabels],
-        data: dataMargin,
+        data: dataRank,
         options: optionsRank
       });
     }

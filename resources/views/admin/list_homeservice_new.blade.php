@@ -6,8 +6,6 @@ $menu_item_second = "list_homeservice";
 
 @section('style')
 <link rel="stylesheet" href="{{ asset('css/admin/calendarorganizer.css?v=' . filemtime('css/admin/calendarorganizer.css')) }}">
-<link rel="stylesheet" href="raty.css">
-<script src="raty.js"></script>
 
 <style>
     .hs-filter a {

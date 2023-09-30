@@ -68,9 +68,10 @@ class HomeServiceSurveyController extends Controller
     	}
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.result_homeservice_survey');
+        $questHSSurvey = HomeServiceSurvey::$allQuest;
+        return view("admin.result_homeservice_survey", compact( "questHSSurvey" ));
     }
 
 }

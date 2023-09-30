@@ -144,6 +144,14 @@
             </a>
         </li>
       @endif
+
+			<li class="nav-item">
+				<a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'survey_homeservice' ? 'active': '' }}"
+						href="{{  route('result_hs_survey') }}">
+						Survey Home Service
+				</a>
+			</li>
+
     </ul>
   </div>
 </li>
@@ -180,7 +188,7 @@
 			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_therapy_location' ? 'active': '' }}" href="{{ route('add_therapy_location')}}">Add Therapy Location</a></li>
 		      @endif
 			  @if(Gate::check('browse-therapy_service_location'))
-			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_therapy_location' ? 'active': '' }}" href="{{ route('list_therapy_location')}}">List Therapy Location</a></li>	
+			      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'list_therapy_location' ? 'active': '' }}" href="{{ route('list_therapy_location')}}">List Therapy Location</a></li>
 			  @endif
   			</ul>
   		</div>
@@ -201,7 +209,7 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'product_homecare' || isset($menu_item_page) && $menu_item_page == 'personal_homecare' || isset($menu_item_page) && $menu_item_page == 'public_homecare' ? 'show': '' }}" id="homeCare-dd">
     <ul class="nav flex-column">
-      
+
       @if(Gate::check('add-phc-product') || Gate::check('browse-phc-product'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'product_homecare'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#producthomecare-dd" aria-expanded="false" aria-controls="producthomecare-dd">
@@ -637,7 +645,7 @@
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'cso' || isset($menu_item_page) && $menu_item_page == 'branch' || isset($menu_item_page) && $menu_item_page == 'promo' || isset($menu_item_page) && $menu_item_page == 'type_customer' || isset($menu_item_page) && $menu_item_page == 'bank' || isset($menu_item_page) && $menu_item_page == 'souvenir' || isset($menu_item_page) && $menu_item_page == 'prize' ? 'show': '' }}" id="masterAdmin-dd">
     <ul class="nav flex-column">
-      
+
 			@if(Gate::check('add-cso') || Gate::check('browse-cso'))
 			<li class="{{isset($menu_item_page) && $menu_item_page == 'cso'? 'active': '' }} nav-item">
 			  <a class="nav-link" data-toggle="collapse" href="#cso-dd" aria-expanded="false" aria-controls="cso-dd">
