@@ -531,54 +531,56 @@
                     @endif
                 </div>
 
-                <div class="w-100" id="commisionDetailTrue">
-                    <h3 class="text-center">Commision Detail</h3>
-                      <table class="w-100">
-                        <thead style="background-color: #80808012 !important">
-                            <td>Date</td>
-                            <td>Payment Gross</td>
-                            <td>Payment Netto</td>
-                            <td>Commission</td>
-                        </thead>
+                @if(Gate::check('detail-order_commission'))
+                    <div class="w-100" id="commisionDetailTrue">
+                        <h3 class="text-center">Commision Detail</h3>
+                          <table class="w-100">
+                            <thead style="background-color: #80808012 !important">
+                                <td>Date</td>
+                                <td>Payment Gross</td>
+                                <td>Payment Netto</td>
+                                <td>Commission</td>
+                            </thead>
 
 
-                        @foreach($order->orderPayment as $orderPayment)
-                            <tr align="center">
-                                @php
-                                    $totalSaleGross = 0;
-                                    $totalSaleNetto = 0;
-                                    if($orderPayment->totalSale['bank_in'] > 0){
-                                        $totalSaleGross = $orderPayment->totalSale['bank_in'];
-                                        $totalSaleNetto = $orderPayment->totalSale['bank_in'];
-                                    }
-                                    elseif($orderPayment->totalSale['debit'] > 0){
-                                        $totalSaleGross = $orderPayment->totalSale['debit'];
-                                        $totalSaleNetto = $orderPayment->totalSale['netto_debit'];
-                                    }
-                                    elseif($orderPayment->totalSale['card'] > 0){
-                                        $totalSaleGross = $orderPayment->totalSale['card'];
-                                        $totalSaleNetto = $orderPayment->totalSale['netto_card'];
-                                    }
-                                @endphp
+                            @foreach($order->orderPayment as $orderPayment)
+                                <tr align="center">
+                                    @php
+                                        $totalSaleGross = 0;
+                                        $totalSaleNetto = 0;
+                                        if($orderPayment->totalSale['bank_in'] > 0){
+                                            $totalSaleGross = $orderPayment->totalSale['bank_in'];
+                                            $totalSaleNetto = $orderPayment->totalSale['bank_in'];
+                                        }
+                                        elseif($orderPayment->totalSale['debit'] > 0){
+                                            $totalSaleGross = $orderPayment->totalSale['debit'];
+                                            $totalSaleNetto = $orderPayment->totalSale['netto_debit'];
+                                        }
+                                        elseif($orderPayment->totalSale['card'] > 0){
+                                            $totalSaleGross = $orderPayment->totalSale['card'];
+                                            $totalSaleNetto = $orderPayment->totalSale['netto_card'];
+                                        }
+                                    @endphp
 
-                                <td>{{ $orderPayment['payment_date'] }}</td>
-                                <td>Rp. {{ number_format($totalSaleGross) }}</td>
-                                <td>Rp. {{ number_format($totalSaleNetto) }}</td>
-                                <td>Rp. {{ number_format($orderPayment->commission_percentage) }}</td>
-                            </tr>
-                        @endforeach
+                                    <td>{{ $orderPayment['payment_date'] }}</td>
+                                    <td>Rp. {{ number_format($totalSaleGross) }}</td>
+                                    <td>Rp. {{ number_format($totalSaleNetto) }}</td>
+                                    <td>Rp. {{ number_format($orderPayment->commission_percentage) }}</td>
+                                </tr>
+                            @endforeach
 
-                        <tfoot>
-                            <td class="font-weight-bold text-right" colspan="3">Total Commission:</td>
-                            <td class="text-center font-weight-bold">Rp. {{ number_format($order->orderPayment->sum('commission_percentage')) }}</td>
-                        </tfoot>
-                    </table>
-                </div>
+                            <tfoot>
+                                <td class="font-weight-bold text-right" colspan="3">Total Commission:</td>
+                                <td class="text-center font-weight-bold">Rp. {{ number_format($order->orderPayment->sum('commission_percentage')) }}</td>
+                            </tfoot>
+                        </table>
+                    </div>
+                @endif
 
                 @if($order['status'] != \App\Order::$status['1'] && $order['status'] != \App\Order::$status['5'])
 
 
-                    @if($order->orderCommission->count() > 0)
+                    @if($order->orderCommission->count() > 0 && Gate::check('detail-order_commission'))
                         <div class="w-100" id="commisionDetailTrue"><!-- change id to bonusDetailTrue later to remove ambiguous -->
                             <h3 class="text-center">Bonus Detail</h3>
                               <table class="w-100">

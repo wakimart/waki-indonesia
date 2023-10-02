@@ -59,8 +59,11 @@ $menu_item_second = "list_commstype";
           						</thead>
           						<tbody>
 									@foreach($datas as $index => $commtype)
+										@php
+											$onPage = isset($_GET['page']) ? ($_GET['page']-1) * 10 : 0;
+										@endphp
 										<tr>
-											<td>{{$index+1}}</td>
+											<td>{{$onPage+$index+1}}</td>
 											<td>{{$commtype->name}}</td>
 											<td>
 												<div>

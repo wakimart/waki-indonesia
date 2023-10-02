@@ -2260,13 +2260,14 @@ class OrderController extends Controller
                     $csoCommission = CsoCommission::where('cso_id', $cso_id)->whereMonth('created_at', $month)->first();
                     $orderCsoCommission->cso_commission_id = $csoCommission->id;
                     $orderCsoCommission->save();
+                dd($csoCommission->id);
                 }
 
                 DB::commit();
                 return Redirect::back()->with("success", "Order commission successfully added.");
             } catch (\Exception $ex) {
                 DB::rollBack();
-                return Redirect::back()->withErrors("Something wrong when add order commission, please call Team IT")->withInput();
+                return Redirect::back()->withErrors("Something wrong when add order commission, please call Team IT (". $ex->getMessage() .")")->withInput();
             }
         }
     }
