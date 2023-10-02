@@ -27,7 +27,7 @@
         <tr>
             <th style="vertical-align: center; text-align: center; border: 1px solid black; height: 55px; width: 15px">No.</th>
             <th style="vertical-align: center; text-align: center; border: 1px solid black; width: 25px">-</th>
-            @php $colors = ['#55efc4', '#81ecec', '#74b9ff', '#a29bfe', '#dfe6e9', '#b2bec3', '#6c5ce7', '#0984e3', '#00cec9', '#00b894', '#ffeaa7', '#fab1a0', '#ff7675', '#fd79a8', '#fdcb6e', '#e17055', '#d63031', '#e84393', '#fbc531', '#e1b12c', '#4cd137', '#1abc9c', '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c', '#7f8c8d' ]  @endphp
+            @php $colors = ['#55efc4', '#81ecec', '#74b9ff', '#a29bfe', '#dfe6e9', '#b2bec3', '#6c5ce7', '#0984e3', '#00cec9', '#00b894', '#ffeaa7', '#fab1a0', '#ff7675', '#fd79a8', '#fdcb6e', '#e17055', '#d63031', '#e84393', '#fbc531', '#e1b12c', '#4cd137', '#1abc9c', '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#f1c40f', '#e67e22', '#e74c3c', '#7f8c8d', '#fad3e7', '#f2d1d1', '#fff89a' ]  @endphp
             @foreach($Branches as $i => $branch)
                 <th style="vertical-align: center; text-align: center; border: 1px solid black; width: 18px; word-wrap: break-word; background: {{$colors[$i]}}">{{ $branch['code'] }} - {{ $branch['name'] }}</th>
             @endforeach
