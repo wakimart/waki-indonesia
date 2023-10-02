@@ -266,260 +266,287 @@ class OfflineSideController extends Controller
             $historyUpdate= [];
             $data = $request->all();
             $orders = Order::where('code', $data['order_code'])->first();
-            $dataBefore = Order::where('code', $data['order_code'])->first();
-            $orders['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
-            $orders['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
-            $orders['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
-            $orders['no_member'] = $data['no_member'];
-            $orders['name'] = $data['name'];
-            $orders['address'] = $data['address'];
-            $orders['cash_upgrade'] = $data['cash_upgrade'];
-            $orders['total_payment'] = $data['total_payment'];
-            $orders['remaining_payment'] = $data['remaining_payment'];
-            $orders['customer_type'] = $data['customer_type'];
-            $orders['description'] = $data['description'];
-            $orders['phone'] = $data['phone'];
-            $orders['know_from'] = $data['know_from'];
-            $orders['province'] = $data['province_id'];
-            $orders['city'] = $data['city'];
-            $orders['distric'] = $data['distric'];
+            if($orders){
+                $dataBefore = Order::where('code', $data['order_code'])->first();
+                $orders['cso_id'] = Cso::where('code', $data['cso_id'])->first()['id'];
+                $orders['30_cso_id'] = Cso::where('code', $data['30_cso_id'])->first()['id'];
+                $orders['70_cso_id'] = Cso::where('code', $data['70_cso_id'])->first()['id'];
+                $orders['no_member'] = $data['no_member'];
+                $orders['name'] = $data['name'];
+                $orders['address'] = $data['address'];
+                $orders['cash_upgrade'] = $data['cash_upgrade'];
+                $orders['total_payment'] = $data['total_payment'];
+                $orders['remaining_payment'] = $data['remaining_payment'];
+                $orders['customer_type'] = $data['customer_type'];
+                $orders['description'] = $data['description'];
+                $orders['phone'] = $data['phone'];
+                $orders['know_from'] = $data['know_from'];
+                $orders['province'] = $data['province_id'];
+                $orders['city'] = $data['city'];
+                $orders['distric'] = $data['distric'];
 
-            $orderDetails = OrderDetail::where('order_id', $orders['id'])->get();
-            $orderDetailOlds = OrderDetail::where('order_id', $orders['id'])->get();
+                $orderDetails = OrderDetail::where('order_id', $orders['id'])->get();
+                $orderDetailOlds = OrderDetail::where('order_id', $orders['id'])->get();
 
-            $orderPayments = OrderPayment::where("order_id", $orders["id"])->get();
-            $orderPaymentOlds = OrderPayment::where("order_id", $orders["id"])->get();
-            
-            //pembentukan array product
-            $index = 0;
-            foreach ($data as $key => $value) {
-                $arrKey = explode("_", $key);
-                if ($arrKey[0] == 'product') {
-                    if (isset($arrKey[1]) && isset($data['qty_' . $arrKey[1]])) {
-                        $isUpdateOrCreateProduct = true;
-                        if (isset($data['orderdetailold'][$arrKey[1]])) {
-                            $orderDetail = OrderDetail::where('order_detail_id', $data['orderdetailold'][$arrKey[1]])->first();
-                            if($orderDetail){
-                                $orderDetail->product_id = null;
-                                $orderDetail->promo_id = null;
-                                $orderDetail->other = null;
-                            }else{
-                                return response()->json([
-                                    'status' => 'error',
-                                    'message' => 'the order detail id on the offline side is still empty'
-                                ], 500);
-                            }
-                        } else {
-                            if (isset($data['productold_'.$arrKey[1]])) {
-                                $isUpdateOrCreateProduct = false;
-                            }
-                            $orderDetail = new OrderDetail;
-                        }
-                        if ($isUpdateOrCreateProduct) {
-                            $orderDetail->order_id = $orders['id'];
-                            $orderDetail->type = OrderDetail::$Type['1'];
-                            $orderDetail->qty = $data['qty_' . $arrKey[1]];
-                            if ($value == 'other') {
-                                $orderDetail->other = $data['product_other_' . $arrKey[1]];
-                            } else {
-                                $splitValue = explode("_", $value);
-                                if ($splitValue[0] == "promo") {
-                                    $orderDetail->promo_id = $splitValue[1];
-                                } else if ($splitValue[0] == "product") {
-                                    $orderDetail->product_id = $splitValue[1];
+                $orderPayments = OrderPayment::where("order_id", $orders["id"])->get();
+                $orderPaymentOlds = OrderPayment::where("order_id", $orders["id"])->get();
+                
+                //pembentukan array product
+                $index = 0;
+                foreach ($data as $key => $value) {
+                    $arrKey = explode("_", $key);
+                    if ($arrKey[0] == 'product') {
+                        if (isset($arrKey[1]) && isset($data['qty_' . $arrKey[1]])) {
+                            $isUpdateOrCreateProduct = true;
+                            if (isset($data['orderdetailold'][$arrKey[1]])) {
+                                $orderDetail = OrderDetail::where('order_detail_id', $data['orderdetailold'][$arrKey[1]])->first();
+                                if($orderDetail){
+                                    $orderDetail->product_id = null;
+                                    $orderDetail->promo_id = null;
+                                    $orderDetail->other = null;
+                                }else{
+                                    return response()->json([
+                                        'status' => 'error',
+                                        'message' => 'the order detail id on the offline side is still empty'
+                                    ], 500);
                                 }
+                            } else {
+                                if (isset($data['productold_'.$arrKey[1]])) {
+                                    $isUpdateOrCreateProduct = false;
+                                }
+                                $orderDetail = new OrderDetail;
                             }
-                            $orderDetail->save();
-                            $index++;
+                            if ($isUpdateOrCreateProduct) {
+                                $orderDetail->order_id = $orders['id'];
+                                $orderDetail->type = OrderDetail::$Type['1'];
+                                $orderDetail->qty = $data['qty_' . $arrKey[1]];
+                                if ($value == 'other') {
+                                    $orderDetail->other = $data['product_other_' . $arrKey[1]];
+                                } else {
+                                    $splitValue = explode("_", $value);
+                                    if ($splitValue[0] == "promo") {
+                                        $orderDetail->promo_id = $splitValue[1];
+                                    } else if ($splitValue[0] == "product") {
+                                        $orderDetail->product_id = $splitValue[1];
+                                    }
+                                }
+                                $orderDetail->save();
+                                $index++;
+                            }
                         }
                     }
                 }
-            }
-            // Hapus Old Order Detail Pembelian
-            foreach ($orderDetails as $orderDetail) {
-                if ($orderDetail['type'] == OrderDetail::$Type['1'] && !in_array($orderDetail['order_detail_id'], $data['orderdetailold'])) {
-                    $orderDetail->delete();
+                // Hapus Old Order Detail Pembelian
+                foreach ($orderDetails as $orderDetail) {
+                    if ($orderDetail['type'] == OrderDetail::$Type['1'] && !in_array($orderDetail['order_detail_id'], $data['orderdetailold'])) {
+                        $orderDetail->delete();
+                    }
                 }
-            }
-            //pembentukan array old_product
-            if (isset($data['old_product'])) {
-                $orderDetail = $orderDetails->filter(function ($item) {
-                    return $item->type == OrderDetail::$Type['3'];
-                })->first();
-                if (!$orderDetail) {
-                    $orderDetail = new OrderDetail;
+                //pembentukan array old_product
+                if (isset($data['old_product'])) {
+                    $orderDetail = $orderDetails->filter(function ($item) {
+                        return $item->type == OrderDetail::$Type['3'];
+                    })->first();
+                    if (!$orderDetail) {
+                        $orderDetail = new OrderDetail;
+                    }
+                    $orderDetail->product_id = null;
+                    $orderDetail->other = null;
+                    $orderDetail->order_id = $orders['id'];
+                    $orderDetail->type = OrderDetail::$Type['3'];
+                    $orderDetail->qty = $data['old_product_qty'] ?? 1;
+                    if ($data['old_product'] == "other") {
+                        $orderDetail->other = $data['old_product_other'];
+                    } else {
+                        $orderDetail->product_id = $data['old_product'];
+                    }
+                    $orderDetail->save();
                 }
-                $orderDetail->product_id = null;
-                $orderDetail->other = null;
-                $orderDetail->order_id = $orders['id'];
-                $orderDetail->type = OrderDetail::$Type['3'];
-                $orderDetail->qty = $data['old_product_qty'] ?? 1;
-                if ($data['old_product'] == "other") {
-                    $orderDetail->other = $data['old_product_other'];
-                } else {
-                    $orderDetail->product_id = $data['old_product'];
+                //pembentukan array prize
+                if (isset($data['prize'])) {
+                    $orderDetail = $orderDetailOlds->filter(function ($item) {
+                        return $item->type == OrderDetail::$Type['2'];
+                    })->first();
+                    if (!$orderDetail) {
+                        $orderDetail = new OrderDetail;
+                    }
+                    $orderDetail->product_id = null;
+                    $orderDetail->other = null;
+                    $orderDetail->order_id = $orders['id'];
+                    $orderDetail->type = OrderDetail::$Type['2'];
+                    $orderDetail->qty = $data['prize_qty'] ?? 1;
+                    if ($data['prize'] == "other") {
+                        $orderDetail->other = $data['prize_other'];
+                    } else {
+                        $orderDetail->product_id = $data['prize'];
+                    }
+                    $orderDetail->save();
                 }
-                $orderDetail->save();
-            }
-            //pembentukan array prize
-            if (isset($data['prize'])) {
-                $orderDetail = $orderDetailOlds->filter(function ($item) {
-                    return $item->type == OrderDetail::$Type['2'];
-                })->first();
-                if (!$orderDetail) {
-                    $orderDetail = new OrderDetail;
+                //pembentukan array takeaway
+                if (isset($data['takeaway'])) {
+                    $orderDetail = $orderDetailOlds->filter(function ($item) {
+                        return $item->type == OrderDetail::$Type['4'];
+                    })->first();
+                    if (!$orderDetail) {
+                        $orderDetail = new OrderDetail;
+                    }
+                    $orderDetail->product_id = null;
+                    $orderDetail->other = null;
+                    $orderDetail->order_id = $orders['id'];
+                    $orderDetail->type = OrderDetail::$Type['4'];
+                    $orderDetail->qty = $data['takeaway_qty'] ?? 1;
+                    if ($data['takeaway'] == "other") {
+                        $orderDetail->other = $data['takeaway_other'];
+                    } else {
+                        $orderDetail->product_id = $data['takeaway'];
+                    }
+                    $orderDetail->save();
                 }
-                $orderDetail->product_id = null;
-                $orderDetail->other = null;
-                $orderDetail->order_id = $orders['id'];
-                $orderDetail->type = OrderDetail::$Type['2'];
-                $orderDetail->qty = $data['prize_qty'] ?? 1;
-                if ($data['prize'] == "other") {
-                    $orderDetail->other = $data['prize_other'];
-                } else {
-                    $orderDetail->product_id = $data['prize'];
-                }
-                $orderDetail->save();
-            }
 
-            //pembentukan array Bank
-            $index = 0;
-            foreach ($data as $key => $value) {
-                $arrKey = explode("_", $key);
-                if($arrKey[0] == 'bank'){
-                    if(isset($data['cicilan_'.$arrKey[1]])){
-                        $isUpdateOrCreatePayment = true;
-                        // Update Order Payment
-                        if (isset($orderPayments[$arrKey[1]]['id'])) {
-                            $orderPayment = OrderPayment::find($orderPayments[$arrKey[1]]['id']);
-                        } else {
-                            if (isset($data['bankold_'.$arrKey[1]])) {
-                                $isUpdateOrCreatePayment = false;
-                            }
-                            $orderPayment = new OrderPayment;
-                        }
-                        // Update Order Payment
-                        if ($isUpdateOrCreatePayment) {
-                            $orderPayment->order_id = $orders['id'];
-                            $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
-                            $orderPayment->payment_date = $orders["orderDate"];
-                            $orderPayment->bank_id = $data['bank_' . $arrKey[1]];
-                            $orderPayment->cicilan = $data['cicilan_' . $arrKey[1]];
-    
-                            // save image
-                            $arrImage = [];
-                            $idxImg = 1;
-                            for ($i = 0; $i < 3; $i++) {
-                                $orderPaymentImages = json_decode($orderPayment->image, true) ?? [];
-                                // Jika Hapus Gambar Lama
-                                if (isset($orderPaymentImages[$i]) && isset($data['dltimg-'.$arrKey[1].'-'.$i])) {
-                                    if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i])) {
-                                        File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i]);
-                                    }
-                                    unset($orderPaymentImages[$i]);
+                //pembentukan array Bank
+                $index = 0;
+                foreach ($data as $key => $value) {
+                    $arrKey = explode("_", $key);
+                    if($arrKey[0] == 'bank'){
+                        if(isset($data['cicilan_'.$arrKey[1]])){
+                            $isUpdateOrCreatePayment = true;
+                            // Update Order Payment
+                            if (isset($orderPayments[$arrKey[1]]['id'])) {
+                                $orderPayment = OrderPayment::find($orderPayments[$arrKey[1]]['id']);
+                            } else {
+                                if (isset($data['bankold_'.$arrKey[1]])) {
+                                    $isUpdateOrCreatePayment = false;
                                 }
-                                if ($request->hasFile('images_' . $arrKey[1] . '_' . $i)) {
-                                    $path = "sources/order";
-    
-                                    // Hapus Img Lama Jika Update Image
-                                    if (isset($orderPaymentImages[$i])) {
+                                $orderPayment = new OrderPayment;
+                            }
+                            // Update Order Payment
+                            if ($isUpdateOrCreatePayment) {
+                                $orderPayment->order_id = $orders['id'];
+                                $orderPayment->total_payment = $data['downpayment_' . $arrKey[1]];
+                                $orderPayment->payment_date = $orders["orderDate"];
+                                $orderPayment->bank_id = $data['bank_' . $arrKey[1]];
+                                $orderPayment->cicilan = $data['cicilan_' . $arrKey[1]];
+        
+                                // save image
+                                $arrImage = [];
+                                $idxImg = 1;
+                                for ($i = 0; $i < 3; $i++) {
+                                    $orderPaymentImages = json_decode($orderPayment->image, true) ?? [];
+                                    // Jika Hapus Gambar Lama
+                                    if (isset($orderPaymentImages[$i]) && isset($data['dltimg-'.$arrKey[1].'-'.$i])) {
                                         if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i])) {
                                             File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i]);
                                         }
+                                        unset($orderPaymentImages[$i]);
                                     }
-    
-                                    $file = $request->file('images_' . $arrKey[1] . '_' . $i);
-                                    $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $arrKey[1] . $idxImg . "_order." . $file->getClientOriginalExtension();
-    
-                                    // Cek ada folder tidak
-                                    if (!is_dir($path)) {
-                                        File::makeDirectory($path, 0777, true, true);
+                                    if ($request->hasFile('images_' . $arrKey[1] . '_' . $i)) {
+                                        $path = "sources/order";
+        
+                                        // Hapus Img Lama Jika Update Image
+                                        if (isset($orderPaymentImages[$i])) {
+                                            if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i])) {
+                                                File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImages[$i]);
+                                            }
+                                        }
+        
+                                        $file = $request->file('images_' . $arrKey[1] . '_' . $i);
+                                        $fileName = str_replace([' ', ':'], '', Carbon::now()->toDateTimeString()) . $arrKey[1] . $idxImg . "_order." . $file->getClientOriginalExtension();
+        
+                                        // Cek ada folder tidak
+                                        if (!is_dir($path)) {
+                                            File::makeDirectory($path, 0777, true, true);
+                                        }
+        
+                                        //compressed img
+                                        $compres = Image::make($file->getRealPath());
+                                        $compres->resize(540, null, function ($constraint) {
+                                            $constraint->aspectRatio();
+                                        })->save($path.'/'.$fileName);
+        
+                                        //array_push($data['image'], $fileName);
+                                        $arrImage[] = $fileName;
+                                        $idxImg++;
+                                    } else if (isset($orderPaymentImages[$i])) {
+                                        $arrImage[] = $orderPaymentImages[$i];
+                                        $idxImg++;
                                     }
-    
-                                    //compressed img
-                                    $compres = Image::make($file->getRealPath());
-                                    $compres->resize(540, null, function ($constraint) {
-                                        $constraint->aspectRatio();
-                                    })->save($path.'/'.$fileName);
-    
-                                    //array_push($data['image'], $fileName);
-                                    $arrImage[] = $fileName;
-                                    $idxImg++;
-                                } else if (isset($orderPaymentImages[$i])) {
-                                    $arrImage[] = $orderPaymentImages[$i];
-                                    $idxImg++;
                                 }
+                                $orderPayment->image = json_encode($arrImage);
+                                $orderPayment->save();
+                                $index++;
                             }
-                            $orderPayment->image = json_encode($arrImage);
-                            $orderPayment->save();
-                            $index++;
                         }
                     }
                 }
-            }
-            // convert order payment id from online to offline
-            $getIDFromOrderPaymentOlds = [];
-            foreach($data['oldorderpaymentamount'] as $index => $amount){
-                $orderPaymentOfflineSide = OrderPayment::where('order_id', $orders->id)->where('total_payment', $amount)->where('bank_id', $data['oldorderpaymentbankid'][$index])->first();
-                array_push($getIDFromOrderPaymentOlds, $orderPaymentOfflineSide->id);
-            }
-            // Hapus Old Order Payment
-            foreach ($orderPayments as $orderPayment) {
-                if (!in_array($orderPayment['id'], $getIDFromOrderPaymentOlds)) {
-                    $orderPaymentImages = json_decode($orderPayment->image, true);
-                    foreach ($orderPaymentImages as $orderPaymentImage) {
-                        if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage)) {
-                            File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage);
+                // convert order payment id from online to offline
+                $getIDFromOrderPaymentOlds = [];
+                foreach($data['oldorderpaymentamount'] as $index => $amount){
+                    $orderPaymentOfflineSide = OrderPayment::where('order_id', $orders->id)->where('total_payment', $amount)->where('bank_id', $data['oldorderpaymentbankid'][$index])->first();
+                    array_push($getIDFromOrderPaymentOlds, $orderPaymentOfflineSide->id);
+                }
+                // Hapus Old Order Payment
+                foreach ($orderPayments as $orderPayment) {
+                    if (!in_array($orderPayment['id'], $getIDFromOrderPaymentOlds)) {
+                        $orderPaymentImages = json_decode($orderPayment->image, true);
+                        foreach ($orderPaymentImages as $orderPaymentImage) {
+                            if (File::exists("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage)) {
+                                File::delete("/var/www/public_html/waki-indonesia/sources/order/" . $orderPaymentImage);
+                            }
+                        }
+                        $orderPayment->delete();
+                    }
+                }
+                $orders->updateDownPayment();
+
+                $orders->save();
+
+                $dataChanges = array_diff(json_decode($orders, true), json_decode($dataBefore, true));
+                $childs = ["orderDetail" => $orderDetailOlds, "orderPayment" => $orderPaymentOlds];
+                foreach ($childs as $key => $child) {
+                    $orderChild = $orders->$key->keyBy('id');
+                    $child = $child->keyBy('id');
+                    foreach ($child as $i=>$c) {
+                        $array_diff_c = isset($orderChild[$i]) 
+                            ? array_diff(json_decode($orderChild[$i], true), json_decode($c, true)) 
+                            : "deleted";
+                        if ($array_diff_c == "deleted") {
+                            $dataChanges[$key][$c['id']."_deleted"] = $c;
+                        } else if ($array_diff_c) {
+                            $dataChanges[$key][$c['id']] = $array_diff_c;
                         }
                     }
-                    $orderPayment->delete();
-                }
-            }
-            $orders->updateDownPayment();
-
-            $orders->save();
-
-            $dataChanges = array_diff(json_decode($orders, true), json_decode($dataBefore, true));
-            $childs = ["orderDetail" => $orderDetailOlds, "orderPayment" => $orderPaymentOlds];
-            foreach ($childs as $key => $child) {
-                $orderChild = $orders->$key->keyBy('id');
-                $child = $child->keyBy('id');
-                foreach ($child as $i=>$c) {
-                    $array_diff_c = isset($orderChild[$i]) 
-                        ? array_diff(json_decode($orderChild[$i], true), json_decode($c, true)) 
-                        : "deleted";
-                    if ($array_diff_c == "deleted") {
-                        $dataChanges[$key][$c['id']."_deleted"] = $c;
-                    } else if ($array_diff_c) {
-                        $dataChanges[$key][$c['id']] = $array_diff_c;
+                    if ($orderChild > $child) {
+                        $array_diff_c = array_diff($orderChild->pluck('id')->toArray(), $child->pluck('id')->toArray());
+                        if ($array_diff_c) {
+                            $dataChanges[$key]["added"] = $array_diff_c;
+                        }
                     }
                 }
-                if ($orderChild > $child) {
-                    $array_diff_c = array_diff($orderChild->pluck('id')->toArray(), $child->pluck('id')->toArray());
-                    if ($array_diff_c) {
-                        $dataChanges[$key]["added"] = $array_diff_c;
-                    }
-                }
-            }
 
-            $user = User::where('code', $request->user_code)->first();
-            $historyUpdate['type_menu'] = "Order";
-            $historyUpdate['method'] = "Update";
-            $historyUpdate['meta'] = json_encode([
-                'user'=>$user['id'],
-                'createdAt' => date("Y-m-d h:i:s"),
-                'dataChange'=> $dataChanges
-            ]);
+                $user = User::where('code', $request->user_code)->first();
+                $historyUpdate['type_menu'] = "Order";
+                $historyUpdate['method'] = "Update";
+                $historyUpdate['meta'] = json_encode([
+                    'user'=>$user['id'],
+                    'createdAt' => date("Y-m-d h:i:s"),
+                    'dataChange'=> $dataChanges
+                ]);
 
-            $historyUpdate['user_id'] = $user['id'];
-            $historyUpdate['menu_id'] = $orders->id;
-            $createData = HistoryUpdate::create($historyUpdate);
+                $historyUpdate['user_id'] = $user['id'];
+                $historyUpdate['menu_id'] = $orders->id;
+                $createData = HistoryUpdate::create($historyUpdate);
 
-            DB::commit();
-            return response()->json([
-                'status' => 'success',
-                'message' => 'data order successfully updated'
-            ], 200);
+                DB::commit();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'data order successfully updated'
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'data is still new'
+                ], 200);
+            }            
         }catch(\Exception $ex){
             DB::rollback();
             return response()->json([

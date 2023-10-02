@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderDetail extends Model
 {
-    static $Type = ['1' => 'pembelian', '2' => 'prize', '3' => 'upgrade'];
+    static $Type = ['1' => 'pembelian', '2' => 'prize', '3' => 'upgrade', '4' => 'takeaway'];
 
     protected $fillable = [
         'order_id', 'product_id', 'promo_id', 'qty', 'type', 'other', 'stock_id', 'order_detail_id'
