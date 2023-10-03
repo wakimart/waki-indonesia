@@ -487,7 +487,7 @@ $menu_item_page = "order";
                                                 id="prize"
                                                 name="prize"
                                                 data-msg="Mohon Pilih Prize Produk">
-                                                <option selected disabled value="">
+                                                <option selected value="">
                                                     Choose Prize Product
                                                 </option>
 
@@ -544,7 +544,7 @@ $menu_item_page = "order";
                                                 id="takeaway"
                                                 name="takeaway"
                                                 data-msg="Please choose takeaway product">
-                                                <option selected disabled value="">
+                                                <option selected value="">
                                                     Choose Takeaway Product
                                                 </option>
 

@@ -467,7 +467,7 @@ $menu_item_second = "add_order";
                                                 id="prize"
                                                 name="prize"
                                                 data-msg="Mohon Pilih Prize Produk">
-                                                <option selected disabled value="">
+                                                <option selected value="">
                                                     Choose Prize Product
                                                 </option>
 
@@ -479,9 +479,11 @@ $menu_item_second = "add_order";
                                                 </option>
                                                 @endforeach
 
-                                                <option value="other">
-                                                    OTHER
-                                                </option>
+                                                @if(Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'branch')
+                                                    <option value="other">
+                                                        OTHER
+                                                    </option>
+                                                @endif
                                             </select>
                                             <div class="validation"></div>
                                         </div>
@@ -519,7 +521,7 @@ $menu_item_second = "add_order";
                                                 id="takeaway"
                                                 name="takeaway"
                                                 data-msg="Please choose takeaway product">
-                                                <option selected disabled value="">
+                                                <option selected value="">
                                                     Choose Takeaway Product
                                                 </option>
 
@@ -531,9 +533,11 @@ $menu_item_second = "add_order";
                                                 </option>
                                                 @endforeach
 
-                                                <option value="other">
-                                                    OTHER
-                                                </option>
+                                                @if(Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'branch')
+                                                    <option value="other">
+                                                        OTHER
+                                                    </option>
+                                                @endif
                                             </select>
                                             <div class="validation"></div>
                                         </div>
