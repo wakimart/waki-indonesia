@@ -9,6 +9,7 @@ use App\Order;
 use App\OrderDetail;
 use App\OrderPayment;
 use App\HistoryUpdate;
+use App\CsoCommission;
 use App\Http\Controllers\StockOrderRequestController;
 use App\User;
 use App\Cso;
@@ -582,6 +583,10 @@ class OfflineSideController extends Controller
             $cso->branch_id = $branch->id;
             $cso->phone = $request->phone;
             $cso->save();
+
+            //create cso commission for this cso
+            $this->createCsoCommission($cso->id);
+
             DB::commit();
             return response()->json([
                 'status' => 'success',
@@ -685,6 +690,17 @@ class OfflineSideController extends Controller
                 'status' => 'error',
                 'message' => $ex->getMessage()
             ], 500);
+        }
+    }
+
+    private function createCsoCommission($cso_id){
+        $isCurrentCsoCommission = CsoCommission::where([['cso_id', $cso_id], ['created_at', date("Y-m-01 00:00:00")]])->first();
+        if(!$isCurrentCsoCommission){
+            $data = [];
+            $data['cso_id'] = $cso_id;
+            $data['created_at'] = date("Y-m-01 00:00:00");
+            $data['updated_at'] = date("Y-m-01 00:00:00");
+            CsoCommission::create($data);
         }
     }
 }
