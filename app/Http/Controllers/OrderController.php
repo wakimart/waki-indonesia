@@ -601,6 +601,13 @@ class OrderController extends Controller
                     $orderDetail->product_id = $data['prize'];
                 }
                 $orderDetail->save();
+            }else{
+                $deletePrize = $orderDetails->filter(function ($item) {
+                                    return $item->type == OrderDetail::$Type['2'];
+                                })->first();
+                if($deletePrize){
+                    $deletePrize->delete();
+                }
             }
 
             //pembentukan array takeaway
@@ -624,6 +631,13 @@ class OrderController extends Controller
                     $orderDetail->product_id = $data['takeaway'];
                 }
                 $orderDetail->save();
+            }else{
+                $deleteTakeaway = $orderDetails->filter(function ($item) {
+                                    return $item->type == OrderDetail::$Type['4'];
+                                })->first();
+                if($deleteTakeaway){
+                    $deleteTakeaway->delete();
+                }
             }
 
             //pembentukan array Bank
