@@ -305,11 +305,11 @@
                                     <div class="form-group" style="width: 30%">
                                         <label for="orderTakeaway" class="w-100">Order Takeaway ?</label>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="orderTakeaway" id="orderTakeawayYes" value="" {{$isTakeAway == 1 ? 'checked' : ''}} >
+                                            <input class="form-check-input" type="radio" name="orderTakeaway" id="orderTakeawayYes" value="" {{$isTakeAway == 1 ? 'checked' : ''}} disabled>
                                             <label class="form-check-label mb-0" for="orderTakeawayYes">Yes</label>
                                         </div>
                                         <div class="form-check-inline">
-                                            <input class="form-check-input" type="radio" name="orderTakeaway" id="orderTakeawayNo" value="" {{$isTakeAway == 0 ? 'checked' : ''}} >
+                                            <input class="form-check-input" type="radio" name="orderTakeaway" id="orderTakeawayNo" value="" {{$isTakeAway == 0 ? 'checked' : ''}} disabled>
                                             <label class="form-check-label mb-0" for="orderTakeawayNo">No</label>
                                         </div>
                                     </div>
@@ -2454,12 +2454,12 @@
     $('#orderTakeawayYes').click(function () {
         $('#orderTakeawayYes').attr('checked', true)
         $('#orderTakeawayNo').attr('checked', false)
-        window.location.href += "&orderTakeaway=yes"
+        window.location.href = "{{url()->current().'?code='.$order->code}}"+'&orderTakeaway=yes'
     })
     $('#orderTakeawayNo').click(function () {
         $('#orderTakeawayNo').attr('checked', true)
         $('#orderTakeawayYes').attr('checked', false)
-        window.location.href += "&orderTakeaway=no"
+        window.location.href = "{{url()->current().'?code='.$order->code}}"+'&orderTakeaway=no'
     })    
 </script>
 @endsection
