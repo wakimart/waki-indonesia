@@ -78,7 +78,7 @@ class CsoCommissionController extends Controller
                 ], 200);
             }
         }
-        return response()->json(['error' => 'Invalid Payment ID'], 500);
+        return response()->json(['error' => 'Invalid ID'], 500);
 	}
 
 	public function update(Request $request, $id){
@@ -100,7 +100,7 @@ class CsoCommissionController extends Controller
                 
             }
         }
-        return response()->json(['error' => 'Invalid Payment ID'], 500);
+        return response()->json(['error' => 'Invalid ID'], 500);
 	}
 
 	public function destroy($id){
@@ -121,7 +121,7 @@ class CsoCommissionController extends Controller
                 
             }
         }
-        return response()->json(['error' => 'Invalid Payment ID'], 500);
+        return response()->json(['error' => 'Invalid ID'], 500);
 	}
 
 	public function exportCsoCommission(Request $request){
