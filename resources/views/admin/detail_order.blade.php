@@ -421,7 +421,7 @@
                                 {{ method_field('PUT') }}
                                 <div>
                                     <div class="row no-gutters">
-                                        <div class="form-group w-50">
+                                        <div class="form-group" style="width: 30%">
                                             <label for="orderUpgrade" class="w-100">Order Upgrade ?</label>
                                             <div class="form-check-inline">
                                                 <input class="form-check-input" type="radio" name="" id="editOrderUpgradeYes" value="" {{$isUpgrade == 1 ? 'checked' : ''}} disabled>
@@ -432,7 +432,18 @@
                                                 <label class="form-check-label mb-0" for="editOrderUpgradeNo">No</label>
                                             </div>
                                         </div>
-                                        <div class="form-group w-50">
+                                        <div class="form-group" style="width: 30%">
+                                            <label for="orderPrize" class="w-100">Order Prize ?</label>
+                                            <div class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="" id="orderPrizeYes" value="" {{$isPrize == 1 ? 'checked' : ''}} disabled>
+                                                <label class="form-check-label mb-0" for="orderPrizeYes">Yes</label>
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <input class="form-check-input" type="radio" name="" id="orderPrizeNo" value="" {{$isPrize == 0 ? 'checked' : ''}} disabled>
+                                                <label class="form-check-label mb-0" for="orderPrizeNo">No</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="width: 30%">
                                             <label for="orderTakeaway" class="w-100">Order Takeaway ?</label>
                                             <div class="form-check-inline">
                                                 <input class="form-check-input" type="radio" name="" id="editOrderTakeawayYes" value="" {{$isTakeAway == 1 ? 'checked' : ''}} disabled>
@@ -637,6 +648,10 @@
                                     <td>Description</td>
                                     <!-- <td>Description</td> -->
                                     <td style="width:50%">{{$order->commissionType->description}}</td>
+                                </tr>
+                                <tr>
+                                    <td>Prize</td>
+                                    <td>{{$order->commissionType->prize == 1 ? 'Yes' : 'No'}}</td>
                                 </tr>
                                 <tr>
                                     <td>Takeaway</td>
