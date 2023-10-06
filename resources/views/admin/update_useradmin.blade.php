@@ -2217,6 +2217,26 @@ $menu_item_page = "user";
                                             Delete Order Commission
                                         </label>
                                     </div>
+                                    <br>
+                                    <label style="font-style: italic;">Special Permission</label>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="show_nominal-order_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="show_nominal-order_commission" />
+                                            Show Nominal Order Commission
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="add_custom_nominal-order_commission">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="add_custom_nominal-order_commission" />
+                                            Add Custom Nominal Order Commission
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 

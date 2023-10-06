@@ -320,6 +320,11 @@
                                         <option selected disabled value="">
                                             Choose Commission Type
                                         </option>
+                                            
+                                        @if(Gate::check('add_custom_nominal-order_commission'))
+                                            <option value="{{$customCommissionType->id}}" data-description="{{$customCommissionType->description}}" data-nominal="{{number_format($customCommissionType->nominal)}}" data-smgt-nominal="{{number_format($customCommissionType->smgt_nominal)}}">{{$customCommissionType->name}}</option>
+                                        @endif
+
                                         @foreach($commissionTypes as $commType)
                                             <option value="{{$commType->id}}" data-description="{{$commType->description}}" data-nominal="{{number_format($commType->nominal)}}" data-smgt-nominal="{{number_format($commType->smgt_nominal)}}">{{$commType->name}}</option>
                                         @endforeach
@@ -338,7 +343,7 @@
                                     <div class="validation"></div>
                                 </div>
 
-                                <div class="row m-0">
+                                <div class="row m-0 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
                                     <div class="form-group col-6">
                                         <label for="">Bonus</label>
                                         <input type="text"
@@ -446,6 +451,11 @@
                                             <option selected disabled value="">
                                                 Choose Commission Type
                                             </option>
+                                            
+                                            @if(Gate::check('add_custom_nominal-order_commission'))
+                                                <option value="{{$customCommissionType->id}}" {{$customCommissionType->id == $order->commission_type_id ? 'selected' : ''}} data-description="{{$customCommissionType->description}}" data-nominal="{{number_format($customCommissionType->nominal)}}" data-smgt-nominal="{{number_format($customCommissionType->smgt_nominal)}}">{{$customCommissionType->name}}</option>
+                                            @endif
+
                                             @foreach($commissionTypes as $commType)
                                                 <option value="{{$commType->id}}" {{$commType->id == $order->commission_type_id ? 'selected' : ''}} data-description="{{$commType->description}}" data-nominal="{{number_format($commType->nominal)}}" data-smgt-nominal="{{number_format($commType->smgt_nominal)}}">{{$commType->name}}</option>
                                             @endforeach
@@ -464,7 +474,7 @@
                                         <div class="validation"></div>
                                     </div>
 
-                                    <div class="row m-0">
+                                    <div class="row m-0 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
                                         <div class="form-group col-6">
                                             <label for="">Bonus</label>
                                             <input type="text"
@@ -604,7 +614,7 @@
                                         <td>Rp. {{number_format($orderCommission->smgt_nominal)}}</td>
                                         <td>Rp. {{number_format($orderCommission->excess_price)}}</td>
                                         <td>
-                                            @if(Gate::check('detail-order_commission') || Gate::check('edit-order_commission') && Auth::user()->inRole("head-admin"))
+                                            @if(Gate::check('add_custom_nominal-order_commission'))
                                             <button value="{{ $orderCommission->id }}" class="btn-delete btn-edit-order-commission">
                                                 <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
                                             </button>

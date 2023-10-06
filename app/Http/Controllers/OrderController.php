@@ -416,7 +416,8 @@ class OrderController extends Controller
         }
 
         $commissionTypes = CommissionType::where('active', true)->where('upgrade', $isUpgrade)->where('prize', $isPrize)->where('takeaway', $isTakeAway)->get();
-        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts', 'isUpgrade', 'isPrize', 'isTakeAway', 'commissionTypes'));
+        $customCommissionType = CommissionType::find(1);
+        return view('admin.detail_order', compact('order', 'historyUpdateOrder', 'csos', 'banks', 'csoDeliveryOrders', 'creditCards', 'bankAccounts', 'isUpgrade', 'isPrize', 'isTakeAway', 'commissionTypes', 'customCommissionType'));
     }
 
     /**
