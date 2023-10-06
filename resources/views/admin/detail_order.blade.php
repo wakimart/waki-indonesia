@@ -343,8 +343,8 @@
                                     <div class="validation"></div>
                                 </div>
 
-                                <div class="row m-0 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
-                                    <div class="form-group col-6">
+                                <div class="row m-0">
+                                    <div class="form-group col-6 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
                                         <label for="">Bonus</label>
                                         <input type="text"
                                             {{ $isUpgrade ? "readonly" : "" }}
@@ -356,7 +356,7 @@
                                             placeholder="Bonus" required/>
                                         <div class="validation"></div>
                                     </div>
-                                    <div class="form-group col-6">
+                                    <div class="form-group col-6 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
                                         <label for="">Bonus Semangat</label>
                                         <input type="text"
                                             class="form-control"
@@ -368,7 +368,7 @@
                                         <div class="validation"></div>
                                     </div>
 
-                                    <div class="form-group col-6">
+                                    <div class="form-group col-6 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
                                         <label for="">Upgrade</label>
                                         <input type="text"
                                             {{ $isUpgrade ? "" : "readonly" }}
@@ -485,8 +485,8 @@
                                         <div class="validation"></div>
                                     </div>
 
-                                    <div class="row m-0 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
-                                        <div class="form-group col-6">
+                                    <div class="row m-0">
+                                        <div class="form-group col-6 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
                                             <label for="">Bonus</label>
                                             <input type="text"
                                                 {{ $isUpgrade ? "readonly" : "" }}
@@ -498,7 +498,7 @@
                                                 placeholder="Bonus" required value="{{ number_format($order->orderCommission->sum('bonus')) }}"/>
                                             <div class="validation"></div>
                                         </div>
-                                        <div class="form-group col-6">
+                                        <div class="form-group col-6 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
                                             <label for="">Bonus Semangat</label>
                                             <input type="text"
                                                 class="form-control"
@@ -510,7 +510,7 @@
                                             <div class="validation"></div>
                                         </div>
 
-                                        <div class="form-group col-6">
+                                        <div class="form-group col-6 {{ Gate::check('show_nominal-order_commission') ? "" : "d-none" }}">
                                             <label for="">Upgrade</label>
                                             <input type="text"
                                                 {{ $isUpgrade ? "" : "readonly" }}
