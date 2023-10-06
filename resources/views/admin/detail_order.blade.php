@@ -364,7 +364,7 @@
                                             name="smgt_nominal"
                                             autocomplete="off"
                                             data-type="currency"
-                                            placeholder="Bonus Semangat" required/>
+                                            placeholder="Bonus Semangat" readonly/>
                                         <div class="validation"></div>
                                     </div>
 
@@ -495,7 +495,7 @@
                                                 name="smgt_nominal"
                                                 autocomplete="off"
                                                 data-type="currency"
-                                                placeholder="Bonus Semangat" required value="{{ number_format($order->orderCommission->sum('smgt_nominal')) }}"/>
+                                                placeholder="Bonus Semangat" readonly value="{{ number_format($order->orderCommission->sum('smgt_nominal')) }}"/>
                                             <div class="validation"></div>
                                         </div>
 
