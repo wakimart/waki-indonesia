@@ -9,8 +9,9 @@ use App\Promo;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class OrderExport implements FromView, ShouldAutoSize
+class OrderExport implements FromView, ShouldAutoSize, WithColumnFormatting
 {
 	public function __construct($start_date, $end_date, $city, $category, $cso, $promo)
     {
@@ -20,6 +21,13 @@ class OrderExport implements FromView, ShouldAutoSize
         $this->category = $category;
         $this->cso = $cso;
         $this->promo = $promo;
+    }
+
+    public function columnFormats(): array
+    {
+        return [
+            'I' => '#,##0.00',
+        ];
     }
 
     public function view(): View
