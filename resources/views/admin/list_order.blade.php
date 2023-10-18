@@ -746,10 +746,10 @@ $menu_item_second = "list_order";
                     <select class="form-control"
                         id="filter_promo_modal"
                         name="filter_promo_modal">
-                        <option value="">
+                        <option value="" selected>
                             All Promo & Product
                         </option>
-                        <option value="promo" selected>
+                        <option value="promo">
                             Only All Promo
                         </option>
                         @foreach($promos as $promo)
@@ -766,6 +766,34 @@ $menu_item_second = "list_order";
                                 {{ $promo['code'] }} ({{ $promo->productName()[0] }} - {{ $promo->productName()[1] }})
                             </option>
                         @endforeach
+                    </select>
+                    <div class="validation"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Filter By Status</label>
+                    <select class="form-control" id="filter_status_modal">
+                        <option value="" selected="">All Status</option>
+                        @foreach(\App\Order::$status as $status)                        
+                            <option value="{{ $status }}">
+                                @if($status == \App\Order::$status['6'])
+                                    request stock
+                                @elseif($status == \App\Order::$status['7'])
+                                    stock approved
+                                @else
+                                    {{ $status }}
+                                @endif
+                            </option>
+                        @endforeach
+                    </select>
+                    <div class="validation"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Export Type</label>
+                    <select class="form-control" id="filter_export_type_modal">
+                        <option value="default" selected="">Default</option>
+                        <option value="tele">Tele Customer</option>
                     </select>
                     <div class="validation"></div>
                 </div>
@@ -911,6 +939,14 @@ $(document).ready(function(e){
         }
         if($('#filter_promo_modal').val() != ""){
             urlParamArray.push("filter_promo=" + $('#filter_promo_modal').val());
+        }
+
+        if($('#filter_status_modal').val() != ""){
+            urlParamArray.push("filter_status_modal=" + $('#filter_status_modal').val());
+        }
+
+        if($('#filter_export_type_modal').val() != ""){
+            urlParamArray.push("filter_export_type_modal=" + $('#filter_export_type_modal').val());
         }
 
         // if($('#categoryReport').val() != "" || $('#categoryReport').val() != null){

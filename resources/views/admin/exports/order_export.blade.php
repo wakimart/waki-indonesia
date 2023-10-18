@@ -17,6 +17,7 @@
             <th>Phone Number</th>
             <th>Address</th>
             <th>Promo Names</th>
+            <th>Status</th>
             <th>Total</th>
         </tr>
     </thead>
@@ -85,7 +86,7 @@
                     }
                 @endphp
                 <td> {!! $product_beli !!}<br>{!! $product_hadiah !!}<br>{!! $product_upgrade !!} </td>
-
+                <td> {{$order->status}} </td>
                 <td> {{$order['total_payment']}}</td>
             </tr>
             @endforeach

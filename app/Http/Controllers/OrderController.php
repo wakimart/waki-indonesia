@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Bank;
 use App\Exports\OrderExport;
+use App\Exports\OrderExportForTeleCustomer;
 use App\DeliveryOrder;
 use App\Order;
 use App\Branch;
@@ -1552,6 +1553,7 @@ class OrderController extends Controller
         $city = null;
         $category = null;
         $promo = null;
+        $status = null;
         if($request->has('start_orderDate') && $request->start_orderDate != "undefined"){
             $start_date = $request->start_orderDate;
         }
@@ -1570,8 +1572,15 @@ class OrderController extends Controller
         if($request->has('filter_promo') && $request->filter_promo != "undefined"){
             $promo = $request->filter_promo;
         }
+        if($request->has('filter_status_modal') && $request->filter_status_modal != "undefined"){
+            $status = $request->filter_status_modal;
+        }
 
-        return Excel::download(new OrderExport($start_date, $end_date, $city, $category, $cso, $promo), 'Order Report.xlsx');
+        if($request->filter_export_type_modal == 'default'){
+            return Excel::download(new OrderExport($start_date, $end_date, $city, $category, $cso, $promo, $status), 'Order Report.xlsx');
+        }else{
+            return Excel::download(new OrderExportForTeleCustomer($start_date, $end_date, $city, $category, $cso, $promo, $status), 'Order Report For Tele Customer.xlsx');
+        }
     }
 
     public function ListOrderforSubmission(Request $request)
