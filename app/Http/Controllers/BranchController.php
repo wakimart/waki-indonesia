@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Branch;
+use App\Warehouse;
 use App\HistoryUpdate;
 use Illuminate\Validation\Rule;
 use Validator;
@@ -38,7 +39,8 @@ class BranchController extends Controller
      */
     public function create()
     {
-        return view('admin.add_branch');
+        $warehouses = Warehouse::where('active', true)->get();
+        return view('admin.add_branch', compact('warehouses'));
     }
 
     /**
@@ -69,6 +71,7 @@ class BranchController extends Controller
             $data = $request->all();
             $data['code'] = strtoupper($data['code']);
             $data['name'] = strtoupper($data['name']);
+            $data['warehouse_id'] = $data['warehouse_id'];
             $branch = Branch::create($data);
             return response()->json(['success' => 'Berhasil']);
         }   
@@ -95,7 +98,8 @@ class BranchController extends Controller
     {
         if($request->has('id')){
             $branches = Branch::find($request->get('id'));
-            return view('admin.update_branch', compact('branches'));
+            $warehouses = Warehouse::where('active', true)->get();
+            return view('admin.update_branch', compact('branches', 'warehouses'));
         }else{
             return response()->json(['result' => 'Gagal!!']);
         }
@@ -132,6 +136,7 @@ class BranchController extends Controller
                 $branches = Branch::find($request->input('idBranch'));
                 $branches->code = $request->input('code');
                 $branches->name = $request->input('name');
+                $branches->warehouse_id = $request->input('warehouse_id');
                 $branches->save();
 
                 $user = Auth::user();
