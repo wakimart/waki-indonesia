@@ -39,6 +39,39 @@
                 </span> Dashboard
             </h3>
         </div>
+
+        <!-- if akun CSO atau branch -->
+        <div class="row">
+          <div class="col-md-6 stretch-card grid-margin">
+            <div class="card bg-gradient-warning p-3">
+              <h4 class="card-title text-dark">
+                Survey Percentage<i class="mdi mdi-chart-pie mdi-24px float-right"></i>
+              </h4>
+              <div class="chart-container" style="position: relative; height:300px; width:auto">
+                <canvas id="surveypieChart" class="m-2"></canvas>
+              </div>
+              <h4 class="text-dark text-center">
+                23/25 HS sudah di survey
+              </h4>
+            </div>
+          </div>
+          <div class="col-md-6 stretch-card grid-margin">
+            <div class="card bg-gradient-success p-3">
+              <h4 class="card-title text-dark">
+                Home Service survey rank
+              </h4>
+              <div class="card-container" style="position: relative; height:300px; width:auto; overflow-y:auto;">
+                <ol style="font-size: 1rem; font-weight: 600;">
+                  <li> F77-Branch Name </li>
+                  <li> F73-Branch name </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- if akun CSO atau branch -->
+
         <div class="row">
             <div class="col-md-4 stretch-card grid-margin">
                 <div class="card bg-gradient-danger card-img-holder text-white">
@@ -1493,6 +1526,52 @@
 
 @section("script")
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.1.1/dist/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0-rc"></script>
+
+<!-- Chart HS data -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    /*Datanya langsung dalam persentase kalau ke chart biar lebih gampang*/
+    var dataSurvey = {
+      labels: ["Survey", "Belum Survey"],
+      datasets: [{
+        data: [90,10],
+        backgroundColor: [
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(255, 99, 132, 0.5)',
+        ],
+        borderColor: [
+          'rgba(153, 102, 255, 1)',
+          'rgba(255,99,132,1)',
+        ],
+        borderWidth: 1,
+        fill: false
+      }]
+    };
+    var optionsSurvey = {
+      responsive: true,
+      maintainAspectRatio: false,
+      animation: {
+        animateScale: true,
+        animateRotate: true
+      },
+    };
+
+    if ($("#surveypieChart").length) {
+      var surveypieChartCanvas = $("#surveypieChart").get(0).getContext("2d");
+      // This will get the first returned node in the jQuery collection.
+      var surveypieChart = new Chart(surveypieChartCanvas, {
+        type: 'pie',
+        data: dataSurvey,
+        options: optionsSurvey
+      });
+    }
+
+}, false);
+</script>
+<!-- Chart HS data -->
+
+<!-- Chart data -->
 <script type="application/javascript">
 document.addEventListener('DOMContentLoaded', function () {
     const URL = '<?php echo route("dashboard_hs"); ?>';
