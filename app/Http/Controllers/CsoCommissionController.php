@@ -55,6 +55,7 @@ class CsoCommissionController extends Controller
 	        	->leftJoin('csos', 'csos.id', '=', 'cso_commissions.cso_id')
 	        	->leftJoin('branches', 'branches.id', '=', 'csos.branch_id')
 	        	->where('branches.id', $request->input('filter_branch'))
+                ->where('csos.active', true)
 	        	->get();        	
         }
 
