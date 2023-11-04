@@ -6,7 +6,15 @@ $menu_item_second = "list_commstype";
 
 
 @section('content')
-
+<style>
+.desc-wrap { word-wrap: break-word; white-space:normal;}
+@media (min-width: 992px) {
+	.desc-wrap { max-width: 700px; }
+}
+@media (max-width: 991.98px) {
+	.desc-wrap { max-width: 400px; }
+}
+</style>
 <div class="main-panel">
 	<div class="content-wrapper">
 		<div class="page-header">
@@ -72,7 +80,7 @@ $menu_item_second = "list_commstype";
 													<div class="mb-1"><b>Upgrade :</b> {{$commtype->upgrade ? 'Yes' : 'No'}}</div>
 													<div class="mb-1"><b>Nominal Bonus :</b> Rp {{number_format($commtype->nominal)}}</div><br>
 													{{-- <div class="mb-1"><b>Semangat Nominal :</b> Rp {{number_format($commtype->smgt_nominal)}}</div><br> --}}
-													<div class="mb-1"><b>Description :</b> {{$commtype->description}}</div>
+													<div class="mb-1 desc-wrap"><b>Description :</b> {{$commtype->description}}</div>
 												</div>
 											</td>
           									@if(Gate::check('detail-commission_type') || Gate::check('edit-commission_type'))
