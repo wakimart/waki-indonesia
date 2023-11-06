@@ -17,7 +17,7 @@ jobs:
         server: ftp.wakimart.com
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
-        server-dir: /laravel_wakiindonesia/
+        server-dir: /../laravel_waki_indonesia/
         exclude: public/**
           - public/
           - .git*
@@ -33,7 +33,7 @@ jobs:
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         local-dir: ./public/
-        server-dir: /public_html/waki-indonesia/
+        server-dir: /../public_html/
         exclude: .htaccess
           - credentials.json
           - favicon.ico
