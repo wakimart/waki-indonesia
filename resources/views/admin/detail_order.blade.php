@@ -129,11 +129,15 @@
                 <table class="w-100">
                     <thead>
                         <td>Sales Branch</td>
-                        <td>Sales Code</td>
+                        <td colspan="2">Sales Code</td>
                     </thead>
                     <tr class="text-center">
-                        <td>{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
-                        <td>{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
+                        <td rowspan="2">{{ $order->branch['code'] }} - {{ $order->branch['name'] }}</td>
+                        <td colspan="2">{{ $order->cso['code'] }} - {{ $order->cso['name'] }}</td>
+                    </tr>
+                    <tr>
+                        <td class="col-3">(30%) {{ $order->cso_id_30['code'] }} - {{ $order->cso_id_30['name'] }}</td>
+                        <td class="col-3">(70%) {{ $order->cso_id_70['code'] }} - {{ $order->cso_id_70['name'] }}</td>
                     </tr>
                 </table>
                 <table class="w-100">

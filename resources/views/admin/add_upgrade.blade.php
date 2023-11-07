@@ -234,12 +234,15 @@
 							</div>
 			                <div class="form-group">
 			                	<label for="">Task</label>
-			                    <textarea required="" class="form-control" name="task" rows="10" data-msg="Mohon Isi Task" placeholder="Task"></textarea>
+			                    <textarea required="" class="form-control" id="task" name="task" rows="10" data-msg="Mohon Isi Task" placeholder="Task"></textarea>
 			                    <div class="validation"></div>
 			                </div>
 
 	              			<div class="form-group">
-	              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2" name="upgrade_id" value="{{ $upgrade->id }}">Process</button>
+								<input type="hidden" name="upgrade_id" value="{{ $upgrade->id }}">
+								<input type="hidden" name="is_it_direct_upgrade" id="is_it_direct_upgrade" value="no">
+	              				<button id="upgradeProcess" type="submit" class="btn btn-gradient-primary mr-2">Process</button>
+								<button class="btn btn-gradient-info" type="button" id="directUpgradeButton">Direct Upgrade</button>
 	              			</div>
 	            		</form>
 
@@ -254,4 +257,17 @@
 @section('script')
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 <script type="text/javascript" src="{{ asset('js/tags-input.js') }}"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#directUpgradeButton").click(function(){
+			$("#task").prop('required',false);
+			$("#is_it_direct_upgrade").val('yes');
+			if($("#area").val() !== ''){
+				$('#actionAdd').submit();
+			}else{
+				alert('Please choose area first!')
+			}
+		}); 
+	});
+</script>
 @endsection

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Bank;
 use App\Exports\OrderExport;
+use App\Exports\OrderExportForTeleCustomer;
 use App\DeliveryOrder;
 use App\Order;
 use App\Branch;
@@ -214,6 +215,20 @@ class OrderController extends Controller
                     $orderDetail->other = $data['prize_other'];
                 } else {
                     $orderDetail->product_id = $data['prize'];
+                }
+                $orderDetail->save();
+            }
+
+            //pembentukan array takeaway
+            if (isset($data['takeaway'])) {
+                $orderDetail = new OrderDetail;
+                $orderDetail->order_id = $order['id'];
+                $orderDetail->type = OrderDetail::$Type['4'];
+                $orderDetail->qty = $data['takeaway_qty'] ?? 1;
+                if ($data['takeaway'] == "other") {
+                    $orderDetail->other = $data['takeaway_other'];
+                } else {
+                    $orderDetail->product_id = $data['takeaway'];
                 }
                 $orderDetail->save();
             }
@@ -432,6 +447,8 @@ class OrderController extends Controller
                 ->where('type', OrderDetail::$Type['3'])->first();
             $orderDetails['prize'] = OrderDetail::where('order_id', $orders['id'])
                 ->where('type', OrderDetail::$Type['2'])->first();
+            $orderDetails['takeaway'] = OrderDetail::where('order_id', $orders['id'])
+                ->where('type', OrderDetail::$Type['4'])->first();
             $arr_price = [];
             return view('admin.update_order', compact('orders','promos', 'products', 'from_know','branches', 'csos', 'cashUpgrades', 'paymentTypes', 'banks', 'orderDetails', 'arr_price'));
         }else{
@@ -585,6 +602,43 @@ class OrderController extends Controller
                     $orderDetail->product_id = $data['prize'];
                 }
                 $orderDetail->save();
+            }else{
+                $deletePrize = $orderDetails->filter(function ($item) {
+                                    return $item->type == OrderDetail::$Type['2'];
+                                })->first();
+                if($deletePrize){
+                    $deletePrize->delete();
+                }
+            }
+
+            //pembentukan array takeaway
+            if (isset($data['takeaway'])) {
+                // $orderDetail = OrderDetail::where("order_id", $orders['id'])
+                //     ->where("type", OrderDetail::$Type['2'])->first();
+                $orderDetail = $orderDetailOlds->filter(function ($item) {
+                    return $item->type == OrderDetail::$Type['4'];
+                })->first();
+                if (!$orderDetail) {
+                    $orderDetail = new OrderDetail;
+                }
+                $orderDetail->product_id = null;
+                $orderDetail->other = null;
+                $orderDetail->order_id = $orders['id'];
+                $orderDetail->type = OrderDetail::$Type['4'];
+                $orderDetail->qty = $data['takeaway_qty'] ?? 1;
+                if ($data['takeaway'] == "other") {
+                    $orderDetail->other = $data['takeaway_other'];
+                } else {
+                    $orderDetail->product_id = $data['takeaway'];
+                }
+                $orderDetail->save();
+            }else{
+                $deleteTakeaway = $orderDetails->filter(function ($item) {
+                                    return $item->type == OrderDetail::$Type['4'];
+                                })->first();
+                if($deleteTakeaway){
+                    $deleteTakeaway->delete();
+                }
             }
 
             //pembentukan array Bank
@@ -1509,6 +1563,7 @@ class OrderController extends Controller
         $city = null;
         $category = null;
         $promo = null;
+        $status = null;
         if($request->has('start_orderDate') && $request->start_orderDate != "undefined"){
             $start_date = $request->start_orderDate;
         }
@@ -1527,8 +1582,15 @@ class OrderController extends Controller
         if($request->has('filter_promo') && $request->filter_promo != "undefined"){
             $promo = $request->filter_promo;
         }
+        if($request->has('filter_status_modal') && $request->filter_status_modal != "undefined"){
+            $status = $request->filter_status_modal;
+        }
 
-        return Excel::download(new OrderExport($start_date, $end_date, $city, $category, $cso, $promo), 'Order Report.xlsx');
+        if($request->filter_export_type_modal == 'default'){
+            return Excel::download(new OrderExport($start_date, $end_date, $city, $category, $cso, $promo, $status), 'Order Report.xlsx');
+        }else{
+            return Excel::download(new OrderExportForTeleCustomer($start_date, $end_date, $city, $category, $cso, $promo, $status), 'Order Report For Tele Customer.xlsx');
+        }
     }
 
     public function ListOrderforSubmission(Request $request)

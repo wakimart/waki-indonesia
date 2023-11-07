@@ -11,7 +11,7 @@ use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
-class OrderExport implements FromView, ShouldAutoSize, WithColumnFormatting
+class OrderExportForTeleCustomer implements FromView, ShouldAutoSize, WithColumnFormatting
 {
 	public function __construct($start_date, $end_date, $city, $category, $cso, $promo, $status)
     {
@@ -55,7 +55,7 @@ class OrderExport implements FromView, ShouldAutoSize, WithColumnFormatting
         if($this->status != null){
             $order = $order->where('status', $this->status);
         }
-        return view('admin.exports.order_export', [
+        return view('admin.exports.order_report_for_tele_customer', [
             'order' => $order->orderBy('orderDate', 'ASC')->get(),
         ]);
     }

@@ -111,15 +111,24 @@ class UpgradeController extends Controller
         try {
             $data = $request->all();
             $upgrade = Upgrade::find($data['upgrade_id']);
-            $upgrade['task'] = $data['task'];
-            $upgrade['due_date'] = $data['due_date'];
-            $upgrade['status'] = "process";
-            $tempHistoryStatus = [];
-            if ($upgrade['history_status'] != null) {
-                $tempHistoryStatus = $upgrade['history_status'];
+            if($data['is_it_direct_upgrade'] == 'yes'){
+                $upgrade['due_date'] = date("Y-m-d H:i:s");
+                $upgrade['task'] = isset($data['task']) ? 'Direct Upgrade ('.$data['task'].')' : '';
+                $upgrade['status'] = 'Completed';
+                $tempHistoryStatus = [];
+                array_push($tempHistoryStatus, ['user_id' => Auth::user()['id'], 'status' => 'completed', 'updated_at' => date("Y-m-d H:i:s")]);
+                $upgrade['history_status'] = $tempHistoryStatus;
+            }else{
+                $upgrade['task'] = $data['task'];
+                $upgrade['due_date'] = $data['due_date'];
+                $upgrade['status'] = "process";
+                $tempHistoryStatus = [];
+                if ($upgrade['history_status'] != null) {
+                    $tempHistoryStatus = $upgrade['history_status'];
+                }
+                array_push($tempHistoryStatus, ['user_id' => Auth::user()['id'], 'status' => $upgrade['status'], 'updated_at' => date("Y-m-d H:i:s")]);
+                $upgrade['history_status'] = $tempHistoryStatus;
             }
-            array_push($tempHistoryStatus, ['user_id' => Auth::user()['id'], 'status' => $upgrade['status'], 'updated_at' => date("Y-m-d H:i:s")]);
-            $upgrade['history_status'] = $tempHistoryStatus;
             $upgrade->save();
 
             $productService = new ProductService();

@@ -84,7 +84,7 @@ class NewNgrokUrl extends Command
                         ."WAKimart offline New URL : ".$urlWakimartOffline."\n"
                         ."WAKi offline FTP New URL : ".$urlFTP."\n";
 
-        if(env('OFFLINE_URL') != $urlWakiOffline){
+        if(env('OFFLINE_URL_2') != $urlWakiOffline){
             $ch = curl_init('https://discord.com/api/webhooks/1118761309173989397/kY5ga6bya6nab3bL9riKFijDz6v2cLIQUfCfnVqI6kvR3uWogzdT_LQENmlq7tGnS9Uq');
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
