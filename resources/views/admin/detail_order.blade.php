@@ -838,8 +838,11 @@
                             </div>
                             <div class="modal-body">
                                 <h5 class="modal-title text-center">Add Order Home Service?</h5>
-                                <hr>
-                                @php $checkRegionOrder = in_array($order['distric'], $order->branch->regionDistrict()['district']); @endphp
+                                <br>
+                                @php 
+                                  $checkRegionOrder = in_array($order['distric'], $order->branch->regionDistrict()['district']); 
+                                @endphp
+                                
                                 @if ($checkRegionOrder == false) 
                                     <p class="text-danger">Different Region !!. This Order Home Service need Acc.</p>
                                 @endif
@@ -851,9 +854,8 @@
                                             @foreach ($order_request_hs as $key => $order_r_hs)
                                             <option value="{{ $key }}">{{ $order_r_hs }}</option>
                                             @endforeach
-                                            @if($checkRegionOrder == false)
-                                                <option value="create">Create</option>
-                                            @endif
+                                            
+                                            <option value="create">Create</option>
                                         </select>
                                     </div>
                                     <div id="div-create-form" style="display: none">

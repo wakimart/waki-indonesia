@@ -1039,12 +1039,19 @@ class OrderController extends Controller
             $orderDetailOlds = OrderDetail::where('order_id', $order['id'])->get();
 
             $checkRegionOrder = in_array($order['distric'], Branch::where('id', $order->branch_id)->first()->regionDistrict()['district']);
-            if($checkRegionOrder == false && $request->index_order_home_service == 'create'){
-                // add new home service
-                $index = null;
+            if($request->index_order_home_service == 'create'){
                 $appointment = $request->request_home_service_date." ".$request->request_home_service_time;
-                $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $index, $appointment, $request->choose_cso_home_service);
-                OrderHomeservice::create(['order_id' => $order->id, 'home_service_id' => $homeservice->id]);
+                if($checkRegionOrder == false){
+                    // Request Acc Home Service
+                    $order->update(['request_hs_acc' => $appointment, 'request_hs_cso_acc' => $request->choose_cso_home_service ? json_encode($request->choose_cso_home_service) : null]);
+                }
+                else{
+                    // add new home service
+                    $index = null;
+                    $homeservice = HomeServiceController::addHomeServiceFromOrderDelivery($order, $index, $appointment, $request->choose_cso_home_service);
+                    OrderHomeservice::create(['order_id' => $order->id, 'home_service_id' => $homeservice->id]);
+                }
+                
                 // set null request hs in order
                 $order->request_hs = null;
                 $order->update();
