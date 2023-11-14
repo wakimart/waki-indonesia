@@ -128,19 +128,20 @@ class CsoCommissionController extends Controller
 	public function exportCsoCommission(Request $request){
 		$startDate = $request->has('filter_month') ? date($request->input('filter_month').'-01') : date('Y-m-01');
         $endDate = date('Y-m-t', strtotime($startDate));
+        $branch = $request->has('filter_branch') ? $request->input('filter_branch') : null;
         $CsoCommissions = null;
 
-        if($request->has('filter_branch')){
+        if($branch){
 	        $CsoCommissions = CsoCommission::select('cso_commissions.*')
 	        	->where('cso_commissions.created_at', '>=', $startDate)
 	        	->where('cso_commissions.created_at', '<=', $endDate)
 	        	->where('cso_commissions.active', true)
 	        	->leftJoin('csos', 'csos.id', '=', 'cso_commissions.cso_id')
 	        	->leftJoin('branches', 'branches.id', '=', 'csos.branch_id')
-	        	->where('branches.id', $request->input('filter_branch'))
+	        	->where('branches.id', $branch)
 	        	->get();
         }
 
-        return Excel::download(new CsoCommissionExport($CsoCommissions), 'Commission Report.xlsx');
+        return Excel::download(new CsoCommissionExport($CsoCommissions, $startDate, $endDate, $branch), 'Commission Report.xlsx');
 	}
 }

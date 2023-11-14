@@ -4,6 +4,15 @@
             <th colspan="9" style="font-weight: bold; text-align: center;">DAFTAR RINCIAN EXTRA BONUS KOMISI WAKI</th>
         </tr>
         <tr>
+            <th colspan="9" style="font-weight: bold; text-align: left;">Cabang : {{ $branch['code'] }} - {{ $branch['name'] }}</th>
+        </tr>
+        <tr>
+            <th colspan="9" style="font-weight: bold; text-align: left;">Bulan : {{ $periode }}</th>
+        </tr>
+        <tr>
+            <th colspan="9" style="font-weight: bold; text-align: left;">Sale : Rp. {{ number_format($totalSale['sum_ts_bank_in'] + $totalSale['sum_ts_netto_debit'] + $totalSale['sum_ts_netto_card']) }}</th>
+        </tr>
+        <tr>
             <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">Date</th>
             <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">CSO - Name (%)</th>
             <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">D/O</th>
