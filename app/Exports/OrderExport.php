@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 class OrderExport implements FromView, ShouldAutoSize
 {
-	public function __construct($start_date, $end_date, $city, $category, $cso, $promo)
+	public function __construct($start_date, $end_date, $city, $category, $cso, $promo, $type, $status)
     {
     	$this->start_date = date($start_date);
         $this->end_date = date($end_date);
@@ -20,6 +20,8 @@ class OrderExport implements FromView, ShouldAutoSize
         $this->category = $category;
         $this->cso = $cso;
         $this->promo = $promo;
+        $this->type = $type;
+        $this->status = $status;
     }
 
     public function view(): View
@@ -44,6 +46,11 @@ class OrderExport implements FromView, ShouldAutoSize
             else{
                 $order = $order->where('product', 'like', '%"id":"'.$this->promo.'"%');
             }
+        }
+        if($this->type == "non-komisi"){
+            return view('admin.exports.order_export_non_komisi', [
+                'order' => $order->orderBy('orderDate', 'ASC')->get(),
+            ]);
         }
         return view('admin.exports.order_export', [
             'order' => $order->orderBy('orderDate', 'ASC')->get(),

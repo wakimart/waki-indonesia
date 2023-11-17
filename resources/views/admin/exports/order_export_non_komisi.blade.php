@@ -9,30 +9,33 @@
 <table>
     <thead>
         <tr>
-            <th>Branch</th>
+            <th>No</th>
             <th>OrderDate</th>
             <th>Order Code | DO</th>
             <th>CSO</th>
-            <th>Name</th>
-            <th>Phone Number</th>
-            <th>Address</th>
-            <th>Promo Names</th>
-            <th>Status</th>
             <th>Total</th>
+            <th>Nominal Bonus</th>
+            <th>Nominal Upgrade</th>
+            <th>Product</th>
         </tr>
     </thead>
     <tbody>
         
         @if (count($order)!=0)
-            @foreach ($order as $order )
+            @foreach ($order as $keyNya => $order )
+
+            @if(count($order->orderCommission) > 0)
+                @continue
+            @endif
+            
             <tr>
-                <td> {{$order->branch['code']}} </td>
-                <td> {{$order['orderDate']}} </td>
+                <td>{{ $keyNya+1 }}</td>
+                <td> {{ date("d-m-Y", strtotime($order['orderDate'])) }} </td>
                 <td> Code : {{$order['code']}} <br> DO : {{$order['temp_no']}}  </td>
-                <td> {{$order->getCSO()->code}} </td>
-                <td> {{$order['name']}} </td>
-                <td> {{$order['phone']}} </td>
-                <td> {{$order['address']}} </td>
+                <td> {{ $order->cso_id_30['code'] }} (30%) <br> {{ $order->cso_id_70['code'] }} (70%) </td>
+                <td> {{$order['total_payment']}}</td>
+                <td></td>
+                <td></td>
 
                 @php
                     $curnt_beli = 1;
@@ -86,8 +89,6 @@
                     }
                 @endphp
                 <td> {!! $product_beli !!}<br>{!! $product_hadiah !!}<br>{!! $product_upgrade !!} </td>
-                <td> {{$order->status}} </td>
-                <td> {{$order['total_payment']}}</td>
             </tr>
             @endforeach
         @endif

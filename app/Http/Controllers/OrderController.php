@@ -1228,6 +1228,8 @@ class OrderController extends Controller
         $city = null;
         $category = null;
         $promo = null;
+        $type = null;
+        $status = null;
         if($request->has('start_orderDate') && $request->start_orderDate != "undefined"){
             $start_date = $request->start_orderDate;
         }
@@ -1246,8 +1248,14 @@ class OrderController extends Controller
         if($request->has('filter_promo') && $request->filter_promo != "undefined"){
             $promo = $request->filter_promo;
         }
+        if($request->has('filter_export_type') && $request->filter_export_type != "undefined"){
+            $type = $request->filter_export_type;
+        }
+        if($request->has('filter_status') && $request->filter_status != "undefined"){
+            $status = $request->filter_status;
+        }
 
-        return Excel::download(new OrderExport($start_date, $end_date, $city, $category, $cso, $promo), 'Order Report.xlsx');
+        return Excel::download(new OrderExport($start_date, $end_date, $city, $category, $cso, $promo, $type, $status), 'Order Report.xlsx');
     }
 
     public function ListOrderforSubmission(Request $request)
