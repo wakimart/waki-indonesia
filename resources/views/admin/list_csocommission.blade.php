@@ -136,6 +136,7 @@ $menu_item_page_sub = "cso_commission";
                                         <th>Bank Account</th>
                                         <th>Commission</th>
                                         <th>Bonus</th>
+                                        <th>Cancel</th>
                                         <th>Tax</th>
                                         <th>Total Commission</th>
                                         <th colspan="3">Detail/Edit</th>
@@ -151,13 +152,9 @@ $menu_item_page_sub = "cso_commission";
 
                                     @foreach ($CsoCommissions as $key => $Cso_Commission)
                                         @php
-                                            $bonusPerCso = 0;
-                                            $commissionPerCso = 0;
-                                            if(count($Cso_Commission->orderCommission) > 0){
+                                            $bonusPerCso = floor($Cso_Commission['bonusPerCso']);
+                                            $commissionPerCso = floor($Cso_Commission['commissionPerCso']);
 
-                                                $bonusPerCso = $Cso_Commission->orderCommission->sum(function ($row) {return ($row->bonus + $row->upgrade + $row->smgt_nominal + $row->excess_price);});
-                                                $commissionPerCso = $Cso_Commission->commission == 0 ? $Cso_Commission->orderCommission->sum('commission') : $Cso_Commission->commission;
-                                            }
                                             $tot_commission += $commissionPerCso;
                                             $tot_pajak += $Cso_Commission['pajak'];
                                             $tot_bonus += $bonusPerCso;
@@ -170,8 +167,9 @@ $menu_item_page_sub = "cso_commission";
                                             <td>{{ $Cso_Commission->cso['no_rekening'] }}</td>
                                             <td class="text-right" {!! ($Cso_Commission->commission > 0) ? 'style="background-color: #cde9ff;"' : '' !!}>Rp. {{ number_format($commissionPerCso) }}</td>
                                             <td class="text-right">Rp. {{ number_format($bonusPerCso) }}</td>
+                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['cancel']) }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['pajak']) }}</td>
-                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['commission'] + $bonusPerCso - $Cso_Commission['pajak']) }}</td>
+                                            <td class="text-right">Rp. {{ number_format($commissionPerCso + $bonusPerCso - $Cso_Commission['pajak']) }}</td>
                                             <td class="text-center">
                                                 @if(Gate::check('detail-cso_commission'))
                                                 <a href="{{ route('detail_cso_commission', ['id' => $Cso_Commission->id]) }}" target="_blank">
@@ -265,6 +263,14 @@ $menu_item_page_sub = "cso_commission";
                         <input type="text"
                             name="commission"
                             id="editCsoCommision-commission"
+                            class="form-control"
+                            data-type="currency"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Cancel <small style="color: red;">*temp</small></label>
+                        <input type="text"
+                            name="cancel"
+                            id="editCsoCommision-cancel"
                             class="form-control"
                             data-type="currency"/>
                     </div>
