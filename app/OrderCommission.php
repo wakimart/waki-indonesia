@@ -22,6 +22,6 @@ class OrderCommission extends Model
 
     public function csoCommission()
     {
-        return $this->belongsToMany(CsoCommission::class, 'order_cso_commissions');
+        return $this->belongsToMany(CsoCommission::class, 'order_cso_commissions')->where('active', true);
     }
 }

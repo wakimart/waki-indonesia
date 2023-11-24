@@ -62,11 +62,11 @@ class Cso extends Model
 
     public function orderCommission()
     {
-        return $this->hasMany("App\OrderCommission");
+        return $this->hasMany("App\OrderCommission")->where('active', true);
     }
 
     public function csoCommission()
     {
-        return $this->hasMany("App\CsoCommission");
+        return $this->hasMany("App\CsoCommission")->where('active', true);
     }
 }
