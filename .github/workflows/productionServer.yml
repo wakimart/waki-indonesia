@@ -14,7 +14,7 @@ jobs:
     - name: 📂 Sync files Laravel
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
-        server: ftp.wakimart.com
+        server: 45.90.228.88
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         server-dir: /../laravel_waki_indonesia/
@@ -29,7 +29,7 @@ jobs:
     - name: 📂 Sync files public
       uses: SamKirkland/FTP-Deploy-Action@4.0.0
       with:
-        server: ftp.wakimart.com
+        server: 45.90.228.88
         username: ${{ secrets.ftp_username }}
         password: ${{ secrets.ftp_password }}
         local-dir: ./public/
