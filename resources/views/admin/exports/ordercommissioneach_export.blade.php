@@ -21,7 +21,8 @@
             <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">Upgrade</th>
             {{-- <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">BNS SMGT</th> --}}
             <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">Lbh Harga</th>
-            <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">Product</th>
+            <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">Product</th>h>
+            <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">Remarks</th>
         </tr>
     </thead>
     <tbody>
@@ -121,6 +122,7 @@
                     <td style="border: 1px solid black; text-align: right;">
                         {!! $product_beli !!}<br>{!! $product_hadiah !!}<br>{!! $product_upgrade !!}
                     </td>
+                    <td style="border: 1px solid black; text-align: right;">{{ $orderPerCommission['remarks'] }}</td>
                 </tr>
             @endforeach
             @php

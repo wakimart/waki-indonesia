@@ -50,6 +50,7 @@ class CsoCommissionEach_onOrderExport implements FromView, ShouldAutoSize, WithC
             'G' => 20,
             'H' => 20,
             'I' => 40,
+            'J' => 40,
         ];
     }
 

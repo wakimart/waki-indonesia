@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use App\Exports\CsoCommissionExport;
 use App\Exports\CsoCommissionEachExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\CsoCommission;
+use App\OrderCommission;
 use App\OrderPayment;
 use App\Branch;
 use App\Order;
@@ -49,6 +51,7 @@ class CsoCommissionController extends Controller
 		$startDate = $request->has('filter_month') ? date($request->input('filter_month').'-01') : date('Y-m-01');
         $endDate = date('Y-m-t', strtotime($startDate));
         $CsoCommissions = null;
+        $totalSaleBranch = 0;
 
         if($request->has('filter_branch')){
 	        $CsoCommissions = CsoCommission::select('cso_commissions.*')
@@ -117,10 +120,24 @@ class CsoCommissionController extends Controller
 
                 $Cso_Commission['bonusPerCso'] = $bonusPerCso;
                 $Cso_Commission['commissionPerCso'] = $commissionPerCso;
+
+                $totalSaleBranch = Branch::from('branches as b')
+                    ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
+                    ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
+                    ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
+                    ->leftJoin('orders as o', 'o.branch_id', 'b.id')
+                    ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
+                    ->leftJoin('total_sales as ts', 'ts.order_payment_id', 'op.id')
+                    ->whereBetween('op.payment_date', [$startDate, $endDate])
+                    ->where([['b.active', true], ['b.id', $request->input('filter_branch')]])
+                    ->where([['o.active', true], ['o.status', '!=', 'reject']])
+                    ->orderBy('b.code')
+                    ->groupBy('b.id')->first();
+                $totalSaleBranch = $totalSaleBranch['sum_ts_bank_in'] + $totalSaleBranch['sum_ts_netto_debit'] + $totalSaleBranch['sum_ts_netto_card'];
             }
         }
 
-        return view('admin.list_csocommission', compact('startDate', 'endDate', 'branches', 'CsoCommissions'));
+        return view('admin.list_csocommission', compact('startDate', 'endDate', 'branches', 'CsoCommissions', 'totalSaleBranch'));
 	}
 
 	public function show($id){
@@ -386,5 +403,48 @@ class CsoCommissionController extends Controller
         }));
 
         return Excel::download(new CsoCommissionEachExport($allCsoCommission, $startDate, $endDate, $branch), 'Commission Report Periode '. date('m-Y', strtotime($startDate)) .' ('. $branchName['code'] .').xlsx');
+    }
+
+    public function cutCommissionOrder(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $startDate = $request->has('commissionCut-month') ? date($request->input('commissionCut-month').'-01') : date('Y-m-01');
+            $endDate = date('Y-m-t', strtotime($startDate));
+            $branch = $request->has('commissionCut-branch') ? $request->input('commissionCut-branch') : null;
+            $cutCommissionPercentage = $request->has('commissionCut-cutPercentage') ? $request->input('commissionCut-cutPercentage') : 0;
+            $totalSaleMinimal = $request->has('commissionCut-minimalTotalSale') ? $request->input('commissionCut-minimalTotalSale') : 0;
+            $totalSaleBranch = $request->has('commissionCut-totalSaleBranch') ? $request->input('commissionCut-totalSaleBranch') : 0;
+
+            // update order commission (recalculate to cut by request)
+            if($totalSaleBranch < $totalSaleMinimal){
+                // get order commission data
+                $orderCommissions = OrderCommission::from('order_commissions as oc')
+                    ->select('oc.*')
+                    ->join('orders as o', 'o.id', 'oc.order_id')
+                    ->where('o.status', '!=', 'reject')
+                    ->where('o.orderDate', '>=', $startDate)
+                    ->where('o.orderDate', '<=', $endDate)
+                    ->where('o.branch_id', $branch)
+                    ->where('o.active', true)
+                    ->orderBy('o.id', 'asc')
+                    ->get();
+
+                // array for percentage calculation cut commission
+                foreach($orderCommissions as $idx => $perOrderCommission){
+                    // update order commission
+                    $perOrderCommission->bonus = $perOrderCommission->bonus - ( $cutCommissionPercentage * $perOrderCommission->bonus / 100 );
+                    $perOrderCommission->upgrade = $perOrderCommission->upgrade - ( $cutCommissionPercentage * $perOrderCommission->upgrade / 100 );
+                    $perOrderCommission->remarks = "Cut Commission ". $cutCommissionPercentage ."% below than minimal Total Sale Rp. ". number_format($totalSaleMinimal);
+                    $perOrderCommission->update();
+                }
+            }
+
+            DB::commit();
+            return Redirect::back()->with("success", "Order commission successfully updated.");
+        } catch (\Exception $ex) {
+            DB::rollBack();
+            return Redirect::back()->withErrors("Something wrong when update order commission type, please call Team IT. [". $ex->getMessage() ."]");
+        }
     }
 }

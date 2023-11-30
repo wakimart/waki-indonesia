@@ -757,6 +757,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('add_custom_nominal-order_commission', function ($user) {
             return $user->hasAccess(['add_custom_nominal-order_commission']);
         });
+        Gate::define('cut_custom_nominal-order_commission', function ($user) {
+            return $user->hasAccess(['cut_custom_nominal-order_commission']);
+        });
 
         //-- CSO COMMISSION --//
         Gate::define('list-cso_commission', function ($user) {

@@ -1717,6 +1717,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::match(['put', 'patch'], '/update/{id}', 'CsoCommissionController@update')->name('update_cso_commission')->middleware('can:edit-cso_commission');
         Route::get('/export-commission', 'CsoCommissionController@exportCsoCommission')->name('exportCsoCommission');
         Route::get('/export-bonus-commission', 'CsoCommissionController@exportBonusCommission')->name('exportBonusCommission');
+        Route::put('/cut-commission', 'CsoCommissionController@cutCommissionOrder')->name('cut_commission_order')->middleware('can:cut_custom_nominal-order_commission');
     });
 
     Route::view('faq_agreement', 'admin.faq_agreement')->name('faq_agreement');

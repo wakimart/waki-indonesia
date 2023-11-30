@@ -101,6 +101,15 @@ $menu_item_page_sub = "cso_commission";
                             <span class="mdi mdi-file-document"></span>
                             Export Commission
                         </a>
+                        @if(isset($_GET['filter_branch']) && isset($_GET['filter_month']) && Gate::check('cut_custom_nominal-order_commission'))
+                            <button id="btn-commisison-cut"
+                                type="button"
+                                class="btn btn-gradient-warning m-1"
+                                name="commisison-cut"
+                                value="{{ $_GET['filter_branch'] }}">
+                                <span class="mdi mdi-percent"></span> Commission Cut
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -333,6 +342,119 @@ $menu_item_page_sub = "cso_commission";
 </div>
 <!-- End Modal Delete -->
 
+<!-- Modal Cut Commission for Certain Branch Head Admin -->
+<div class="modal fade"
+    id="commissionCutModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post" id="cutCommissionForm" action="{{ route('cut_commission_order') }}">
+                @csrf
+                {{ method_field('PUT') }}
+                <div class="modal-body">
+                    <h5 style="text-align: center;">
+                        Cut Commission for <span id="commisison-cut-branch"></span>
+                    </h5>
+                    <br>
+                    <input type="hidden" name="commissionCut-month" value="{{ isset($_GET['filter_month']) ? $_GET['filter_month'] : date('Y-m') }}">
+                    <input type="hidden" name="commissionCut-branch" value="{{ isset($_GET['filter_branch']) ? $_GET['filter_branch'] : "" }}">
+                    <input type="hidden" name="commissionCut-totalSaleBranch" value="{{ isset($totalSaleBranch) ? $totalSaleBranch : 0 }}">
+                    <div class="form-group">
+                        <label for="">Month</label>
+                        <input type="month"
+                            id="commissionCut-month"
+                            class="form-control"
+                            value="{{ isset($_GET['filter_month']) ? $_GET['filter_month'] : date('Y-m') }}"
+                            disabled="" />
+                    </div>
+                    <div class="form-group">
+                        <label for="commissionCut-branch">
+                            Filter By Branch
+                        </label>
+                        <select class="form-control"
+                            id="commissionCut-branch"
+                            disabled="">
+                            <option value="" selected="">
+                                Please select branch
+                            </option>
+                            @foreach ($branches as $branch)
+                                @php
+                                $selected = "";
+
+                                if (isset($_GET['filter_branch'])) {
+                                    if ((int) $_GET['filter_branch'] === (int) $branch['id']) {
+                                        $selected = "selected";
+                                    }
+                                }
+                                @endphp
+
+                                <option {{ $selected }}
+                                    value="{{ $branch['id'] }}">
+                                    {{ $branch['code'] }} - {{ $branch['name'] }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Total Sale Netto Branch</label>
+                        <input type="text"
+                            id="commissionCut-totalSaleBranch"
+                            class="form-control"
+                            data-type="currency"
+                            disabled="" 
+                            value="Rp. {{ number_format($totalSaleBranch) }}" />
+                    </div>
+
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="">Minimal Total Sale</label>
+                                    <input type="text"
+                                        name="commissionCut-minimalTotalSale"
+                                        id="commissionCut-minimalTotalSale"
+                                        class="form-control"
+                                        data-type="currency"
+                                        value="{{ number_format(250000000) }}" />
+                                </div>                            
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label for="">Cut Percentage (%)</label>
+                                    <input type="number"
+                                        min="0"
+                                        max="100"
+                                        value="40" 
+                                        name="commissionCut-cutPercentage"
+                                        id="commissionCut-cutPercentage"
+                                        class="form-control"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                    
+                    <div class="clearfix"></div>
+                </div>
+                <div class="modal-footer">
+                    @if(Gate::check('edit-cso_commission'))
+                    <button id="submitFormCutCommission" type="submit" class="btn btn-gradient-success mr-2">Save</button>
+                    @endif
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Modal Cut Commission for Certain Branch Head Admin -->
+
 @endsection
 
 @section('script')
@@ -385,13 +507,27 @@ $menu_item_page_sub = "cso_commission";
         $('#deleteDoModal').modal('show');
     });
 
-    $("#submitFormEditCommission").on("click", function(e) {
+    $("#submitFormEditCommissio").on("click", function(e) {
         $("#editFormCsoCommision").find('input[data-type="currency"]').each(function() {
             $(this).val(numberNoCommas($(this).val()));
         });
         $("#editFormCsoCommision").submit();
         $("#submitFormEditCommission").html("Loading...");
         $("#submitFormEditCommission").attr("disabled", true);
+    });
+
+    $("#submitFormCutCommission").on("click", function(e) {
+        $("#cutCommissionForm").find('input[data-type="currency"]').each(function() {
+            $(this).val(numberNoCommas($(this).val()));
+        });
+        $("#cutCommissionForm").submit();
+        $("#submitFormCutCommission").html("Loading...");
+        $("#submitFormCutCommission").attr("disabled", true);
+    });
+
+    $("#btn-commisison-cut").click(function() {
+        var branch_id = $(this).val()
+        $('#commissionCutModal').modal('show');
     });
 
     $(document).on("click", "#btn-filter", function (e) {
