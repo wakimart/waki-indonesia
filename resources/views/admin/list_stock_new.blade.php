@@ -216,7 +216,7 @@ $menu_item_second = "list_stock";
                                                             </td>
                                                             <td class="text-center" rowspan="{{ $count_sioProduct }}">
                                                                 @if (Gate::check('detail-stock_in_out'))
-                                                                <a href="{{ route('detail_stock_in_out', ['code' => $stockInOut->code]) }}">
+                                                                <a href="{{ route('detail_stock_in_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
                                                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
                                                                 </a>
                                                                 @endif
@@ -224,13 +224,13 @@ $menu_item_second = "list_stock";
                                                             <td class="text-center" rowspan="{{ $count_sioProduct }}">
                                                                 @if ($stockInOut->type == "in")
                                                                     @if (Gate::check('edit-stock_in'))
-                                                                    <a href="{{ route('edit_stock_in', ['code' => $stockInOut->code]) }}">
+                                                                    <a href="{{ route('edit_stock_in', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
                                                                         <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                                     </a>
                                                                     @endif
                                                                 @else
                                                                     @if (Gate::check('edit-stock_out'))
-                                                                    <a href="{{ route('edit_stock_out', ['code' => $stockInOut->code]) }}">
+                                                                    <a href="{{ route('edit_stock_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
                                                                         <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                                     </a>
                                                                     @endif
@@ -242,7 +242,7 @@ $menu_item_second = "list_stock";
                                                                     data-toggle="modal"
                                                                     href="#deleteDoModal"
                                                                     onclick="submitDelete(this)"
-                                                                    data-id="{{ $stockInOut->code }}">
+                                                                    data-id="{{ $stockInOut->id }}">
                                                                     <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                                                 </a>
                                                                 @endif
@@ -304,7 +304,7 @@ $menu_item_second = "list_stock";
                     method="post"
                     action="{{ route('delete_stock_in_out') }}">
                     @csrf
-                    <input type="hidden" name="old_code" id="id-delete" />
+                    <input type="hidden" name="stock_id" id="id-delete" />
                     <button type="submit"
                         class="btn btn-gradient-danger mr-2">
                         Yes

@@ -515,7 +515,7 @@ class StockInOutController extends Controller
 
     public function show(Request $request)
     {
-        $stockInOut = StockInOut::where("code", $request->code)
+        $stockInOut = StockInOut::where("id", $request->id)
             ->where('active', true)->first();
 
         $historyUpdate = HistoryUpdate::leftjoin('users','users.id', '=','history_updates.user_id' )
@@ -537,7 +537,7 @@ class StockInOutController extends Controller
      */
     public function editIn(Request $request)
     {
-        $stockInOut = StockInOut::where("code", $request->code)
+        $stockInOut = StockInOut::where("id", $request->id)
             ->where('type', 'in')
             ->where('active', true)->first();
 
@@ -560,7 +560,7 @@ class StockInOutController extends Controller
      */
     public function editOut(Request $request)
     {
-        $stockInOut = StockInOut::where("code", $request->code)
+        $stockInOut = StockInOut::where("id", $request->id)
             ->where('type', 'out')
             ->where('active', true)->first();
 
@@ -815,7 +815,7 @@ class StockInOutController extends Controller
         DB::beginTransaction();
 
         try {
-            $stockInOut = StockInOut::where("code", $request->old_code)
+            $stockInOut = StockInOut::where("id", $request->stock_id)
                 ->where("active", true)
                 ->first();
             $stockInOut->active = false;
