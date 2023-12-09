@@ -1148,6 +1148,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // Submission MGM Query with prize as parameter
         Route::get("/get/mgm2", "SubmissionController@queryNewSubmissionMGM")
             ->name("query_new_submission_mgm");
+
+        // export pdf submission mgm form
+        Route::get('/mgm/{id}/pdf', 'SubmissionController@exportPDF')
+            ->name('submission_mgm_export_pdf');
     });
 
     Route::group(["prefix" => "reference", "middleware" => "auth"], function () {

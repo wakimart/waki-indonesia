@@ -184,7 +184,13 @@ if (
                             </tr>
                         </thead>
                         <tbody>
+                            @php $referenceStatus = 'pending'; @endphp
                             @foreach ($references as $key => $reference)
+                            @php 
+                                if($key == 0){
+                                    $referenceStatus = $reference->reference_souvenir['final_status'];
+                                }
+                            @endphp
                                 <input type="hidden"
                                     class="d-none"
                                     id="id_{{ $key }}"
@@ -361,18 +367,21 @@ if (
                         Share Submission Form
                     </h2>
                 </div>
-                <form class="forms-sample"
-                    method="GET"
-                    action="https://api.whatsapp.com/send">
-                    <div class="form-group row justify-content-center">
+                <div class="form-group row justify-content-center">
+                    <form class="forms-sample"
+                        method="GET"
+                        action="https://api.whatsapp.com/send">
                         <button type="submit"
                             class="btn btn-gradient-primary mr-2 my-2"
                             name="text"
                             value="Terima Kasih telah mengikuti program *Member Get Member*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
                             Share Program MGM
                         </button>
-                    </div>
-                </form>
+                    </form>
+                    @if($referenceStatus == 'success')
+                        <a href="{{route('submission_mgm_export_pdf', $submission->id)}}" class="btn btn-gradient-info mr-2 my-2">Export PDF</a>
+                    @endif
+                </div>
              </div>
 
             @if ($historySubmission->isNotEmpty())
