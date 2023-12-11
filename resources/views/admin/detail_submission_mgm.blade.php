@@ -184,7 +184,13 @@ if (
                             </tr>
                         </thead>
                         <tbody>
+                            @php $referenceStatus = 'pending'; @endphp
                             @foreach ($references as $key => $reference)
+                            @php 
+                                if($key == 0){
+                                    $referenceStatus = $reference->reference_souvenir['final_status'];
+                                }
+                            @endphp
                                 <input type="hidden"
                                     class="d-none"
                                     id="id_{{ $key }}"
@@ -360,15 +366,21 @@ if (
                     <h2 class="text-center share w-100">
                         Share Submission Form
                     </h2>
-                    <form class="forms-sample" method="GET" action="https://api.whatsapp.com/send">
-                        <button type="submit" class="btn btn-gradient-primary mt-2 mr-2" name="text"
+                </div>
+                <div class="form-group row justify-content-center">
+                    <form class="forms-sample"
+                        method="GET"
+                        action="https://api.whatsapp.com/send">
+                        <button type="submit"
+                            class="btn btn-gradient-primary mr-2 my-2"
+                            name="text"
                             value="Terima Kasih telah mengikuti program *Member Get Member*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
                             Share Program MGM
                         </button>
                     </form>
-                    <a href="{{ route('adminPdfMGM')}}" class="btn btn-gradient-info mt-2 ml-2" name="text">
-                      Export PDF
-                    </a>
+                    @if($referenceStatus == 'success')
+                        <a href="{{route('submission_mgm_export_pdf', $submission->id)}}" class="btn btn-gradient-info mr-2 my-2">Export PDF</a>
+                    @endif
                 </div>
              </div>
 

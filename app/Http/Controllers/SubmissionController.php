@@ -28,6 +28,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use PDF;
 
 class SubmissionController extends Controller
 {
@@ -1895,5 +1896,20 @@ class SubmissionController extends Controller
             "result" => 1,
             "hasil" => $resultReference,
         ]);
+    }
+
+    /**
+     * submission mgm export pdf
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function exportPDF($id)
+    {
+        $submission = Submission::find($id);
+        return response()->json($submission);
     }
 }
