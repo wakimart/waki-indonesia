@@ -19,4 +19,14 @@ class Product extends Model
     {
         return $this->hasMany('App\PersonalHomecareProduct');
     }
+
+    public function stock()
+    {
+        return $this->hasMany('App\Stock');
+    }
+
+    public function stock_with_warehouse($warehuse_id)
+    {
+        return $this->hasMany('App\Stock')->where('warehouse_id', $warehouse_id);
+    }
 }

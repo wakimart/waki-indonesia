@@ -73,8 +73,13 @@ $menu_item_page = "stock";
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @php $idxNo = 0; @endphp
                                             @foreach ($stockInOuts as $stockInOut)
-                                                @php 
+                                                @php
+                                                    if(!$stockInOut->warehouse_id){
+                                                        continue;
+                                                    }
+                                                    $idxNo++;
                                                 @endphp
                                                 <tr>
                                                     <td style="vertical-align: top; text-align: right;">{{ $loop->iteration }}</td>

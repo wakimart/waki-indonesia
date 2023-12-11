@@ -12,7 +12,7 @@ class CategoryProduct extends Model
 
     public function product()
     {
-        return $this->hasMany('App\Product', 'category_id', 'id');
+        return $this->hasMany('App\Product', 'category_id', 'id')->where('active', true);
     }
 
     public function productIndex()

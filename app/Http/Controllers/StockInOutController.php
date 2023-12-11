@@ -114,7 +114,7 @@ class StockInOutController extends Controller
             $warehouses = Warehouse::where('parent_warehouse_id', $request->filter_parent_warehouse)->get()->keyBy('code');
 
             foreach ($warehouses as $warehouse) {
-                $stockWarehouses[$warehouse->code] = Product::select('p.*')
+                $stockWarehouses[$warehouse->code] = Product::select('p.*', 's.warehouse_id as warehouse_id')
                     ->selectRaw("SUM(s.quantity) as sum_current_quantity")
                     ->selectRaw("SUM((".$subQuery['todayDate']['in'].")) as today_in")
                     ->selectRaw("SUM((".$subQuery['todayDate']['out'].")) as today_out")

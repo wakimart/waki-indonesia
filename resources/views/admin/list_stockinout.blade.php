@@ -203,11 +203,16 @@ $menu_item_second = "list_stock_in_out";
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    @php $idxNo = 0; @endphp
                                                     @foreach ($stockInOuts as $stockInOut)
                                                         @php
+                                                            if(!$stockInOut->warehouse_id){
+                                                                continue;
+                                                            }
+                                                            $idxNo++;
                                                         @endphp
                                                         <tr>
-                                                            <td style="vertical-align: top; text-align: right;">{{ $loop->iteration }}</td>
+                                                            <td style="vertical-align: top; text-align: right;">{{ $idxNo }}</td>
                                                             <td style="vertical-align: top; text-align: left;">{{ $stockInOut->code }}</td>
                                                             <td style="vertical-align: top; text-align: left;">{{ $stockInOut->name }}</td>
                                                             <td style="vertical-align: top; text-align: right;">
