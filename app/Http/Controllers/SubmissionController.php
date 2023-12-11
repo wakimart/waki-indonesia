@@ -610,6 +610,10 @@ class SubmissionController extends Controller
         }
     }
 
+    public function adminPdfMGM() {
+        return view ('admin.pdf_submission_mgm');
+    }
+
     public function updateReferensi(Request $request)
     {
         $submission = Submission::find($request->id);

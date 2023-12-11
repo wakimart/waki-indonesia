@@ -92,7 +92,7 @@ if (
     <section id="intro" class="clearfix">
         <div class="content-wrapper">
             <div class="row justify-content-center">
-                <h2>SUBMISSION SUCCESS</h2>
+                <h2>SUBMISSION SUCCESSasd</h2>
             </div>
             <div class="row justify-content-center">
                 <table class="w-100">
@@ -357,22 +357,19 @@ if (
             <div class="col-md-12 center"
                 style="margin-top: 3em;">
                 <div class="row justify-content-center">
-                    <h2 class="text-center share">
+                    <h2 class="text-center share w-100">
                         Share Submission Form
                     </h2>
-                </div>
-                <form class="forms-sample"
-                    method="GET"
-                    action="https://api.whatsapp.com/send">
-                    <div class="form-group row justify-content-center">
-                        <button type="submit"
-                            class="btn btn-gradient-primary mr-2 my-2"
-                            name="text"
+                    <form class="forms-sample" method="GET" action="https://api.whatsapp.com/send">
+                        <button type="submit" class="btn btn-gradient-primary mt-2 mr-2" name="text"
                             value="Terima Kasih telah mengikuti program *Member Get Member*. Berikut adalah tautan bukti formulir ( {{ route('refrence_untung') }}?id={{ $submission->id }} )">
                             Share Program MGM
                         </button>
-                    </div>
-                </form>
+                    </form>
+                    <a href="{{ route('adminPdfMGM')}}" class="btn btn-gradient-info mt-2 ml-2" name="text">
+                      Export PDF
+                    </a>
+                </div>
              </div>
 
             @if ($historySubmission->isNotEmpty())
