@@ -184,7 +184,7 @@ $menu_item_second = "add_acceptance_form";
 	                			<label for="">New Product</label>
 	                			<select class="form-control" id="newproduct_id" name="newproduct_id" data-msg="Mohon Pilih Product Baru" required>
 									<option selected disabled value="">Pilihan Product</option>
-									@foreach($products as $product)
+									@foreach($products->where('can_buy', true) as $product)
 		                                <option value="{{ $product['id'] }}">{{ $product['code'] }} - {{ $product['name'] }}</option>
 		                            @endforeach
 								</select>
@@ -198,7 +198,7 @@ $menu_item_second = "add_acceptance_form";
                                     id="product-add-ons"
                                     class="form-control">
                                     <option value="" selected>Choose Product</option>
-                                    @foreach ($products as $product)
+                                    @foreach ($products->where('can_buy', true) as $product)
                                         <option value="{{ $product['id'] }}">
                                             {{ $product['code'] }} - {{ $product['name'] }}
                                         </option>

@@ -129,7 +129,7 @@ class OrderController extends Controller
     public function admin_AddOrder()
     {
         $promos = Promo::all();
-        $products = Product::where('active', true)->where('show', true)->orderBy("code")->get();
+        $products = Product::where('active', true)->where('can_buy', true)->orderBy("code")->get();
         $branches = Branch::where('active', true)->orderBy("code", 'asc')->get();
         $csos = Cso::all();
         $cashUpgrades = Order::$CashUpgrade;
@@ -413,7 +413,7 @@ class OrderController extends Controller
     {
         $csos = Cso::where('active', true)->orderBy('code')->get();
         $banks = Bank::all();
-        $products = Product::where('active', true)->orderBy("code")->get();
+        $products = Product::where('active', true)->where('can_buy', true)->orderBy("code")->get();
         $order = Order::where('code', $request['code'])->first();
         $csoDeliveryOrders = Cso::whereIn('id', json_decode($order['delivery_cso_id']) ?? [])->get();
         $order['district'] = $order->getDistrict();
@@ -435,7 +435,7 @@ class OrderController extends Controller
             $orders = Order::find($request->get('id'));
             $orders['district'] = $orders->getDistrict();
             $promos = Promo::all();
-            $products = Product::where('active', true)->orderBy("code")->get();
+            $products = Product::where('active', true)->where('can_buy', true)->orderBy("code")->get();
             $branches = Branch::all()->sortBy("code");
             $csos = Cso::all();
             $cashUpgrades = Order::$CashUpgrade;

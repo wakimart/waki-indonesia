@@ -72,6 +72,7 @@ $menu_item_second = "list_product";
                                         <th class="center">Price</th>
                                         <th>Category</th>
                                         <th>Show</th>
+                                        <th>Can Buy</th>
                                         <th class="center">Edit</th>
                                         <th class="center">Delete</th>
                                     </tr>
@@ -120,6 +121,13 @@ $menu_item_second = "list_product";
                                                 <span class="badge badge-primary">Show</span>
                                                 @else
                                                 <span class="badge badge-secondary">Hide</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($product->can_buy == true)
+                                                <span class="badge badge-success">Yes</span>
+                                                @else
+                                                <span class="badge badge-warning">No</span>
                                                 @endif
                                             </td>
                                             <td class="center">

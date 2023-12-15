@@ -78,6 +78,22 @@ $menu_item_page = "product";
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="">Can Buy</label>
+                                <select class="form-control"
+                                    id="can-buy"
+                                    name="can_buy"
+                                    required>
+                                    <option value="1"
+                                        {{ (int) $products["can_buy"] === 1 ? "selected" : "" }}>
+                                        Yes
+                                    </option>
+                                    <option value="0"
+                                        {{ (int) $products["can_buy"] === 0 ? "selected" : "" }}>
+                                        No
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="code">Code</label>
                                 <input type="text"
                                     class="form-control"
