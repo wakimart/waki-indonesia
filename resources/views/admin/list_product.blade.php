@@ -89,7 +89,7 @@ $menu_item_second = "list_product";
 
                                                 try {
                                                     $img = json_decode($product->image);
-                                                    $defaultImg = asset('sources/product_images/')
+                                                    $defaultImg = 'https://waki-indonesia.co.id/sources/product_images'
                                                         . '/'
                                                         . strtolower($product['code'])
                                                         . '/'
