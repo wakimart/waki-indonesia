@@ -10,9 +10,11 @@ use App\PettyCashClosedBook;
 use App\PettyCashDetail;
 use App\PettyCashOutType;
 use Illuminate\Http\Request;
+use App\Exports\PettyCashExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PettyCashController extends Controller
 {
@@ -503,5 +505,67 @@ class PettyCashController extends Controller
                 ->back()
                 ->with("danger", $e->getMessage());
         }
+    }
+
+    public function export(Request $request){
+        $banks = self::getUserBank();
+        $pettyCashAccs = PettyCashOutType::where('active', true)->get();
+
+        $lastPTCClosedBook = null;
+        $startDate = date('Y-m-01');
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-d');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+        $currentBank="";
+        if ($request->has('filter_bank')) {
+            $currentBank = BankAccount::where("id", $request->filter_bank)->first();
+            if (!in_array($currentBank->id, $banks->pluck('id')->toArray())) $currentBank = "";
+        }
+
+        $keyType = $request->type;
+        $pettyCashes = [];
+        if ($currentBank) {
+            if ($keyType == "statement") {
+                $pettyCashes = PettyCashDetail::from('petty_cash_details as ptcd')
+                    ->select('ptcd.*', 'ptc.code', 'ptc.transaction_date', 'ptc.type')
+                    ->join('petty_cashes as ptc', 'ptcd.petty_cash_id', 'ptc.id')
+                    ->where('ptc.active', true)
+                    ->whereBetween('transaction_date', [$startDate, $endDate])
+                    ->where('bank_account_id', $currentBank->id)
+                    ->orderBy('transaction_date')
+                    ->orderByRaw('length(code) asc, code asc');
+                if ($request->filter_acc) {
+                    $pettyCashes->where('ptcd.petty_cash_out_type_id', $request->filter_acc);
+                }
+                $pettyCashes = $pettyCashes->get();
+
+                // Get Last Month Petty Cash Closed Book
+                $lastMonth = date('Y-m-d', strtotime($startDate . " first day of last month"));
+                $lastPTCClosedBook = PettyCashClosedBook::where('bank_account_id', $currentBank->id)
+                    ->whereBetween('date', [
+                        date('Y-m-01', strtotime($lastMonth)),
+                        date('Y-m-t', strtotime($lastMonth)),
+                    ])->first();
+            } else {
+                $pettyCashes = PettyCash::where('active', true)
+                    ->whereBetween('transaction_date', [$startDate, $endDate])
+                    ->where('type', $keyType)
+                    ->where('bank_account_id', $currentBank->id)
+                    ->orderBy('transaction_date', 'desc')
+                    ->orderByRaw('length(code) desc, code desc');
+                if ($request->filter_acc) {
+                    $pettyCashes->whereHas('pettyCashDetail', function($query) use($request) {
+                        $query->where('petty_cash_out_type_id', $request->filter_acc);
+                    });
+                }
+                $pettyCashes = $pettyCashes->get();
+            }
+        }
+
+        return Excel::download(new PettyCashExport($startDate, $endDate, $currentBank, $pettyCashes, $lastPTCClosedBook), 'Report Petty Cash ('. $currentBank->code . '-' . $currentBank->name .').xlsx');
     }
 }
