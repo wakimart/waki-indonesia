@@ -147,6 +147,7 @@ class ProductController extends Controller
     {
         $products = Product::find($request->input('idProduct'));
         $products->show = $request->input("show");
+        $products->can_buy = $request->input("can_buy");
         $products->name = $request->input('name');
         $products->price = $request->input('price');
         $products->video = $request->input('video');

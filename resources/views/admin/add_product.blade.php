@@ -72,6 +72,17 @@ $menu_item_second = "add_product";
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label for="">Can Buy</label>
+                                <select class="form-control"
+                                    id="can-buy"
+                                    name="can_buy"
+                                    onchange="isImageRequired(this)"
+                                    required>
+                                    <option value="1">Yes</option>
+                                    <option value="0" selected="">No</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label for="">Code</label>
                                 <input type="text"
                                     class="form-control"
