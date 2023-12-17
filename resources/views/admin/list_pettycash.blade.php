@@ -211,6 +211,10 @@ $menu_item_second = "list_petty_cash";
                                             target="_blank" class="btn btn-gradient-info m-1 btn-print">
                                             Print {{ ucwords($keyType) }}
                                         </a>
+                                        <a href="{{ route('export_petty_cash', array_merge(request()->input(), ['type' => $keyType])) }}"
+                                            target="_blank" class="btn btn-gradient-success m-1 btn-export">
+                                            Export {{ ucwords($keyType) }}
+                                        </a>
                                     </div>
                                     {{-- Tab Statement --}}
                                     @if($keyType == "statement")

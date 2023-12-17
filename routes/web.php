@@ -648,6 +648,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
             ->name('print_petty_cash')
             ->middleware("can:browse-petty_cash");
 
+        // Export Petty Cash
+        Route::get('/export', 'PettyCashController@export')
+            ->name('export_petty_cash')
+            ->middleware("can:browse-petty_cash");
+
         //Store Petty Cash Detail
         Route::post('/store_petty_cash_detail', 'PettyCashDetailController@store')
             ->name('store_petty_cash_detail');
