@@ -23,6 +23,7 @@ Route::group(['middleware' => 'cors'], function() {
     Route::post('/replicate-order-data', 'Api\OfflineSideController@replicateOrderData');
     Route::post('/replicate-order-payment-data', 'Api\OfflineSideController@replicateOrderPaymentData');
     Route::post('/update-order-data', 'Api\OfflineSideController@updateOrderData');
+    Route::post('/update-order-detail-data', 'Api\OfflineSideController@updateOrderDetailData');
 
     Route::post('/replicate-cso-data', 'Api\OfflineSideController@replicateCSOData');
     Route::post('/update-cso-data', 'Api\OfflineSideController@updateCSOData');
