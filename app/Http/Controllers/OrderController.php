@@ -2481,4 +2481,38 @@ class OrderController extends Controller
 
         return response()->json(["errors" => "Order Code is Invalid."], 404);
     }
+
+    /**
+     * get order detail ID by order ID for offline side data
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function getOrderDetailIDByOrderID($id)
+    {
+        DB::beginTransaction();
+        try{
+            $order = Order::find($id);
+            $orderDetails = OrderDetail::where('order_id', $id)->get();
+            $data = [
+                'order' => $order,
+                'order_details' => $orderDetails
+            ];
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => $data
+            ], 200);
+                       
+        }catch(\Exception $ex){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ], 500);
+        }
+    }
 }

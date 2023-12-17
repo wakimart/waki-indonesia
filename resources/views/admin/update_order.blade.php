@@ -997,45 +997,90 @@ document.addEventListener("DOMContentLoaded", function () {
             ajax.setRequestHeader("X-CSRF-TOKEN",$('meta[name="csrf-token"]').attr('content'));
             ajax.send(frmUpdate);
 
-            testNetwork(networkValue, function(val){                
-                $.ajax({
-                    method: "post",
-                    url: `${urlOffline}/api/update-order-data`,
-                    data: frmUpdate,
-                    processData: false,
-                    contentType: false,
-                    success: function(res){   
-                        if(res.status == 'success'){
-                            alert("Input Success !!!");
-                            var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
-                            window.location.href = url;
-                        }else{
+            if('{{$orders->status}}' !== 'new'){ //exception of order status not being copied to the offline side
+                testNetwork(networkValue, function(val){
+                    $.ajax({
+                        method: "post",
+                        url: `${urlOffline}/api/update-order-data`,
+                        data: frmUpdate,
+                        processData: false,
+                        contentType: false,
+                        success: function(res){
+                            if(res.status == 'success'){
+                                // update order detail id from online to offline side
+                                $.ajax({
+                                    url: "{{route('get_order_detail_id', $orders->id)}}",
+                                    type: 'GET',
+                                    dataType: 'json', 
+                                    success: function(res) {
+                                        // send to offline side to update order detail id 
+                                        $.ajax({
+                                            method: "post",
+                                            url: `${urlOffline}/api/update-order-detail-data`,
+                                            data: res,
+                                            success: function(response){
+                                                alert("Input Success !!!");
+                                                var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
+                                                window.location.href = url;
+                                            },
+                                            error: function(xhr){
+                                                var modal = `                
+                                                    <div class="modal-body">
+                                                        <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                                                        <hr>
+                                                        <p class="text-center">${xhr.responseJSON.message}</p>
+                                                    </div>                
+                                                `
+                                                $('#error-modal-desc').html(modal)
+                                                $('#error-modal').modal("show")
+                                            }
+                                            
+                                        })
+                                    },
+                                    error: function(xhr){
+                                        var modal = `                
+                                            <div class="modal-body">
+                                                <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                                                <hr>
+                                                <p class="text-center">${xhr.responseJSON.message}</p>
+                                            </div>                
+                                        `
+                                        $('#error-modal-desc').html(modal)
+                                        $('#error-modal').modal("show")
+                                    }
+                                });                            
+                            }else{
+                                var modal = `                
+                                    <div class="modal-body">
+                                        <h5 class="modal-title text-center">${res.status}</h5>
+                                        <hr>
+                                        <p class="text-center">${res.message}</p>
+                                    </div>                
+                                `
+                                $('#error-modal-desc').html(modal)
+                                $('#error-modal').modal("show")
+                            }
+                        },
+                        error: function(xhr){
                             var modal = `                
                                 <div class="modal-body">
-                                    <h5 class="modal-title text-center">${res.status}</h5>
+                                    <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
                                     <hr>
-                                    <p class="text-center">${res.message}</p>
+                                    <p class="text-center">${xhr.responseJSON.message}</p>
                                 </div>                
                             `
                             $('#error-modal-desc').html(modal)
                             $('#error-modal').modal("show")
                         }
-                    },
-                    error: function(xhr){
-                        var modal = `                
-                            <div class="modal-body">
-                                <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
-                                <hr>
-                                <p class="text-center">${xhr.responseJSON.message}</p>
-                            </div>                
-                        `
-                        $('#error-modal-desc').html(modal)
-                        $('#error-modal').modal("show")
-                    }
-                    
+                        
+                    })
                 })
-            })
-            return false      
+                return false      
+            }else{
+                alert("Input Success !!!");
+                var url = "{{ route('detail_order', ['code'=>$orders['code']])}}";
+                window.location.href = url;
+            }
         });
 
         function progressHandler(event){
