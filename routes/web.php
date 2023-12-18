@@ -463,6 +463,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         Route::get('/check_order_code', 'OrderController@checkOrderCode')
             ->name('check_order_code');
+        Route::get('/get_order_detail_id_by_order_id/{id}', 'OrderController@getOrderDetailIDByOrderID')
+            ->name('get_order_detail_id');
     });
 
     Route::group(['prefix' => 'homeservice', 'middleware' => 'auth'], function() {

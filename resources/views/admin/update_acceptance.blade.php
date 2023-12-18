@@ -234,7 +234,7 @@ $menu_item_second = "list_acceptance_form";
 	                			<label for="">New Product</label>
 	                			<select class="form-control" id="newproduct_id" name="newproduct_id" data-msg="Mohon Pilih Product Baru" required>
 									<option selected disabled value="">Pilihan Product</option>
-									@foreach($products as $product)
+									@foreach($products->where('can_buy', true) as $product)
 										@php
 											$selected = "";
 											if($acceptance['newproduct_id'] == $product['id']){
@@ -255,7 +255,7 @@ $menu_item_second = "list_acceptance_form";
                                     id="product-add-ons"
                                     class="form-control">
                                     <option value="" selected disabled>Choose Product</option>
-                                    @foreach ($products as $product)
+                                    @foreach ($products->where('can_buy', true) as $product)
                                         <?php
                                         $selected = "";
                                         if ($acceptance["product_addons_id"] == $product["id"]) {
