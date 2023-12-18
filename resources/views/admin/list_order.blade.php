@@ -390,6 +390,15 @@ $menu_item_second = "list_order";
                                 data-target="#reportOrderModal">
                                 <span class="mdi mdi-filter"></span> Report Order
                             </button>
+                            <button id="btn-pdfCustomerLetter"
+                                type="button"
+                                class="btn btn-gradient-warning m-1"
+                                name="pdfCustomerLetter"
+                                value="-"
+                                data-toggle="modal"
+                                data-target="#customerLetterModal">
+                                <span class="mdi mdi-filter"></span> Customer Letter
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -834,6 +843,104 @@ $menu_item_second = "list_order";
     </div>
     <!-- End Modal Report -->
 </div>
+
+<!-- Modal Report -->
+<div class="modal fade"
+    id="customerLetterModal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label>Customer Letter Download</label>
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+                    <div class="col-xs-6 col-sm-6" style="display: inline-block;">
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date"
+                                class="form-control"
+                                name="start_orderDate"
+                                id="start_orderDate"
+                                required
+                                data-msg="Mohon Isi Tanggal"
+                                onload="getDate()" 
+                                value="{{ date('Y-m-01') }}" />
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6" style="display: inline-block;">
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date"
+                                class="form-control"
+                                name="end_orderDate"
+                                id="end_orderDate"
+                                required
+                                data-msg="Mohon Isi Tanggal"
+                                onload="getDate()" 
+                                value="{{ date('Y-m-d') }}" />
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 row"
+                    style="margin: 0; padding: 0;">
+                    <div class="col-xs-12 col-sm-12"
+                        style="display: inline-block;">
+                        <div class="form-group">
+                            <label for="">Filter By Team</label>
+                            <select class="form-control"
+                                id="filter_branch_modal"
+                                name="filter_branch_modal">
+                                <option value="" selected>
+                                    All Branch
+                                </option>
+                                @foreach($branches as $branch)
+                                    @php
+                                    $selected = "";
+                                    if (isset($_GET['filter_branch'])) {
+                                        if ($_GET['filter_branch'] == $branch['id']) {
+                                            $selected = "selected=\"\"";
+                                        }
+                                    }
+                                    @endphp
+
+                                    <option {{ $selected }}
+                                        value="{{ $branch['id'] }}">
+                                        {{ $branch['code'] }} - {{ $branch['name'] }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    {{ csrf_field() }}
+                    <button type="submit"
+                        id="exportButton"
+                        class="btn btn-gradient-primary mr-2">
+                        Download
+                    </button>
+                    <button class="btn btn-light" data-dismiss="modal">
+                        No
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal Report -->
 @endsection
 
 @section('script')
