@@ -92,7 +92,7 @@ if (
     <section id="intro" class="clearfix">
         <div class="content-wrapper">
             <div class="row justify-content-center">
-                <h2>SUBMISSION SUCCESSasd</h2>
+                <h2>SUBMISSION SUCCESS</h2>
             </div>
             <div class="row justify-content-center">
                 <table class="w-100">

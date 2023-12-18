@@ -17,10 +17,10 @@
         <div style="display:flex; flex-grow: 1; margin-top: 1rem; justify-content: center;">
         </div>
         <div style="display:flex; flex-grow: 1;">
-          <img src="{{asset('sources/logosince.svg')}}" style="max-width: 300px; height: 80px; margin-bottom:0.5rem;">
+          <img src="{{asset('sources/Logosince.svg')}}" style="max-width: 300px; height: 80px; margin-bottom:0.5rem;">
         </div>
         <div style="display:flex; margin-top: 1rem; justify-content: flex-end;">
-          <div style="font-weight: bolder; font-size:1.2rem;">F-40</div>
+          <div style="font-weight: bolder; font-size:1.2rem;">{{$submission->branch->code}}</div>
         </div>
       </div>
     </div>
@@ -28,16 +28,16 @@
     <div style="text-align: center;">
       <h3 style="margin-bottom: 5px; text-decoration: underline;">WAKI PROGRAM REFRENSI BIAYA IKLAN BELANJA</h3>
       <h5 style="margin-top: 0;">TEMA AKTIFITAS: PRODUK KEMBALI PROGRAM</h5>
-      <p style="margin-top: 0; text-align: right">No. MPC: 123456789</p>
+      <p style="margin-top: 0; text-align: right">No. MPC: {{$submission->no_member}}</p>
     </div>
 
     <div style="display:flex; flex-direction: row;">
       <p>Terhormat Bapak / Ibu yang terpilih</p>
       <p style="margin-left: 0.25rem; text-decoration: underline; text-transform: uppercase; font-weight: bolder">
-        Ibu Repiaana S.
+        {{$submission->name}}
       </p>
       <p style="margin-left: 0.25rem; text-decoration: underline; text-transform: uppercase; font-weight: bolder">
-        <i>08129384541</i>
+        <i>{{$submission->phone}}</i>
       </p>
     </div>
 
@@ -51,7 +51,18 @@
           Tanggal Berlaku :
         </div>
         <div style="text-decoration: underline;">
-          16-31 OKTOBER 2023
+          @php
+            //divide the days of a month into two parts
+            $numberOfDays = date('t');
+            $divideByTwo = $numberOfDays/2;
+            $currentDate = date('d');
+            if($currentDate <= floor($divideByTwo)){
+              $effectiveDate = "1 - " . floor($divideByTwo);
+            }else{
+              $effectiveDate = floor($divideByTwo)+1 . " - " . $numberOfDays;
+            }
+          @endphp
+          {{$effectiveDate}} {{date("F Y")}}
         </div>
       </div>
 
@@ -74,7 +85,7 @@
           Branch :
         </div>
         <div style="text-decoration: underline;">
-          F40 T JOHN
+          {{$submission->branch->code}} - {{$submission->branch->name}}
         </div>
       </div>
 
@@ -83,7 +94,7 @@
           Produk Kembali :
         </div>
         <div style="text-decoration: underline;">
-          SMART COOKER 18 IN 1
+          {{$reference->prize_name}}
         </div>
       </div>
     </div>
@@ -105,7 +116,7 @@
     </div>
 
     <div style="margin-top: 5rem;">
-      <p style="margin: 0;">"Jakarta, <span>28 Oktober 2023</span></p>
+      <p style="margin: 0;">Jakarta, <span>{{date("d F Y")}}</span></p>
       <p style="margin: 0;">Salam Hangat,</p>
     </div>
     <div style="margin-top: 5rem;">

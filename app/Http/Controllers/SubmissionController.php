@@ -611,10 +611,6 @@ class SubmissionController extends Controller
         }
     }
 
-    public function adminPdfMGM() {
-        return view ('admin.pdf_submission_mgm');
-    }
-
     public function updateReferensi(Request $request)
     {
         $submission = Submission::find($request->id);
@@ -1776,7 +1772,8 @@ class SubmissionController extends Controller
             "reference_souvenirs.delivery_status_prize AS delivery_status_prize",
             "reference_souvenirs.wakimart_link",
             "reference_souvenirs.order_code",
-            "reference_souvenirs.order_image"
+            "reference_souvenirs.order_image",
+            "prizes.name as prize_name"
         )
         ->leftJoin(
             "reference_souvenirs",
@@ -1789,6 +1786,16 @@ class SubmissionController extends Controller
             "reference_souvenirs.souvenir_id",
             "=",
             "souvenirs.id"
+        )
+        ->leftJoin(
+            "prizes",
+            "reference_souvenirs.prize_id",
+            "=",
+            "prizes.id"
+        )
+        ->orderBy(
+            "references.id",
+            "desc"
         )
         ->get();
     }
@@ -1910,6 +1917,13 @@ class SubmissionController extends Controller
     public function exportPDF($id)
     {
         $submission = Submission::find($id);
-        return response()->json($submission);
+        $references = $this->queryReferenceReferensi($id);
+        $reference = $references[0];
+        $data = [
+            'submission' => $submission,
+            'reference' => $reference
+        ];
+        $pdf = PDF::loadView('admin.pdf_submission_mgm', $data);
+        return $pdf->download($submission->code.'.pdf');
     }
 }

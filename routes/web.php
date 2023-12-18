@@ -1128,10 +1128,6 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get("/edit/", "SubmissionController@edit")
             ->name("edit_submission_form");
 
-        // PDF submission MGM
-        Route::get('/testpdfmgm', 'SubmissionController@adminPdfMGM')
-            ->name('adminPdfMGM');
-
         // Process submission form edit
         Route::post("/update/mgm", "SubmissionController@updateMGM")
             ->name("update_submission_mgm");
