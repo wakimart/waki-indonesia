@@ -483,7 +483,7 @@ class OfflineSideController extends Controller
                 $getIDFromOrderPaymentOlds = [];
                 foreach($data['oldorderpaymentamount'] as $index => $amount){
                     $orderPaymentOfflineSide = OrderPayment::where('order_id', $orders->id)->where('total_payment', $amount)->where('bank_id', $data['oldorderpaymentbankid'][$index])->first();
-                    array_push($getIDFromOrderPaymentOlds, $orderPaymentOfflineSide->id);
+                    array_push($getIDFromOrderPaymentOlds, $orderPaymentOfflineSide['id']);
                 }
                 // Hapus Old Order Payment
                 foreach ($orderPayments as $orderPayment) {
@@ -548,6 +548,42 @@ class OfflineSideController extends Controller
                     'message' => 'data is still new'
                 ], 200);
             }            
+        }catch(\Exception $ex){
+            DB::rollback();
+            return response()->json([
+                'status' => 'error',
+                'message' => $ex->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * update order detail data (only order detail id from online to offline side => order_detail_id)
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function updateOrderDetailData(Request $request)
+    {
+        DB::beginTransaction();
+        try{
+            $order = Order::where('code', $request->message['order']['code'])->first();
+            $orderDetails = OrderDetail::where('order_id', $order->id)->get();
+            foreach($orderDetails as $index => $od){
+                if(is_null($od->order_detail_id)){
+                    $update = OrderDetail::find($od->id);
+                    $update->order_detail_id = $request->message['order_details'][$index]['id'];
+                    $update->update();
+                }
+            }
+            DB::commit();
+            return response()->json([
+                'status' => 'success',
+                'message' => 'data order detail successfully updated'
+            ], 200);
         }catch(\Exception $ex){
             DB::rollback();
             return response()->json([
