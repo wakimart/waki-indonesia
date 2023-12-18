@@ -634,8 +634,8 @@ $menu_item_second = "list_order";
                             <label>Start Date</label>
                             <input type="date"
                                 class="form-control"
-                                name="start_orderDate"
-                                id="start_orderDate"
+                                name="start_p"
+                                id="start_p"
                                 required
                                 data-msg="Mohon Isi Tanggal"
                                 onload="getDate()" />
@@ -830,7 +830,7 @@ $menu_item_second = "list_order";
                 <div class="modal-footer">
                     {{ csrf_field() }}
                     <button type="submit"
-                        id="exportButton"
+                        id="pdfCustomerLetterButton"
                         class="btn btn-gradient-primary mr-2">
                         Download
                     </button>
