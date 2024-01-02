@@ -167,7 +167,7 @@
                                     $idxBank++; 
                                     $idxBranch = 0;
                                     $totalSaleGross += $totalBankIn + $totalDebit + $totalCard;
-                                    $totalSaleNetto += $totalNettoDebit + $totalNettoCard;
+                                    $totalSaleNetto += $totalBankIn + $totalNettoDebit + $totalNettoCard;
                                 @endphp
                             @endforeach
                             <tr><td colspan="9"></td></tr>
@@ -347,7 +347,7 @@
                                     $idxBranch++; 
                                     $idxBank = 0;
                                     $totalSaleGross += $totalBankIn + $totalDebit + $totalCard;
-                                    $totalSaleNetto += $totalNettoDebit + $totalNettoCard;
+                                    $totalSaleNetto += $totalBankIn + $totalNettoDebit + $totalNettoCard;
                                 @endphp
                             @endforeach
                             <tr><td colspan="9"></td></tr>

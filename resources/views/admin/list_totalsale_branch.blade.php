@@ -160,7 +160,7 @@ $menu_item_page_sub = "order_report";
                                 @foreach ($total_sales as $key => $total_sale)
                                 @php
                                     $totalSaleGross += $total_sale['sum_ts_bank_in'] + $total_sale['sum_ts_debit'] + $total_sale['sum_ts_card'];
-                                    $totalSaleNetto += $total_sale['sum_ts_netto_debit'] + $total_sale['sum_ts_netto_card'];
+                                    $totalSaleNetto += $total_sale['sum_ts_bank_in'] + $total_sale['sum_ts_netto_debit'] + $total_sale['sum_ts_netto_card'];
                                 @endphp
                                 <tr>
                                     <td class="text-center">{{ $key+1 }}</td>
