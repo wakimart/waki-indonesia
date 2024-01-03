@@ -150,7 +150,7 @@ class FinancialRoutineController extends Controller
         $banks = BankAccount::leftjoin('branches','branches.bank_account_id', '=','bank_accounts.id' )
             ->where([['bank_accounts.active', true], ['branches.bank_account_id', '=', null]])
             ->select('bank_accounts.*')->get();
-        $banksPettyCash = BankAccount::where('id', 7)->get();
+        $banksPettyCash = BankAccount::where('active', true)->get();
         $financialRoutine = FinancialRoutine::where('id', $request->id)->first();
 
         return view('admin.edit_financialroutine', compact('banks', 'financialRoutine', 'banksPettyCash'));
