@@ -17,7 +17,7 @@
         <div style="display:flex; flex-grow: 1; margin-top: 1rem; justify-content: center;">
         </div>
         <div style="display:flex; flex-grow: 1;">
-          <img src="{{asset('sources/Logosince.svg')}}" style="max-width: 300px; height: 80px; margin-bottom:0.5rem;">
+          <img src="{{public_path('sources/Logo Since.png')}}" style="max-width: 300px; height: 80px; margin-bottom:0.5rem;">
         </div>
         <div style="display:flex; margin-top: 1rem; justify-content: flex-end;">
           <div style="font-weight: bolder; font-size:1.2rem;">{{$submission->branch->code}}</div>
