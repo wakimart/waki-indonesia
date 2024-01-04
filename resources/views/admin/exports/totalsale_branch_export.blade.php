@@ -40,7 +40,7 @@
             @foreach ($total_sales as $key => $total_sale)
                 @php
                     $totalSale_temp = $total_sale['sum_ts_bank_in'] + $total_sale['sum_ts_debit'] + $total_sale['sum_ts_card'];
-                    $totalSaleNetto_temp = $total_sale['sum_ts_netto_debit'] + $total_sale['sum_ts_netto_card'];
+                    $totalSaleNetto_temp = $total_sale['sum_ts_bank_in'] + $total_sale['sum_ts_netto_debit'] + $total_sale['sum_ts_netto_card'];
                     $totalSale += $totalSale_temp;
                     $totalSaleNetto += $totalSaleNetto_temp;
                 @endphp

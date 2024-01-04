@@ -372,7 +372,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                             </tr>
                                                             @php
                                                                 $totalSaleGross += $subtotalBankIn + $subtotalDebit + $subtotalCard;
-                                                                $totalSaleNetto += $subtotalNettoDebit + $subtotalNettoCard;
+                                                                $totalSaleNetto += $subtotalBankIn + $subtotalNettoDebit + $subtotalNettoCard;
                                                             @endphp
                                                             @if($loop->last)
                                                             <tr>
@@ -480,7 +480,7 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                                             {{-- <td class="text-left">
                                                                                 {{ $order['c_name'] }}
                                                                             </td> --}}
-                                                                            @php $totalSubGross+= $order['ts_bank_in']; @endphp
+                                                                            @php $totalSubGross+= $order['ts_bank_in']; $totalSubNetto+= $order['ts_bank_in']; @endphp
                                                                             <td class="text-right">{{ number_format($order['ts_bank_in']) }}</td>
                                                                             @php $totalSubGross+= $order['ts_debit']; $totalSubNetto+= $order['ts_netto_debit']; @endphp
                                                                             <td class="text-right">{{ number_format($order['ts_debit']) }}</td>
