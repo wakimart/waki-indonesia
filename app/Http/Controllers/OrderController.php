@@ -39,6 +39,7 @@ use App\OrderCsoCommission;
 use App\CsoCommission;
 use ZipArchive;
 use Response;
+use PDF;
 
 class OrderController extends Controller
 {
@@ -2583,6 +2584,36 @@ class OrderController extends Controller
         }
         else{
             return false;
+        }
+    }
+
+    /**
+     * download customer letter with filter
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function customerLetter(Request $request)
+    {
+        $orders = Order::whereBetween('orderDate', [$request->start_date, $request->end_date])
+                    ->whereIn('status', [4,8]);
+        if($request->filter_by_team){
+            $orders = $orders->where('branch_id', $request->filter_by_team);
+        }
+        $orders = $orders->get();
+        $data = [
+            'orders' => $orders
+        ];
+
+        if(count($orders) > 0){
+            $pdf = PDF::loadView('admin.pdf_customer_letter', $data);
+            return $pdf->download('customer-letter-'.date('d-m-Y').'.pdf');
+            // return view('admin.pdf_customer_letter', compact('orders'));
+        }else{
+            return Redirect::back()->withErrors('no data');
         }
     }
 }

@@ -457,6 +457,9 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/view_order_payment/{id}', 'OrderController@viewOrderPayment')->name('view_order_payment');
         //Update Order payment for those who are not head admin
         Route::match(['put', 'patch'], '/update_order_payment_for_those_who_are_not_head_admin/{id}', 'OrderController@updateOrderPaymentForThoseWhoAreNotHeadAdmin')->name('update_order_payment_for_those_who_are_not_head_admin');        
+
+        // customer letter
+        Route::match(['put', 'patch'], '/customer-letter', 'OrderController@customerLetter')->name('customer_letter');
     });
 
     Route::group(['prefix' => 'total_sale', 'middleware' => 'auth'], function() {

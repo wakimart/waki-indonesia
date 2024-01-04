@@ -114,4 +114,8 @@ class Order extends Model
     {
         return $this->belongsTo("App\CommissionType");
     }
+
+    public function historyOrders(){
+        return $this->hasMany("App\HistoryUpdate", 'menu_id', 'id')->where('type_menu', 'Order')->where('method', 'Update Status');
+    }
 }

@@ -390,11 +390,9 @@ $menu_item_second = "list_order";
                                 data-target="#reportOrderModal">
                                 <span class="mdi mdi-filter"></span> Report Order
                             </button>
-                            <button id="btn-pdfCustomerLetter"
+                            <button
                                 type="button"
-                                class="btn btn-gradient-warning m-1"
-                                name="pdfCustomerLetter"
-                                value="-"
+                                class="btn btn-gradient-warning m-1"                                
                                 data-toggle="modal"
                                 data-target="#customerLetterModal">
                                 <span class="mdi mdi-filter"></span> Customer Letter
@@ -862,80 +860,65 @@ $menu_item_second = "list_order";
                 </button>
             </div>
             <div class="modal-body">
-                <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-                    <div class="col-xs-6 col-sm-6" style="display: inline-block;">
-                        <div class="form-group">
-                            <label>Start Date</label>
-                            <input type="date"
-                                class="form-control"
-                                name="start_orderDate"
-                                id="start_orderDate"
-                                required
-                                data-msg="Mohon Isi Tanggal"
-                                onload="getDate()" 
-                                value="{{ date('Y-m-01') }}" />
-                            <div class="validation"></div>
+                <form action="{{route('customer_letter')}}" method="post">
+                    {{ method_field('PUT') }}
+                    @csrf
+                    <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+                        <div class="col-xs-6 col-sm-6" style="display: inline-block;">
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date"
+                                    class="form-control"
+                                    name="start_date"                                
+                                    required
+                                    data-msg="Mohon Isi Tanggal"
+                                    value="{{ date('Y-m-01') }}" />
+                                <div class="validation"></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6" style="display: inline-block;">
+                            <div class="form-group">
+                                <label>End Date</label>
+                                <input type="date"
+                                    class="form-control"
+                                    name="end_date"
+                                    required
+                                    data-msg="Mohon Isi Tanggal"
+                                    value="{{ date('Y-m-d') }}" />
+                                <div class="validation"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xs-6 col-sm-6" style="display: inline-block;">
-                        <div class="form-group">
-                            <label>End Date</label>
-                            <input type="date"
-                                class="form-control"
-                                name="end_orderDate"
-                                id="end_orderDate"
-                                required
-                                data-msg="Mohon Isi Tanggal"
-                                onload="getDate()" 
-                                value="{{ date('Y-m-d') }}" />
-                            <div class="validation"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-12 col-sm-12 row"
-                    style="margin: 0; padding: 0;">
-                    <div class="col-xs-12 col-sm-12"
-                        style="display: inline-block;">
-                        <div class="form-group">
-                            <label for="">Filter By Team</label>
-                            <select class="form-control"
-                                id="filter_branch_modal"
-                                name="filter_branch_modal">
-                                <option value="" selected>
-                                    All Branch
-                                </option>
-                                @foreach($branches as $branch)
-                                    @php
-                                    $selected = "";
-                                    if (isset($_GET['filter_branch'])) {
-                                        if ($_GET['filter_branch'] == $branch['id']) {
-                                            $selected = "selected=\"\"";
-                                        }
-                                    }
-                                    @endphp
-
-                                    <option {{ $selected }}
-                                        value="{{ $branch['id'] }}">
-                                        {{ $branch['code'] }} - {{ $branch['name'] }}
+                    <div class="col-xs-12 col-sm-12 row"
+                        style="margin: 0; padding: 0;">
+                        <div class="col-xs-12 col-sm-12"
+                            style="display: inline-block;">
+                            <div class="form-group">
+                                <label for="">Filter By Team</label>
+                                <select class="form-control"
+                                    name="filter_by_team">
+                                    <option value="" selected>
+                                        All Branch
                                     </option>
-                                @endforeach
-                            </select>
-                            <div class="validation"></div>
+                                    @foreach($branches as $branch)
+                                        <option value="{{ $branch['id'] }}">
+                                            {{ $branch['code'] }} - {{ $branch['name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <div class="validation"></div>
+                            </div>
                         </div>
+                    </div>                    
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-gradient-primary mr-2">
+                            Download
+                        </button>
+                        <button class="btn btn-light" data-dismiss="modal">
+                            No
+                        </button>
                     </div>
-                </div>
-
-                <div class="modal-footer">
-                    {{ csrf_field() }}
-                    <button type="submit"
-                        id="exportButton"
-                        class="btn btn-gradient-primary mr-2">
-                        Download
-                    </button>
-                    <button class="btn btn-light" data-dismiss="modal">
-                        No
-                    </button>
-                </div>
+                </form>
             </div>
         </div>
     </div>
@@ -1048,47 +1031,6 @@ $(document).ready(function(e){
 
     $(".btn-delete").click(function(e) {
         $("#frmDelete").attr("action",  $(this).val());
-    });
-
-    $("#exportButton").on("click", function () {
-        var urlParamArray = new Array();
-        var urlParamStr = "";
-
-        if($('#start_orderDate').val() != ""){
-            urlParamArray.push("start_orderDate=" + $('#start_orderDate').val());
-        }
-        if($('#end_orderDate').val() != ""){
-            urlParamArray.push("end_orderDate=" + $('#end_orderDate').val());
-        }
-
-        if($('#report_cso_modal').val() != ""){
-            urlParamArray.push("report_cso_modal=" + $('#report_cso_modal').val());
-        }
-
-        if($('#filter_promo_modal').val() != ""){
-            urlParamArray.push("filter_promo=" + $('#filter_promo_modal').val());
-        }
-
-        if($('#filter_status_modal').val() != ""){
-            urlParamArray.push("filter_status=" + $('#filter_status_modal').val());
-        }
-        if($('#filter_export_type_modal').val() != ""){
-            urlParamArray.push("filter_export_type=" + $('#filter_export_type_modal').val());
-        }
-
-        // if($('#categoryReport').val() != "" || $('#categoryReport').val() != null){
-        // 	urlParamArray.push("categoryReport=" + $('#categoryReport').val());
-        // }
-
-        for (var i = 0; i < urlParamArray.length; i++) {
-            if (i === 0) {
-                urlParamStr += "?" + urlParamArray[i]
-            } else {
-                urlParamStr += "&" + urlParamArray[i]
-            }
-        }
-
-        window.location.href = "{{ route('order_export-to-xls') }}" + urlParamStr;
     });
 
     $("#province").on("change", function () {
