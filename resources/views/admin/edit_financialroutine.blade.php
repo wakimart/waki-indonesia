@@ -92,7 +92,7 @@ if(Route::currentRouteName() === 'edit_financial_routine_branch'){
                             <input type="hidden" id="last_financial_routine_id" name="last_financial_routine_id" value="{{ $financialRoutine->financial_routine_id }}">
                             <div class="form-group">
                                 <label for="total_sale">Total Sale</label>
-                                <input type="text" id="total_sale" name="total_sale" value="{{ number_format($financialRoutine->total_sale, 2) }}"
+                                <input type="text" id="total_sale" name="total_sale" value="{{ number_format($totalSale, 2) }}"
                                     placeholder="Total Sale"
                                     class="form-control" 
                                     data-type="currency"

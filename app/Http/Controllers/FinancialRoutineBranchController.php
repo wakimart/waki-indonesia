@@ -84,8 +84,9 @@ class FinancialRoutineBranchController extends Controller
                 ->where([['bank_accounts.active', true], ['branches.bank_account_id', '=', null]])
                 ->select('bank_accounts.*')->get();
         $financialRoutine = FinancialRoutine::where('id', $request->id)->first();
+        $totalSale = self::getTotalSale($financialRoutine['routine_date'], $financialRoutine['bank_account_id'], $financialRoutine['id'])['totalSale']['total_sale'];
 
-        return view('admin.edit_financialroutine', compact('banks', 'financialRoutine', 'banksPettyCash'));
+        return view('admin.edit_financialroutine', compact('banks', 'financialRoutine', 'banksPettyCash', 'totalSale'));
     }
 
     public function destroy(Request $request)
