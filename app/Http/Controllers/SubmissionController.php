@@ -1923,6 +1923,7 @@ class SubmissionController extends Controller
             'submission' => $submission,
             'reference' => $reference
         ];
+        // return view('admin.pdf_submission_mgm', $data);
         $pdf = PDF::loadView('admin.pdf_submission_mgm', $data);
         return $pdf->download($submission->code.'.pdf');
     }
