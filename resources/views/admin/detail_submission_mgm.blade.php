@@ -378,7 +378,7 @@ if (
                             Share Program MGM
                         </button>
                     </form>
-                    @if($referenceStatus == 'success')
+                    @if($referenceStatus == 'success' && $specialPermission)
                         <a href="{{route('submission_mgm_export_pdf', $submission->id)}}" class="btn btn-gradient-info mr-2 my-2">Export PDF</a>
                     @endif
                 </div>
