@@ -16,7 +16,7 @@
         <p style="margin: 0rem; font-weight: bolder; font-size:1.2rem;">{{$submission->branch->code}}</p>
       </div>
       <div style="text-align: center;">
-        <img src="{{public_path('sources/Logo Since.png')}}" style="max-width: 300px; height: 80px; margin-bottom:0.5rem;">
+        <img src="{{asset('sources/Logo Since.png')}}" style="max-width: 300px; height: 80px; margin-bottom:0.5rem;">
       </div>
     </div>
 
@@ -103,7 +103,7 @@
       <p style="margin: 0;">Salam Hangat,</p>
     </div>
     <div style="position: relative;">
-      <img src="{{public_path('sources/ttd.png')}}" style="max-width: 140px; margin-bottom:0.5rem; position: absolute; top: -2rem;">
+      <img src="{{asset('sources/ttd.png')}}" style="max-width: 140px; margin-bottom:0.5rem; position: absolute; top: -2rem;">
     </div>
     <div style="margin-top: 4rem;">
       <p style="margin: 0;">Customer Relationship Department</p>
