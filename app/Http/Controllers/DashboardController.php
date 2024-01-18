@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Branch;
+use App\Cso;
 
 class DashboardController extends Controller
 {
@@ -87,40 +89,6 @@ class DashboardController extends Controller
         //khusus untuk reference souvenir need to acc
         $refSouvenirs = ReferenceSouvenir::where('is_acc', true)->get();
 
-        //khusus untuk personal homecare to acc
-        $personalHomecares = [];
-        $personalHomecares['new'] = PersonalHomecare::where([['active', true], ['status', 'new']])
-                        ->orderBy("updated_at", "desc")
-                        ->get();
-        $personalHomecares['verified'] = PersonalHomecare::where([['active', true], ['status', 'verified']])
-                        ->orderBy("updated_at", "desc")
-                        ->get();
-        $personalHomecares['waiting_in'] = PersonalHomecare::where([['active', true], ['status', 'waiting_in']])
-                        ->orderBy("updated_at", "desc")
-                        ->get();
-        $personalHomecares['reschedule_acc'] = PersonalHomecare::where('active', true)
-                        ->whereNotNull('reschedule_date')
-                        ->orderBy("updated_at", "desc")
-                        ->get();
-        $personalHomecares['extend_acc'] = PersonalHomecare::where([['active', true], ['is_extend', true]])
-                        ->orderBy("updated_at", "desc")
-                        ->get();
-        $personalHomecares['cancel_acc'] = PersonalHomecare::where([['active', true], ['is_cancel', true]])
-                        ->orderBy("updated_at", "desc")
-                        ->get();
-
-
-        // $personalHomecares = PersonalHomecare::where('active', true)
-        //                 ->whereIn('status', ['new', 'waiting_in', 'verified'])
-        //                 ->orWhere(function ($q){
-        //                     $q->whereNotNull('reschedule_date');
-        //                 })
-        //                 ->orWhere(function ($q){
-        //                     $q->where('is_extend', true);
-        //                 })
-        //                 ->orderBy("updated_at", "desc")
-        //                 ->get();
-
         //khusus untuk acc reschedule & delete HS
         $accRescheduleHS = HomeService::where([['active', true], ['is_acc_resc', true]])->orderBy("updated_at", "desc")->get();
         $accDeleteHS = HomeService::where([['active', true], ['is_acc', true]])->orderBy("updated_at", "desc")->get();
@@ -132,6 +100,52 @@ class DashboardController extends Controller
 
         $ordersOutsideRegion = Order::where('active', true)->whereNotNull('request_hs_acc')->get();
 
+        // rank
+        $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
+        $startDate = date('Y-m-01');
+        $endDate = date('Y-m-d');
+        // cso
+        $query_rank_by_cso = "SELECT SUM(op.total_payment) 
+            FROM order_payments as op
+            LEFT JOIN orders as o
+            ON o.id = op.order_id
+            WHERE o.cso_id = c.id
+            AND op.payment_date >= '$startDate'
+            AND op.payment_date <= '$endDate'
+            AND op.status = 'verified'
+            AND (o.status = '" . Order::$status['2'] . "'
+            OR o.status = '" . Order::$status['3'] . "' 
+            OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['4'] . "')";
+        $rank_by_cso = Cso::from('csos as c')
+            ->select('c.code', 'c.name')
+            ->selectRaw("($query_rank_by_cso) as total_sale")
+            ->where('active', true)
+            ->orderBy('total_sale', 'desc');
+        $rank_by_cso_first_part = $rank_by_cso->skip(0)->take(5)->get();
+        $rank_by_cso_last_part = $rank_by_cso->skip(5)->take(5)->get();
+        // branch
+        $query_rank_by_branch = "SELECT SUM(op.total_payment) 
+            FROM order_payments as op
+            LEFT JOIN orders as o
+            ON o.id = op.order_id
+            WHERE o.branch_id = b.id
+            AND op.payment_date >= '$startDate'
+            AND op.payment_date <= '$endDate'
+            AND op.status = 'verified'
+            AND (o.status = '" . Order::$status['2'] . "'
+            OR o.status = '" . Order::$status['3'] . "' 
+            OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['4'] . "')";
+        $rank_by_branch = Branch::from('branches as b')
+            ->select('b.code', 'b.name')
+            ->selectRaw("($query_rank_by_branch) as total_sale")
+            ->where('active', true)
+            ->orderBy('total_sale', 'DESC')
+            ->skip(0)
+            ->take(5)
+            ->get();
+
         return view(
             "admin.dashboard",
             compact(
@@ -140,11 +154,13 @@ class DashboardController extends Controller
                 "registration",
                 "references",
                 "refSouvenirs",
-                "personalHomecares",
                 "accRescheduleHS",
                 "accDeleteHS",
                 "absentOffs",
-                "ordersOutsideRegion"
+                "ordersOutsideRegion",
+                "rank_by_cso_first_part",
+                "rank_by_cso_last_part",
+                "rank_by_branch"
             )
         );
     }

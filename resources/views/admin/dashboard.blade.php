@@ -25,6 +25,11 @@
     @media(max-width: 468px){
         .btn-action button{ margin-bottom: 0.6em; }
     }
+
+    .table-rank tr th, .table-rank tr td{
+        text-align: center;
+        font-size: 14px;
+    }
 </style>
 @endsection
 
@@ -92,217 +97,85 @@
             </div>
         </div>
 
-        @if(Gate::check('change-status-checkin-personalhomecare') == true || Gate::check('change-status-checkout-personalhomecare') == true || Gate::check('change-status-verified-personalhomecare') == true || Gate::check('acc-reschedule-personalhomecare') == true || Gate::check('acc-extend-personalhomecare') == true)
-            <div class="col-12 grid-margin stretch-card px-0">
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
-                    <div class="card-header" style="background: none;">
-                        <h4 style="margin-bottom: 1em;">
-                            Personal Homecare ACC
+                    <div class="card-header">
+                        <h4 style="margin-bottom: 1em">
+                            Rank Total Sale
                         </h4>
-                        <ul class="nav nav-tabs card-header-tabs">
-                            @foreach($personalHomecares as $keyNya => $arrPP5H)
-                                <li class="nav-item">
-                                    <a class="nav-link {{ $keyNya == "new" ? 'active' : '' }}"
-                                        style="font-weight: 500; font-size: 1em;"
-                                        id="{{ $keyNya }}-tab"
-                                        data-toggle="tab"
-                                        href="#tabs-{{ $keyNya }}"
-                                        role="tab"
-                                        aria-controls="{{ $keyNya }}"
-                                        aria-selected="true">
-                                        {{ ucwords(str_replace("_", " ",$keyNya)) }} ({{ sizeof($arrPP5H) }})
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
                     </div>
-                    <div class="card-body wrapper">
-                        <div class="tab-content" id="myTabContent">
-                            @foreach($personalHomecares as $keyNya => $arrPP5H)
-                                <div class="tab-pane fade show {{ $keyNya == "new" ? 'active' : '' }} p-3" id="tabs-{{ $keyNya }}" role="tabpanel" aria-labelledby="{{ $keyNya }}-tab">
-                                    <h5 class="mb-3">
-                                        Personal Homecare Data | Status {{ ucwords(str_replace("_", " ",$keyNya)) }} (Total: {{ sizeof($arrPP5H) }})
-                                    </h5>
-                                    <div class="d-flex flex-wrap mt-4" style="align-items: center;">
-                                        <p>Terpilih : <span id="checkedPH" class="checkedPH"></span></p>
-                                        <div style="margin-left: auto;">
-                                            @if($keyNya == "new")
-                                                <form id="formSelectAllNew" method="POST" action="{{ route('update_personal_homecare_status') }}">
-                                            @elseif($keyNya == "verified")
-                                                <form id="formSelectAllVerified" method="POST" action="{{ route('update_personal_homecare_status') }}">
-                                            @elseif($keyNya == "waiting_in")
-                                                <form id="formSelectAllWaitingIn" method="POST" action="{{ route('update_personal_homecare_status') }}">
-                                            @elseif($keyNya == "reschedule_acc")
-                                                <form id="formSelectAllReschedule" method="POST" action="{{ route('reschedule_personal_homecare') }}">
-                                            @elseif($keyNya == "extend_acc")
-                                                <form id="formSelectAllExtend" method="POST" action="{{ route('update_personal_homecare_status') }}">
-                                            @elseif($keyNya == "cancel_acc")
-                                                <form id="formSelectAllCancel" method="POST" action="{{ route('delete_personal_homecare') }}">
-                                            @else
-                                                <form id="" method="POST" action="">
-                                            @endif
-                                                @csrf
-                                                <div class="form-group btn-action">
-                                                    <div class="d-flex flex-wrap" style="justify-content: right;">
-                                                    @if($keyNya == "new")
-                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="verified">Approved All</button>
-                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="rejected">Reject All</button>
-                                                    @elseif($keyNya == "verified")
-                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="approve_out">Approved All</button>
-                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="rejected">Reject All</button>
-                                                    @elseif($keyNya == "waiting_in")
-                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="done">Approved All</button>
-                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="pending_product">Reject All</button>
-                                                    @elseif($keyNya == "reschedule_acc")
-                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="acceptance">Approved All</button>
-                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="rejected">Reject All</button>
-                                                    @elseif($keyNya == "extend_acc")
-                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="process_extend">Approved All</button>
-                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="process_extend_reject">Reject All</button>
-                                                    @elseif($keyNya == "cancel_acc")
-                                                        <button type="submit" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="cancel_approved">Approved All</button>
-                                                        <button type="submit" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="cancel_rejected">Reject All</button>
-                                                    @else
-                                                        <button type="button" id="AccPH-{{ $keyNya }}" class="btn btn-md btn-outline-success" name="status" value="acceptance">Approved All</button>
-                                                        <button type="button" id="CancelPH-{{ $keyNya }}" class="btn btn-md btn-outline-danger ml-2" name="status" value="rejected">Reject All</button>
-                                                    @endif
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="table-responsive table-PP5H"
-                                        style="border: 1px solid #ebedf2;">
-                                        <table class="table table-bordered table-wrap">
-                                            <thead style="text-align: center; background-color: aliceblue;">
-                                                <tr>
-                                                    <td class="text-center">
-                                                        <div class="form-group mb-0">
-                                                            <input type="checkbox" id="{{$keyNya}}" name="" value="true"
-                                                                class="form-control SelectAll_Dynamic checkBoxPH"
-                                                                style="position: relative; width: 16px; margin: auto;"/>
-                                                        </div>
-                                                    </td>
-                                                    <td>Customer <br class="break">(Branch - CSO)</td>
-                                                    <td>Product</td>
-                                                    <td>Acc/Reject/Detail</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($arrPP5H as $personalHomecare)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            <div class="form-group">
-                                                                <input type="checkbox" name=""
-                                                                    class="form-control checkBoxPH"
-                                                                    id="{{$keyNya}}"
-                                                                    value="{{$personalHomecare['id']}}"
-                                                                    style="position: relative; width: 16px; margin: auto;"/>
-                                                            </div>
-                                                        </td>
-                                                        <td style="white-space: normal;">
-                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
-                                                            <br class="break">
-                                                            ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }} - {{ $personalHomecare->cso['name'] }})
-
-                                                            @if ($keyNya == "extend_acc" && $personalHomecare['is_extend'] && Gate::check('acc-extend-personalhomecare'))
-                                                            <br class="break">
-                                                            <div class="extendReason" style="font-weight:bold;">
-                                                              <p>{{ $personalHomecare["extend_reason"] }}</p>
-                                                            </div>
-                                                            @endif
-
-                                                            @if ($keyNya == "cancel_acc" && $personalHomecare['is_cancel'] && Gate::check('acc-extend-personalhomecare'))
-                                                            <br class="break">
-                                                            <div class="extendReason" style="font-weight:bold;">
-                                                              <p>{{ $personalHomecare["cancel_desc"] }}</p>
-                                                            </div>
-                                                            @endif
-
-                                                            @if ($keyNya == "reschedule_acc" && $personalHomecare['reschedule_date'] != null && Gate::check('acc-reschedule-personalhomecare'))
-                                                            <br class="break">
-                                                            <div class="extendReason" style="font-weight:bold;">
-                                                              <p>{{ $personalHomecare["reschedule_reason"] }}</p>
-                                                            </div>
-                                                            @endif
-                                                        </td>
-                                                        <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
-                                                        <td style="text-align: center; white-space: normal;">
-                                                          @if(Auth::user()->inRole("head-admin"))
-                                                            @if($personalHomecare->status == "new")
-                                                                <form method="POST" action="{{ route('update_personal_homecare_status') }}" style="margin: auto;">
-                                                            @elseif($personalHomecare->status == "verified")
-                                                                <form method="POST" action="{{ route('update_personal_homecare_status') }}" style="margin: auto;">
-                                                            @elseif($personalHomecare->status == "waiting_in")
-                                                                <form method="POST" action="{{ route('update_personal_homecare_status') }}" style="margin: auto;">
-                                                                    <input type="hidden" name="id_product" value="{{$personalHomecare->personalHomecareProduct['id']}}">
-                                                            @elseif(!empty($personalHomecare->reschedule_date))
-                                                                <form method="POST" action="{{ route('reschedule_personal_homecare') }}" style="margin: auto;">
-                                                            @elseif($personalHomecare->is_extend)
-                                                                <form method="POST" action="{{ route('update_personal_homecare_status') }}" style="margin: auto;">
-                                                            @elseif($personalHomecare->is_cancel)
-                                                                <form method="POST" action="{{ route('delete_personal_homecare') }}" style="margin: auto;">
-                                                            @else
-                                                                <form id="formUpdateStatusHS" method="POST" action="" style="margin: auto;">
-                                                            @endif
-                                                              @csrf
-                                                              <div class="form-group">
-
-                                                                  <input type="hidden" id="hiddenInput" name="cancel" value="1" />
-                                                                  <input type="hidden" id="input_id_hs_hidden" name="id" value="{{ $personalHomecare->id }}" />
-
-                                                                  <div style="text-align: center;">
-                                                                    <p>Do you approved it ?</p>
-                                                                  </div>
-                                                                  <div class="btn-action" style="text-align: center;">
-
-                                                                  @if($personalHomecare->status == "new")
-                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="verified">Yes</button>
-                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
-                                                                  @elseif($personalHomecare->status == "verified")
-                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="approve_out">Yes</button>
-                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
-                                                                  @elseif($personalHomecare->status == "waiting_in")
-                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="done">Yes</button>
-                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="pending_product">No</button>
-                                                                  @elseif(!empty($personalHomecare->reschedule_date))
-                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="acceptance">Yes</button>
-                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
-                                                                  @elseif($personalHomecare->is_extend)
-                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="process_extend">Yes</button>
-                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="process_extend_reject">No</button>
-                                                                  @elseif($personalHomecare->is_cancel)
-                                                                    <button type="submit" class="btn btn-gradient-primary" name="status" value="cancel_approved">Yes</button>
-                                                                    <button type="submit" class="btn btn-gradient-danger" name="status" value="cancel_rejected">No</button>
-                                                                  @else
-                                                                    <button type="button" class="btn btn-gradient-primary" name="status" value="acceptance">Yes</button>
-                                                                    <button type="button" class="btn btn-gradient-danger" name="status" value="rejected">No</button>
-                                                                  @endif
-                                                                  </div>
-                                                              </div>
-                                                          </form>
-                                                          <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
-                                                              <i class="mdi mdi-eye" style="font-size: 12px; text-decoration:none;">More Detail</i>
-                                                          </a>
-                                                          @else
-                                                            <a href="{{ route('admin_list_homeService', ["id_hs"=>$perHomeservice['id']]) }}">
-                                                                <i class="mdi mdi-eye" style="font-size: 24px;"></i>
-                                                            </a>
-                                                          @endif
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                        <br>
-                                    </div>
-                                </div>
-                            @endforeach
+                    <div class="card-body wrapper row">
+                        <div class="col-8 p-0">
+                            <table class="table table-responsive table-rank">
+                                <tr>
+                                    <th colspan="6">By CSO</th>
+                                </tr>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>CSO</th>
+                                    <th>Total Sales</th>
+                                    <th>Rank</th>
+                                    <th>CSO</th>
+                                    <th>Total Sales</th>
+                                </tr>
+                                @foreach($rank_by_cso_first_part as $index => $cso)
+                                    @php 
+                                        if($index == 0){
+                                            $bgcolor = '#2ecc71';
+                                        }elseif($index == 1){
+                                            $bgcolor = '#f1c40f';
+                                        }else{
+                                            $bgcolor = '';
+                                        }
+                                    @endphp                                    
+                                    <tr>
+                                        <th style="background-color: {{$bgcolor}};">{{$index+1}}</th>
+                                        <td style="white-space: normal; background-color: {{$bgcolor}};">{{$cso->code}} - {{$cso->name}}</td>
+                                        <td style="background-color: {{$bgcolor}};">Rp. {{number_format($cso->total_sale)}}</td>
+                                        <th>{{$index+6}}</th>
+                                        <td style="white-space: normal">{{$rank_by_cso_last_part[$index]->code}} - {{$rank_by_cso_last_part[$index]->name}}</td>
+                                        <td>Rp. {{number_format($rank_by_cso_last_part[$index]->total_sale)}}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                        <div class="col-4 p-0">
+                            <table class="table table-responsive table-rank">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3">By Branch</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Branch</th>
+                                        <th>Total Sales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($rank_by_branch as $index => $branch)
+                                        @php
+                                            if($index == 0){
+                                                $bgcolor = '#2ecc71';
+                                            }elseif($index == 1){
+                                                $bgcolor = '#f1c40f';
+                                            }else{
+                                                $bgcolor = '';
+                                            }
+                                        @endphp
+                                        <tr>                                        
+                                            <th style="background-color: {{$bgcolor}};">{{$index+1}}</th>
+                                            <td style="white-space: normal; background-color: {{$bgcolor}};">{{$branch->code}} - {{$branch->name}}</td>
+                                            <td style="background-color: {{$bgcolor}};">Rp. {{number_format($branch->total_sale)}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-        @endif
+        </div>
 
         <div class="row">
             <div class="col-md-12 grid-margin stretch-card">
@@ -976,77 +849,85 @@
             </h3>
         </div>
 
-        @if(Gate::check('change-status-checkin-personalhomecare') == true || Gate::check('change-status-checkout-personalhomecare') == true || Gate::check('change-status-verified-personalhomecare') == true || Gate::check('acc-reschedule-personalhomecare') == true || Gate::check('acc-extend-personalhomecare') == true)
-            <div class="col-12 grid-margin stretch-card px-0">
+        <div class="row">
+            <div class="col-md-12 grid-margin stretch-card">
                 <div class="card">
-                    <div class="card-header" style="background: none;">
-                        <h4 style="margin-bottom: 1em;">
-                            Personal Homecare ACC
+                    <div class="card-header">
+                        <h4 style="margin-bottom: 1em">
+                            Rank Total Sale
                         </h4>
-                        <ul class="nav nav-tabs card-header-tabs">
-                            @foreach($personalHomecares as $keyNya => $arrPP5H)
-                                <li class="nav-item">
-                                    <a class="nav-link {{ $keyNya == "new" ? 'active' : '' }}"
-                                        style="font-weight: 500; font-size: 1em;"
-                                        id="{{ $keyNya }}-tab"
-                                        data-toggle="tab"
-                                        href="#tabs-{{ $keyNya }}"
-                                        role="tab"
-                                        aria-controls="{{ $keyNya }}"
-                                        aria-selected="true">
-                                        {{ ucwords(str_replace("_", " ",$keyNya)) }} ({{ sizeof($arrPP5H) }})
-                                    </a>
-                                </li>
-                            @endforeach
-                        </ul>
                     </div>
-                    <div class="card-body">
-                        <div class="tab-content" id="myTabContent">
-                            @foreach($personalHomecares as $keyNya => $arrPP5H)
-                                <div class="tab-pane fade show {{ $keyNya == "new" ? 'active' : '' }} p-3" id="tabs-{{ $keyNya }}" role="tabpanel" aria-labelledby="{{ $keyNya }}-tab">
-                                    <h5 style="margin-bottom: 0.5em;">
-                                        Status {{ ucwords(str_replace("_", " ",$keyNya)) }} | Total: {{ sizeof($arrPP5H) }}
-                                    </h5>
-                                    <div class="table-responsive"
-                                        style="border: 1px solid #ebedf2;">
-                                        <table class="table table-bordered">
-                                            <thead style="text-align: center; background-color: aliceblue;">
-                                                <tr>
-                                                    <td colspan="2">Personal Homecare Data</td>
-                                                    <td rowspan="2">View</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Customer <br class="break">(Branch - CSO)</td>
-                                                    <td>Product</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach($arrPP5H as $personalHomecare)
-                                                    <tr>
-                                                        <td>
-                                                            {{ $personalHomecare['name'] }} - {{ $personalHomecare['phone'] }}
-                                                            <br class="break">
-                                                            ({{ $personalHomecare->branch['code'] }} - {{ $personalHomecare->cso['code'] }} - {{ $personalHomecare->cso['name'] }})
-                                                        </td>
-                                                        <td>{{ $personalHomecare->personalHomecareProduct['code'] }} - {{ $personalHomecare->personalHomecareProduct->product['code'] }}</td>
-                                                        <td style="text-align: center;">
-                                                            <a href="{{ route('detail_personal_homecare', ['id' => $personalHomecare['id']]) }}">
-                                                                <i class="mdi mdi-eye" style="font-size: 24px;"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                        <br>
-                                    </div>
-                                </div>
-                            @endforeach
+                    <div class="card-body wrapper row">
+                        <div class="col-8 p-0">
+                            <table class="table table-responsive table-rank">
+                                <tr>
+                                    <th colspan="6">By CSO</th>
+                                </tr>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>CSO</th>
+                                    <th>Total Sales</th>
+                                    <th>Rank</th>
+                                    <th>CSO</th>
+                                    <th>Total Sales</th>
+                                </tr>
+                                @foreach($rank_by_cso_first_part as $index => $cso)
+                                    @php 
+                                        if($index == 0){
+                                            $bgcolor = '#2ecc71';
+                                        }elseif($index == 1){
+                                            $bgcolor = '#f1c40f';
+                                        }else{
+                                            $bgcolor = '';
+                                        }
+                                    @endphp                                    
+                                    <tr>
+                                        <th style="background-color: {{$bgcolor}};">{{$index+1}}</th>
+                                        <td style="white-space: normal; background-color: {{$bgcolor}};">{{$cso->code}} - {{$cso->name}}</td>
+                                        <td style="background-color: {{$bgcolor}};">Rp. {{number_format($cso->total_sale)}}</td>
+                                        <th>{{$index+6}}</th>
+                                        <td style="white-space: normal">{{$rank_by_cso_last_part[$index]->code}} - {{$rank_by_cso_last_part[$index]->name}}</td>
+                                        <td>Rp. {{number_format($rank_by_cso_last_part[$index]->total_sale)}}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                        <div class="col-4 p-0">
+                            <table class="table table-responsive table-rank">
+                                <thead>
+                                    <tr>
+                                        <th colspan="3">By Branch</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>Branch</th>
+                                        <th>Total Sales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($rank_by_branch as $index => $branch)
+                                        @php
+                                            if($index == 0){
+                                                $bgcolor = '#2ecc71';
+                                            }elseif($index == 1){
+                                                $bgcolor = '#f1c40f';
+                                            }else{
+                                                $bgcolor = '';
+                                            }
+                                        @endphp
+                                        <tr>                                        
+                                            <th style="background-color: {{$bgcolor}};">{{$index+1}}</th>
+                                            <td style="white-space: normal; background-color: {{$bgcolor}};">{{$branch->code}} - {{$branch->name}}</td>
+                                            <td style="background-color: {{$bgcolor}};">Rp. {{number_format($branch->total_sale)}}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
-        @endif
+        </div>
 
         @if(Gate::check('acc-view-home_service') == true)
         <div class="row">
