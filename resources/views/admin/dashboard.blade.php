@@ -106,7 +106,7 @@
                         </h4>
                     </div>
                     <div class="card-body wrapper row">
-                        <div class="col-8 p-0">
+                        <div class="col-8 p-0" style="border-right: 1px solid #b2bec3">
                             <table class="table table-responsive table-rank">
                                 <tr>
                                     <th colspan="6">By CSO</th>
@@ -142,34 +142,30 @@
                         </div>
                         <div class="col-4 p-0">
                             <table class="table table-responsive table-rank">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3">By Branch</th>
+                                <tr>
+                                    <th colspan="3">By Branch</th>
+                                </tr>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Branch</th>
+                                    <th>Total Sales</th>
+                                </tr>
+                                @foreach($rank_by_branch as $index => $branch)
+                                    @php
+                                        if($index == 0){
+                                            $bgcolor = '#2ecc71';
+                                        }elseif($index == 1){
+                                            $bgcolor = '#f1c40f';
+                                        }else{
+                                            $bgcolor = '';
+                                        }
+                                    @endphp
+                                    <tr>                                        
+                                        <th style="background-color: {{$bgcolor}};">{{$index+1}}</th>
+                                        <td style="white-space: normal; background-color: {{$bgcolor}};">{{$branch->code}} - {{$branch->name}}</td>
+                                        <td style="background-color: {{$bgcolor}};">Rp. {{number_format($branch->total_sale)}}</td>
                                     </tr>
-                                    <tr>
-                                        <th>Rank</th>
-                                        <th>Branch</th>
-                                        <th>Total Sales</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($rank_by_branch as $index => $branch)
-                                        @php
-                                            if($index == 0){
-                                                $bgcolor = '#2ecc71';
-                                            }elseif($index == 1){
-                                                $bgcolor = '#f1c40f';
-                                            }else{
-                                                $bgcolor = '';
-                                            }
-                                        @endphp
-                                        <tr>                                        
-                                            <th style="background-color: {{$bgcolor}};">{{$index+1}}</th>
-                                            <td style="white-space: normal; background-color: {{$bgcolor}};">{{$branch->code}} - {{$branch->name}}</td>
-                                            <td style="background-color: {{$bgcolor}};">Rp. {{number_format($branch->total_sale)}}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                                @endforeach
                             </table>
                         </div>
                     </div>
@@ -858,7 +854,7 @@
                         </h4>
                     </div>
                     <div class="card-body wrapper row">
-                        <div class="col-8 p-0">
+                        <div class="col-8 p-0" style="border-right: 1px solid #b2bec3">
                             <table class="table table-responsive table-rank">
                                 <tr>
                                     <th colspan="6">By CSO</th>
@@ -894,34 +890,30 @@
                         </div>
                         <div class="col-4 p-0">
                             <table class="table table-responsive table-rank">
-                                <thead>
-                                    <tr>
-                                        <th colspan="3">By Branch</th>
+                                <tr>
+                                    <th colspan="3">By Branch</th>
+                                </tr>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Branch</th>
+                                    <th>Total Sales</th>
+                                </tr>
+                                @foreach($rank_by_branch as $index => $branch)
+                                    @php
+                                        if($index == 0){
+                                            $bgcolor = '#2ecc71';
+                                        }elseif($index == 1){
+                                            $bgcolor = '#f1c40f';
+                                        }else{
+                                            $bgcolor = '';
+                                        }
+                                    @endphp
+                                    <tr>                                        
+                                        <th style="background-color: {{$bgcolor}};">{{$index+1}}</th>
+                                        <td style="white-space: normal; background-color: {{$bgcolor}};">{{$branch->code}} - {{$branch->name}}</td>
+                                        <td style="background-color: {{$bgcolor}};">Rp. {{number_format($branch->total_sale)}}</td>
                                     </tr>
-                                    <tr>
-                                        <th>Rank</th>
-                                        <th>Branch</th>
-                                        <th>Total Sales</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($rank_by_branch as $index => $branch)
-                                        @php
-                                            if($index == 0){
-                                                $bgcolor = '#2ecc71';
-                                            }elseif($index == 1){
-                                                $bgcolor = '#f1c40f';
-                                            }else{
-                                                $bgcolor = '';
-                                            }
-                                        @endphp
-                                        <tr>                                        
-                                            <th style="background-color: {{$bgcolor}};">{{$index+1}}</th>
-                                            <td style="white-space: normal; background-color: {{$bgcolor}};">{{$branch->code}} - {{$branch->name}}</td>
-                                            <td style="background-color: {{$bgcolor}};">Rp. {{number_format($branch->total_sale)}}</td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
+                                @endforeach
                             </table>
                         </div>
                     </div>
