@@ -322,7 +322,10 @@ class OrderController extends Controller
 
         // Khusus akun CSO
         if (Auth::user()->roles[0]['slug'] == 'cso') {
-            $orders = Order::where('cso_id', Auth::user()->cso['id'])->where('active', true);
+            $orders = Order::where(function ($query) {
+                            $query->where('30_cso_id', Auth::user()->cso['id'])
+                                ->orWhere('70_cso_id', Auth::user()->cso['id']);
+                        })->where('active', true);
         }
 
         // Khusus akun branch dan area-manager
