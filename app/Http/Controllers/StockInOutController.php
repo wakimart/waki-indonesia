@@ -63,6 +63,15 @@ class StockInOutController extends Controller
                 $stockTypes[$type]->where('date', $request->filter_date);
             }
 
+            if ($request->has("filter_warehouse")){
+                if($type == "in"){
+                    $stockTypes[$type]->where('warehouse_to_id', $request->filter_warehouse);
+                }
+                elseif($type == "out"){
+                    $stockTypes[$type]->where('warehouse_from_id', $request->filter_warehouse);
+                }
+            }
+
             $stockTypes[$type] = $stockTypes[$type]->paginate(10, ['*'], $type);
         }
         return view("admin.list_stock_new", compact("stockTypes", "warehouses", "stocks"));
