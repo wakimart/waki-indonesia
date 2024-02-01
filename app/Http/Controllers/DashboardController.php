@@ -102,8 +102,14 @@ class DashboardController extends Controller
 
         // rank
         $branches = Branch::where('active', true)->orderBy('code', 'asc')->get();
+        $nowDay = date('j');
         $startDate = date('Y-m-01');
         $endDate = date('Y-m-d');
+        if($nowDay == 1){
+            $startDate = date("Y-m-01",strtotime("-1 month"));
+            $endDate = date("Y-m-d",strtotime('last day of previous month'));
+        }
+
         // cso
         $query_rank_by_cso = "SELECT SUM(op.total_payment) 
             FROM order_payments as op
