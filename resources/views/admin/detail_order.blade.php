@@ -757,9 +757,16 @@
                                 <span class="badge badge-success">Success</span>
                             @elseif ($order['status'] == \App\Order::$status['5'])
                                 <span class="badge badge-danger">Reject</span>
+                            @elseif ($order['status'] == \App\Order::$status['9'])
+                                <span class="badge badge-danger">Cancel</span>
                             @endif
                         </td>
                     </tr>
+                    @if (($order['status'] == \App\Order::$status['5'] || $order['status'] == \App\Order::$status['9']) && $order->reject_reason != null)
+                        <tr>
+                            <td class="text-danger">{{ $order->reject_reason }}</td>
+                        </tr>
+                    @endif
                     @if (count($csoDeliveryOrders) > 0)
                     <tr>
                         <td>Cso Delivery Order : </td>
@@ -824,7 +831,7 @@
                                         Success Order
                                     </button> --}}
                                     @endif
-                                    @if ($order['status'] == \App\Order::$status['5'] && $checkTotalSales == true && Gate::check('change-status_order_reject'))
+                                    @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2'] || $order['status'] == \App\Order::$status['3']) && $checkTotalSales == true && Gate::check('change-status_order_reject'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['5']}}"
                                         class="btn btn-gradient-danger mr-2 btn-lg btn-change-status-order">
                                         Reject Order

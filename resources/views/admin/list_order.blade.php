@@ -490,6 +490,8 @@ $menu_item_second = "list_order";
                                                 <span class="badge badge-success">Success</span>
                                             @elseif ($order['status'] == \App\Order::$status['5'])
                                                 <span class="badge badge-danger">Reject</span>
+                                            @elseif ($order['status'] == \App\Order::$status['9'])
+                                                <span class="badge badge-danger">Cancel</span>
                                             @endif
                                         </td>
                                         {{-- @foreach($ProductPromos as $ProductPromo)

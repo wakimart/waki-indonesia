@@ -53,6 +53,7 @@ class OfflineSideController extends Controller
      **/
     public function replicateOrderData(Request $request)
     {
+        // return response()->json($request->all());
         DB::beginTransaction();
         try{
             if($request->status == 'process'){
@@ -118,6 +119,10 @@ class OfflineSideController extends Controller
                             }
                             $order->delivered_image = json_encode($request->delivered_image);
                         }
+                    } else if ($order->status == Order::$status['5'] || $order->status == Order::$status['9']) { // reject or cancel
+                        OrderPayment::Where('order_id', $order->id)->update(['status' => 'rejected']);
+                        $order->reject_reason = $request->reject_reason;
+                        $order->nominal_cancel = $request->nominal_cancel;
                     }
                     $order->update();
                     

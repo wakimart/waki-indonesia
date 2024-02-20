@@ -881,7 +881,6 @@ class OrderController extends Controller
 
     public function storeOrderPayment(Request $request)
     {
-        // return response()->json($request->all());
         DB::beginTransaction();
         try {
             $validator = $request->validate([
@@ -1331,6 +1330,8 @@ class OrderController extends Controller
             AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
+            OR o.status = '" . Order::$status['8'] . "' 
+            OR o.status = '" . Order::$status['9'] . "' 
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(op.total_payment) 
             FROM order_payments as op
@@ -1341,6 +1342,8 @@ class OrderController extends Controller
             AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['9'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         // $query_total_sale_untilYesterday = "SELECT SUM(o.down_payment) 
@@ -1393,6 +1396,8 @@ class OrderController extends Controller
             AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
+            OR o.status = '" . Order::$status['8'] . "' 
+            OR o.status = '" . Order::$status['9'] . "' 
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(op.total_payment) 
             FROM order_payments as op
@@ -1403,6 +1408,8 @@ class OrderController extends Controller
             AND op.status = 'verified'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['9'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $currentBranch = null;
@@ -1458,7 +1465,8 @@ class OrderController extends Controller
                 $query->where('orders.status', Order::$status['2'])
                     ->orWhere('orders.status', Order::$status['3'])
                     ->orWhere('orders.status', Order::$status['4'])
-                    ->orWhere('orders.status', Order::$status['8']);
+                    ->orWhere('orders.status', Order::$status['8'])
+                    ->orWhere('orders.status', Order::$status['9']);
             })
             ->where('order_payments.status', 'verified')
             ->orderBy('order_payments.payment_date', 'desc')->select('orders.*', DB::raw('SUM(order_payments.total_payment) as totalPaymentNya'))->groupBy('orders.id')->get();
@@ -1487,6 +1495,8 @@ class OrderController extends Controller
             AND o.orderDate <= '$yesterdayDate'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['9'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
@@ -1494,6 +1504,8 @@ class OrderController extends Controller
             AND o.orderDate = '$endDate'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['9'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $order_reports = Branch::from('branches as b')
@@ -1529,6 +1541,8 @@ class OrderController extends Controller
             AND o.orderDate <= '$yesterdayDate'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['9'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $query_total_sale_today = "SELECT SUM(o.down_payment) 
             FROM orders as o
@@ -1536,6 +1550,8 @@ class OrderController extends Controller
             AND o.orderDate = '$endDate'
             AND (o.status = '" . Order::$status['2'] . "' 
             OR o.status = '" . Order::$status['3'] . "'
+            OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['9'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
 
         $currentBranch = null;
@@ -1590,7 +1606,9 @@ class OrderController extends Controller
         $order_reports = $order_reports->where(function($query) {
                 $query->where('status', Order::$status['2'])
                     ->orWhere('status', Order::$status['3'])
-                    ->orWhere('status', Order::$status['4']);
+                    ->orWhere('status', Order::$status['4'])
+                    ->orWhere('status', Order::$status['8'])
+                    ->orWhere('status', Order::$status['9']);
             })
             ->orderBy('orderDate', 'desc')->get();
         $countOrderReports = $order_reports->count();
