@@ -61,13 +61,14 @@
 
     .cancel-template {
         list-style-type: none;
-        margin: 25px 0 0 0;
+        margin: 0 0 0 -10px;
     }
     .cancel-template li {
         margin: 0 5px 0 0;
         width: auto;
         height: 45px;
         position: relative;
+        text-align: center;
     }
     .cancel-template label,
     .cancel-template input {
@@ -85,6 +86,7 @@
     .cancel-template input[type="radio"]:checked+label,
     .Checked+label {
         background: #2ecc71;
+        color: white;
     }
     .cancel-template label {
         padding: 5px;
@@ -93,7 +95,11 @@
         z-index: 90;
     }
     .cancel-template label:hover {
-        background: #DDD;
+        background: #2ecc71;
+        color: white;
+    }
+    .label-reject-template {
+        margin: 0 0 0 5px;
     }
     
     .ellipsis {
@@ -340,6 +346,8 @@
                                 <span class="badge badge-success">Success</span>
                             @elseif ($order['status'] == \App\Order::$status['5'])
                                 <span class="badge badge-danger">Reject</span>
+                            @elseif ($order['status'] == \App\Order::$status['9'])
+                                <span class="badge badge-danger">Cancel</span>
                             @endif
                         </td>
                     </tr>
@@ -410,7 +418,7 @@
                         </td>
                     </tr>
                     @endif
-                    @if ($order['status'] == \App\Order::$status['5'] && $order->reject_reason != null)
+                    @if (($order['status'] == \App\Order::$status['5'] || $order['status'] == \App\Order::$status['9']) && $order->reject_reason != null)
                         <tr>
                             <td class="text-danger">{{ $order->reject_reason }}</td>
                         </tr>
@@ -449,7 +457,7 @@
                                     @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2'] || $order['status'] == \App\Order::$status['3']) && Gate::check('change-status_order_reject'))
                                     <button type="button" data-toggle="modal" data-target="#modal-change-status" status-order="{{\App\Order::$status['5']}}"
                                         class="btn btn-gradient-danger mr-2 btn-change-status-order">
-                                        Reject Order
+                                        Reject/Cancel
                                     </button>
                                     @endif
                                 </div>
@@ -778,6 +786,15 @@
                                 {{-- Reject Order --}}
                                 @if (($order['status'] == \App\Order::$status['1'] || $order['status'] == \App\Order::$status['2'] || $order['status'] == \App\Order::$status['3']) && Gate::check('change-status_order_reject'))
                                     <div id="reject_template_reason">
+                                        <p class="label-reject-template">Reject / Cancel This Order</p>
+                                        <select class="form-control" id="reject_or_cancel">
+                                            <option value="reject">Reject</option>
+                                            @if($order['status'] !== \App\Order::$status['1'])
+                                                <option value="cancel">Cancel</option>
+                                            @endif
+                                        </select>
+                                        <input type="text" class="form-control d-none" id="nominal_cancel" name="nominal_cancel" autocomplete="off" data-type="currency"/>
+                                        <p class="label-reject-template">Reason</p>
                                         <ul class="cancel-template">
                                             @foreach(\App\Order::$rejectTemplates as $index => $val)
                                                 <li>
@@ -1441,7 +1458,7 @@
             } else if (statusOrder == "{{\App\Order::$status['5']}}") {
                 $("#reject_template_reason").show();
                 $("#reject_reason").attr('disabled', false);
-                $("#modal-change-status-question").html('Reject This Order?');
+                $("#modal-change-status-question").html('Reject / Cancel This Order?');
             }
         });
 
@@ -1848,7 +1865,9 @@
                     'delivered_image': <?= $order->delivered_image ?>,
                     'order_details':order_details,
                     'user_id':'{{Auth::user()->code}}',
-                    'temp_no':'{{$order->temp_no}}'
+                    'temp_no':'{{$order->temp_no}}',
+                    'nominal_cancel':numberNoCommas($('#nominal_cancel').val()),
+                    'reject_reason':$('#reject_reason').val()
                 }
                 for(var i = 0; i < order.delivered_image.length; i++){
                     order['delivered_image_file_'+i] = `{{ asset('sources/order/${order.delivered_image[i]}') }}`;
@@ -2029,6 +2048,15 @@
         $(document).on("click", ".delete-cso-home-service", function (e) {
             e.preventDefault();
             $(this).parents(".cso-home-service-via-create-new-home-service")[0].remove();
+        });
+
+        $('#reject_or_cancel').on('change', function() {
+            if(this.value == "cancel"){
+                $('#nominal_cancel').removeClass('d-none').val("{{number_format($order->down_payment)}}")
+                $('#status-order').val('cancel')
+            }else{
+                $('#nominal_cancel').addClass('d-none').val('')
+            }
         });
     });
 

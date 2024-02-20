@@ -21,6 +21,7 @@ class Order extends Model
         '8' => 'delivered',
         '4' => 'success', 
         '5' => 'reject', 
+        '9' => 'cancel'
     ];
     static $rejectTemplates = ['A. ' => 'Template A', 'B. ' => 'Template B', 'Other' => ''];
 
