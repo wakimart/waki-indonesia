@@ -122,6 +122,7 @@ class DashboardController extends Controller
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
             OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['9'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $rank_by_cso = Cso::from('csos as c')
             ->select('c.code', 'c.name')
@@ -142,6 +143,7 @@ class DashboardController extends Controller
             AND (o.status = '" . Order::$status['2'] . "'
             OR o.status = '" . Order::$status['3'] . "' 
             OR o.status = '" . Order::$status['8'] . "'
+            OR o.status = '" . Order::$status['9'] . "'
             OR o.status = '" . Order::$status['4'] . "')";
         $rank_by_branch = Branch::from('branches as b')
             ->select('b.code', 'b.name')

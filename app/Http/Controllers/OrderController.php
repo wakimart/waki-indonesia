@@ -907,7 +907,9 @@ class OrderController extends Controller
                 }
                 $order->delivered_image = json_encode($arrImage);
             } else if ($order->status == Order::$status['5'] || $order->status == Order::$status['9']) { // reject or cancel
-                OrderPayment::Where('order_id', $order->id)->update(['status' => 'rejected']);
+                if($order->status == Order::$status['5']){
+                    OrderPayment::Where('order_id', $order->id)->update(['status' => 'rejected']);
+                }
                 $order->reject_reason = $request->reject_reason;
                 $order->nominal_cancel = str_replace(",","",$request->nominal_cancel);
             }
