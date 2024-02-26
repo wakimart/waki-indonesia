@@ -1866,8 +1866,10 @@
                     'order_details':order_details,
                     'user_id':'{{Auth::user()->code}}',
                     'temp_no':'{{$order->temp_no}}',
-                    'nominal_cancel':numberNoCommas($('#nominal_cancel').val()),
                     'reject_reason':$('#reject_reason').val()
+                }
+                if($('#nominal_cancel').val() != ""){
+                  order['nominal_cancel'] = numberNoCommas($('#nominal_cancel').val());
                 }
                 for(var i = 0; i < order.delivered_image.length; i++){
                     order['delivered_image_file_'+i] = `{{ asset('sources/order/${order.delivered_image[i]}') }}`;
