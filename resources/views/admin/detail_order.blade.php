@@ -1868,7 +1868,7 @@
                     'temp_no':'{{$order->temp_no}}',
                     'reject_reason':$('#reject_reason').val()
                 }
-                if($('#nominal_cancel').val() != ""){
+                if($('#nominal_cancel').val() != undefined){
                   order['nominal_cancel'] = numberNoCommas($('#nominal_cancel').val());
                 }
                 for(var i = 0; i < order.delivered_image.length; i++){
