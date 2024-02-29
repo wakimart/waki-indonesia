@@ -339,10 +339,10 @@ class FinancialRoutineController extends Controller
                 , 'bacc.id as bacc_id', 'bacc.code as bacc_code', 'bacc.name as bacc_name', 'bacc.account_number as bacc_account_number', 'bacc.estimate_transfer as bacc_estimate_transfer'
                 , 'ts.bank_in as ts_bank_in'
                 , 'ts.debit as ts_debit'
-                , 'ts.netto_debit as ts_netto_debit'
                 , 'ts.card as ts_card'
-                , 'ts.netto_card as ts_netto_card'
             )
+            ->selectRaw('IFNULL(ts.netto_debit_edited, ts.netto_debit) as ts_netto_debit')
+            ->selectRaw('IFNULL(ts.netto_card_edited, ts.netto_card) as ts_netto_card')
             ->join('orders as o', 'o.id', 'op.order_id')
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
             ->join('csos as c', 'c.id', 'o.Cso_id')

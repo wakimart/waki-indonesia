@@ -125,9 +125,9 @@ class TotalSaleController extends Controller
             ->select('b.*')
             ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
             ->selectRaw("SUM(ts.debit) as sum_ts_debit")
-            ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
+            ->selectRaw("SUM(IFNULL(ts.netto_debit_edited, ts.netto_debit)) as sum_ts_netto_debit")
             ->selectRaw("SUM(ts.card) as sum_ts_card")
-            ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
+            ->selectRaw("SUM(IFNULL(ts.netto_card_edited, ts.netto_card)) as sum_ts_netto_card")
             ->leftJoin('orders as o', 'o.branch_id', 'b.id')
             ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
             ->leftJoin('total_sales as ts', 'ts.order_payment_id', 'op.id')
@@ -166,9 +166,9 @@ class TotalSaleController extends Controller
             ->select('c.*')
             ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
             ->selectRaw("SUM(ts.debit) as sum_ts_debit")
-            ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
+            ->selectRaw("SUM(IFNULL(ts.netto_debit_edited, ts.netto_debit)) as sum_ts_netto_debit")
             ->selectRaw("SUM(ts.card) as sum_ts_card")
-            ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
+            ->selectRaw("SUM(IFNULL(ts.netto_card_edited, ts.netto_card)) as sum_ts_netto_card")
             ->join('orders as o', 'o.cso_id', 'c.id')
             ->join('order_payments as op', 'op.order_id', 'o.id')
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
@@ -215,9 +215,9 @@ class TotalSaleController extends Controller
             ->select('o.*', 'op.payment_date as op_payment_date')
             ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
             ->selectRaw("SUM(ts.debit) as sum_ts_debit")
-            ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
+            ->selectRaw("SUM(IFNULL(ts.netto_debit_edited, ts.netto_debit)) as sum_ts_netto_debit")
             ->selectRaw("SUM(ts.card) as sum_ts_card")
-            ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
+            ->selectRaw("SUM(IFNULL(ts.netto_card_edited, ts.netto_card)) as sum_ts_netto_card")
             ->join('order_payments as op', 'op.order_id', 'o.id')
             ->join('total_sales as ts', 'ts.order_payment_id', 'op.id')
             ->whereBetween('op.payment_date', [$startDate, $endDate])
@@ -272,9 +272,9 @@ class TotalSaleController extends Controller
                 , 'op.estimate_transfer_date as op_estimate_transfer_date'
                 , 'ts.bank_in as ts_bank_in'
                 , 'ts.debit as ts_debit'
-                , 'ts.netto_debit as ts_netto_debit'
-                , 'ts.card as ts_card'
-                , 'ts.netto_card as ts_netto_card')
+                , 'ts.card as ts_card')
+            ->selectRaw('IFNULL(ts.netto_debit_edited, ts.netto_debit) as ts_netto_debit')
+            ->selectRaw('IFNULL(ts.netto_card_edited, ts.netto_card) as ts_netto_card')
             ->join('order_payments as op', 'op.bank_account_id', 'b.id')
             ->join('orders as o', 'o.id', 'op.order_id')
             ->join('branches as br', 'br.id', 'o.branch_id')
@@ -328,9 +328,9 @@ class TotalSaleController extends Controller
                 , 'op.estimate_transfer_date as op_estimate_transfer_date'
                 , 'ts.bank_in as ts_bank_in'
                 , 'ts.debit as ts_debit'
-                , 'ts.netto_debit as ts_netto_debit'
-                , 'ts.card as ts_card'
-                , 'ts.netto_card as ts_netto_card')
+                , 'ts.card as ts_card')
+            ->selectRaw('IFNULL(ts.netto_debit_edited, ts.netto_debit) as ts_netto_debit')
+            ->selectRaw('IFNULL(ts.netto_card_edited, ts.netto_card) as ts_netto_card')
             ->join('orders as o', 'o.branch_id', 'br.id')
             ->join('order_payments as op', 'op.order_id', 'o.id')
             ->join('bank_accounts as b', 'b.id', 'op.bank_account_id')

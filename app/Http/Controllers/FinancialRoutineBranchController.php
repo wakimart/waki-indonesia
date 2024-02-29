@@ -154,9 +154,9 @@ class FinancialRoutineBranchController extends Controller
                 , DB::raw('CONCAT(c.code," - ",c.name) as c_name')
                 , 'ts.bank_in as ts_bank_in'
                 , 'ts.debit as ts_debit'
-                , 'ts.netto_debit as ts_netto_debit'
-                , 'ts.card as ts_card'
-                , 'ts.netto_card as ts_netto_card')
+                , 'ts.card as ts_card')
+            ->selectRaw('IFNULL(ts.netto_debit_edited, ts.netto_debit) as ts_netto_debit')
+            ->selectRaw('IFNULL(ts.netto_card_edited, ts.netto_card) as ts_netto_card')
             ->join('orders as o', 'o.branch_id', 'br.id')
             ->join('order_payments as op', 'op.order_id', 'o.id')
             ->join('bank_accounts as b', 'b.id', 'op.bank_account_id')

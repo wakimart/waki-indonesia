@@ -225,37 +225,37 @@ $menu_item_page_sub = "order_report";
 
 @section('script')
 <script>
-$(document).on("click", "#btn-filter", function (e) {
-    var urlParamArray = new Array();
-    var urlParamStr = "";
+    $(document).on("click", "#btn-filter", function (e) {
+        var urlParamArray = new Array();
+        var urlParamStr = "";
 
-    if ($('#filter_start_date').val() != "") {
-        urlParamArray.push("filter_start_date=" + $('#filter_start_date').val());
-    }
-
-    if ($('#filter_end_date').val() != "") {
-        urlParamArray.push("filter_end_date=" + $('#filter_end_date').val());
-    }
-
-    if ($('#filter_branch').val() != "") {
-        urlParamArray.push("filter_branch=" + $('#filter_branch').val());
-    }
-
-    const filterCso = document.getElementById("filter_cso").value.trim();
-    if (filterCso !== "All Cso" && filterCso.length) {
-        const getCsoCode = filterCso.split("-");
-        urlParamArray.push("filter_cso=" + getCsoCode[0]);
-    }
-
-    for (var i = 0; i < urlParamArray.length; i++) {
-        if (i === 0) {
-            urlParamStr += "?" + urlParamArray[i]
-        } else {
-            urlParamStr += "&" + urlParamArray[i]
+        if ($('#filter_start_date').val() != "") {
+            urlParamArray.push("filter_start_date=" + $('#filter_start_date').val());
         }
-    }
 
-    window.location.href = "{{route('list_total_sale_cso')}}" + urlParamStr;
-});
+        if ($('#filter_end_date').val() != "") {
+            urlParamArray.push("filter_end_date=" + $('#filter_end_date').val());
+        }
+
+        if ($('#filter_branch').val() != "") {
+            urlParamArray.push("filter_branch=" + $('#filter_branch').val());
+        }
+
+        const filterCso = document.getElementById("filter_cso").value.trim();
+        if (filterCso !== "All Cso" && filterCso.length) {
+            const getCsoCode = filterCso.split("-");
+            urlParamArray.push("filter_cso=" + getCsoCode[0]);
+        }
+
+        for (var i = 0; i < urlParamArray.length; i++) {
+            if (i === 0) {
+                urlParamStr += "?" + urlParamArray[i]
+            } else {
+                urlParamStr += "&" + urlParamArray[i]
+            }
+        }
+
+        window.location.href = "{{route('list_total_sale_cso')}}" + urlParamStr;
+    });
 </script>
 @endsection
