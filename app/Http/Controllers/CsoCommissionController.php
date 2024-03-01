@@ -68,6 +68,7 @@ class CsoCommissionController extends Controller
                 // break;
                 $bonusPerCso = 0;
                 $commissionPerCso = 0;
+                $cancelPerCso = 0;
 
                 if(count($Cso_Commission->orderCommission) > 0){
                     $bonusPerCso = $Cso_Commission->orderCommission->sum(function ($row) {return ($row->bonus + $row->upgrade + $row->smgt_nominal + $row->excess_price);});
@@ -113,6 +114,21 @@ class CsoCommissionController extends Controller
                     // foreach ($order30 as $perOrder) {
                     //     $commissionPerCso += 30 / 100 * $perOrder->orderPayment->sum('commission_percentage');
                     // }
+
+                    // cancel
+                    $cancel70 = Order::selectRaw('IFNULL(SUM(nominal_cancel), 0) as total_cancel_70')
+                                ->where('status', 'cancel')
+                                ->where('orderDate', '>=', $startDate)
+                                ->where('orderDate', '<=', $endDate)
+                                ->where('70_cso_id', $Cso_Commission->cso['id'])
+                                ->first()->total_cancel_70;
+                    $cancel30 = Order::selectRaw('IFNULL(SUM(nominal_cancel), 0) as total_cancel_30')
+                                ->where('status', 'cancel')
+                                ->where('orderDate', '>=', $startDate)
+                                ->where('orderDate', '<=', $endDate)
+                                ->where('30_cso_id', $Cso_Commission->cso['id'])
+                                ->first()->total_cancel_30;
+                    $cancelPerCso = (70 / 100 * $cancel70) + (30 / 100 * $cancel30);
                 }
                 else{
                     $commissionPerCso = $Cso_Commission->commission;
@@ -120,6 +136,7 @@ class CsoCommissionController extends Controller
 
                 $Cso_Commission['bonusPerCso'] = $bonusPerCso;
                 $Cso_Commission['commissionPerCso'] = $commissionPerCso;
+                $Cso_Commission['cancelPerCso'] = $cancelPerCso;
 
                 $totalSaleBranch = Branch::from('branches as b')
                     ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
@@ -286,6 +303,7 @@ class CsoCommissionController extends Controller
             foreach ($allCsoCommission as $key => $perCsoCommission) {
                 $bonusPerCso = 0;
                 $commissionPerCso = 0;
+                $cancelPerCso = 0;
 
                 $bonusPerCso = $perCsoCommission->orderCommission->filter(function($valueNya, $keyNya) use ($startDate, $endDate, $branch){
                     $perOr = $valueNya->order;
@@ -319,6 +337,24 @@ class CsoCommissionController extends Controller
 
                 $perCsoCommission['bonusPerCso'] = $bonusPerCso;
                 $perCsoCommission['commissionPerCso'] = $commissionPerCso;
+
+                // cancel
+                $cancel70 = Order::selectRaw('IFNULL(SUM(nominal_cancel), 0) as total_cancel_70')
+                            ->where('status', 'cancel')
+                            ->where('orderDate', '>=', $startDate)
+                            ->where('orderDate', '<=', $endDate)
+                            ->where('branch_id', $branch)
+                            ->where('70_cso_id', $perCsoCommission['id'])
+                            ->first()->total_cancel_70;
+                $cancel30 = Order::selectRaw('IFNULL(SUM(nominal_cancel), 0) as total_cancel_30')
+                            ->where('status', 'cancel')
+                            ->where('orderDate', '>=', $startDate)
+                            ->where('orderDate', '<=', $endDate)
+                            ->where('branch_id', $branch)
+                            ->where('30_cso_id', $perCsoCommission['id'])
+                            ->first()->total_cancel_30;
+                $cancelPerCso = (70 / 100 * $cancel70) + (30 / 100 * $cancel30);
+                $perCsoCommission['cancelPerCso'] = $cancelPerCso;
             }
         }
 

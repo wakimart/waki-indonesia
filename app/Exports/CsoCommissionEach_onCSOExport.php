@@ -30,6 +30,7 @@ class CsoCommissionEach_onCSOExport implements FromView, ShouldAutoSize, WithCol
             'F' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
             'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
             'H' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'I' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
         ];
     }
     public function columnWidths(): array
@@ -43,6 +44,7 @@ class CsoCommissionEach_onCSOExport implements FromView, ShouldAutoSize, WithCol
             'F' => 20,
             'G' => 20,
             'H' => 25,
+            'I' => 25,
         ];
     }
 

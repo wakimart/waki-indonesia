@@ -157,17 +157,20 @@ $menu_item_page_sub = "cso_commission";
                                         $tot_pajak = 0;
                                         $tot_result = 0;
                                         $tot_bonus = 0;
+                                        $tot_cancel = 0;
                                     @endphp
 
                                     @foreach ($CsoCommissions as $key => $Cso_Commission)
                                         @php
                                             $bonusPerCso = floor($Cso_Commission['bonusPerCso']);
                                             $commissionPerCso = floor($Cso_Commission['commissionPerCso']);
+                                            $cancelPerCso = floor($Cso_Commission['cancelPerCso']);
 
                                             $tot_commission += $commissionPerCso;
                                             $tot_pajak += $Cso_Commission['pajak'];
                                             $tot_bonus += $bonusPerCso;
-                                            $tot_result += $commissionPerCso + $bonusPerCso - $Cso_Commission['pajak'];
+                                            $tot_cancel += $cancelPerCso;
+                                            $tot_result += $commissionPerCso + $bonusPerCso - $Cso_Commission['pajak'] - $cancelPerCso;
                                         @endphp
 
                                         <tr>
@@ -176,9 +179,9 @@ $menu_item_page_sub = "cso_commission";
                                             <td>{{ $Cso_Commission->cso['no_rekening'] }}</td>
                                             <td class="text-right" {!! ($Cso_Commission->commission > 0) ? 'style="background-color: #cde9ff;"' : '' !!}>Rp. {{ number_format($commissionPerCso) }}</td>
                                             <td class="text-right">Rp. {{ number_format($bonusPerCso) }}</td>
-                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['cancel']) }}</td>
+                                            <td class="text-right">Rp. {{ number_format($Cso_Commission['cancelPerCso']) }}</td>
                                             <td class="text-right">Rp. {{ number_format($Cso_Commission['pajak']) }}</td>
-                                            <td class="text-right">Rp. {{ number_format($commissionPerCso + $bonusPerCso - $Cso_Commission['pajak']) }}</td>
+                                            <td class="text-right">Rp. {{ number_format($commissionPerCso + $bonusPerCso - $Cso_Commission['pajak'] - $cancelPerCso) }}</td>
                                             <td class="text-center">
                                                 @if(Gate::check('detail-cso_commission'))
                                                 <a href="{{ route('detail_cso_commission', ['id' => $Cso_Commission->id]) }}" target="_blank">
@@ -209,6 +212,7 @@ $menu_item_page_sub = "cso_commission";
                                         <th colspan="3" rowspan="2">TOTAL COMMISSION</th>
                                         <th>Rp. {{ number_format($tot_commission) }}</th>
                                         <th>Rp. {{ number_format($tot_bonus) }}</th>
+                                        <th>Rp. {{ number_format($tot_cancel) }}</th>
                                         <th>Rp. {{ number_format($tot_pajak) }}</th>
                                         <th>Rp. {{ number_format($tot_result) }}</th>
                                     </tr>
