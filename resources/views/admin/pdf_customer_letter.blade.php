@@ -69,7 +69,13 @@
                     @foreach($order->orderDetail as $index => $detail)
                         <tr>
                             <td>{{ucwords($detail->type)}}</td>
-                            <td>{{$detail->promo_id ? $detail->promo->code : $detail->product->code}}</td>
+                            @if($detail->product_id)
+                                <td>{{$detail->product->code}}</td>
+                            @elseif($detail->promo_id)
+                                <td>{{$detail->promo->code}}</td>
+                            @else
+                                <td>{{$detail->other}}</td>
+                            @endif
                             <td>{{$detail->qty}}</td>
                             @if($index == 0)
                                 <td rowspan={{count($order->orderDetail)}}>Rp {{number_format($order->total_payment)}}</td>
