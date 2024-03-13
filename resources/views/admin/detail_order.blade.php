@@ -176,7 +176,13 @@
                         <td>{{ $orderPayment->payment_date }}</td>
                         <td>{{ ucfirst($orderPayment->type) }}</td>
                         <td>Rp. {{ number_format($orderPayment->total_payment) }}</td>
-                        <td>{{ ($orderPayment->type_payment == 'card installment') ? $orderPayment->creditCard->name : (isset($orderPayment->bank_account_id)) ? $orderPayment->bankAccount->name : $orderPayment->bank->name }} {{ $orderPayment->cicilan }} Bln</td>
+                        @if($orderPayment->type_payment == 'card installment')
+                            <td>{{$orderPayment->creditCard->name}} {{ $orderPayment->cicilan }} Bln</td>
+                        @elseif(isset($orderPayment->bank_account_id))
+                            <td>{{$orderPayment->bankAccount->name}} {{ $orderPayment->cicilan }} Bln</td>
+                        @else
+                            <td>{{$orderPayment->bank->name}} {{ $orderPayment->cicilan }} Bln</td>
+                        @endif
                         <td>{{ $order->branch->code }} ({{ $orderPayment->bank['name'] }})</td>
                         <td>
                             @foreach (json_decode($orderPayment->image, true) as $orderPaymentImage)
