@@ -1254,7 +1254,10 @@ class OrderController extends Controller
         if($request->has('filter_status') && $request->filter_status != "undefined"){
             $status = $request->filter_status;
         }
-
+        // $order = Order::whereBetween('orderDate', [$start_date, $end_date])->where('active', true);
+        // return view('admin.exports.order_export_non_komisi', [
+        //         'order' => $order->orderBy('orderDate', 'ASC')->get(),
+        //     ]);
         return Excel::download(new OrderExport($start_date, $end_date, $city, $category, $cso, $promo, $type, $status), 'Order Report.xlsx');
     }
 

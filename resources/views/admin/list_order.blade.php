@@ -634,8 +634,8 @@ $menu_item_second = "list_order";
                             <label>Start Date</label>
                             <input type="date"
                                 class="form-control"
-                                name="start_p"
-                                id="start_p"
+                                name="start_orderDate"
+                                id="start_orderDate"
                                 required
                                 data-msg="Mohon Isi Tanggal"
                                 onload="getDate()" />
@@ -775,10 +775,10 @@ $menu_item_second = "list_order";
                     <select class="form-control"
                         id="filter_promo_modal"
                         name="filter_promo_modal">
-                        <option value="">
+                        <option value="" selected="">
                             All Promo & Product
                         </option>
-                        <option value="promo" selected>
+                        <option value="promo">
                             Only All Promo
                         </option>
                         @foreach($promos as $promo)
@@ -830,7 +830,7 @@ $menu_item_second = "list_order";
                 <div class="modal-footer">
                     {{ csrf_field() }}
                     <button type="submit"
-                        id="pdfCustomerLetterButton"
+                        id="exportButton"
                         class="btn btn-gradient-primary mr-2">
                         Download
                     </button>
@@ -1086,6 +1086,47 @@ $(document).ready(function(e){
         if (id == "") {
             $( "#report_cso_modal" ).html("<option selected value=\"\">All CSO</option>");
         }
+    });
+
+    $("#exportButton").on("click", function () {
+        var urlParamArray = new Array();
+        var urlParamStr = "";
+
+        if($('#start_orderDate').val() != ""){
+            urlParamArray.push("start_orderDate=" + $('#start_orderDate').val());
+        }
+        if($('#end_orderDate').val() != ""){
+            urlParamArray.push("end_orderDate=" + $('#end_orderDate').val());
+        }
+
+        if($('#report_cso_modal').val() != ""){
+            urlParamArray.push("report_cso_modal=" + $('#report_cso_modal').val());
+        }
+
+        if($('#filter_promo_modal').val() != ""){
+            urlParamArray.push("filter_promo=" + $('#filter_promo_modal').val());
+        }
+
+        if($('#filter_status_modal').val() != ""){
+            urlParamArray.push("filter_status=" + $('#filter_status_modal').val());
+        }
+        if($('#filter_export_type_modal').val() != ""){
+            urlParamArray.push("filter_export_type=" + $('#filter_export_type_modal').val());
+        }
+
+        // if($('#categoryReport').val() != "" || $('#categoryReport').val() != null){
+        //  urlParamArray.push("categoryReport=" + $('#categoryReport').val());
+        // }
+
+        for (var i = 0; i < urlParamArray.length; i++) {
+            if (i === 0) {
+                urlParamStr += "?" + urlParamArray[i]
+            } else {
+                urlParamStr += "&" + urlParamArray[i]
+            }
+        }
+
+        window.location.href = "{{ route('order_export-to-xls') }}" + urlParamStr;
     });
 });
 
