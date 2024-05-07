@@ -111,6 +111,11 @@ $menu_item_second = "list_order_report";
                                 Export Total Sale
                             </a>
                         @endif
+                        <a href="{{ route('admin_export_total_sale_7030', $exportParameter) }}"
+                            class="btn btn-gradient-info m-1">
+                            <span class="mdi mdi-file-document"></span>
+                            Export Total Sale by 70&30
+                        </a>
                     </div>
                 </div>
             </div>

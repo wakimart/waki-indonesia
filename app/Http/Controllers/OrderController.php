@@ -12,6 +12,7 @@ use App\CategoryProduct;
 use App\Exports\OrderReportBranchExport;
 use App\Exports\OrderReportCsoExport;
 use App\Exports\OrderReportExport;
+use App\Exports\TotalSale7030Export;
 use App\User;
 use App\RajaOngkir_City;
 use App\HistoryUpdate;
@@ -1618,6 +1619,39 @@ class OrderController extends Controller
         } else if ($request->export_type == "xls") {
             return Excel::download(new OrderReportCsoExport($startDate, $endDate, $order_reports, $countOrderReports, $currentBranch, $currentCso), 'Order Report Cso.xlsx');
         }
+    }
+
+    public function admin_ExportTotalSale7030(Request $request)
+    {
+        $startDate = date('Y-m-01');
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-d');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+
+        $allCso70 = Order::where('orders.orderDate', '>=', $startDate)
+            ->where('orders.orderDate', '<=', $endDate)
+            ->join('csos as cso70', 'orders.70_cso_id', '=', 'cso70.id')
+            ->select('cso70.id')
+            ->get()->toArray();
+        $allCso30 = Order::where('orders.orderDate', '>=', $startDate)
+            ->where('orders.orderDate', '<=', $endDate)
+            ->join('csos as cso30', 'orders.30_cso_id', '=', 'cso30.id')
+            ->select('cso30.id')
+            ->get()->toArray();
+
+        $allCso = Cso::whereIn('id', array_unique(array_merge($allCso70, $allCso30), SORT_REGULAR))->get();
+        // return view('admin.exports.orderreport7030_export', [
+        //     'startDate' => $startDate, 
+        //     'endDate' => $endDate, 
+        //     'allCso' => $allCso, 
+        //     'countCso' => $allCso->count()
+        // ]);
+
+        return Excel::download(new TotalSale7030Export($startDate, $endDate, $allCso, $allCso->count()), 'Order Report 7030 Total Sale.xlsx');
     }
 
     public function fetchDetailPromo($promo_id)
