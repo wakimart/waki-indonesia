@@ -18,11 +18,16 @@
             border-collapse: collapse;
         }
         .border td {
-            padding: 10px;
+            padding: 3px;
             border: 1px solid black;
         }
         .border thead {
             text-align: center;
+        }
+        .footer {
+            width: 100%;
+            bottom: 60px;
+            position: fixed;
         }
         div {
             page-break-after: always;
@@ -76,21 +81,25 @@
                             @else
                                 <td>{{$detail->other}}</td>
                             @endif
-                            <td>{{$detail->qty}}</td>
+                            <td>{{$detail->qty}} Set</td>
                             @if($index == 0)
-                                <td rowspan={{count($order->orderDetail)}}>Rp {{number_format($order->total_payment)}}</td>
+                                <td rowspan="{{count($order->orderDetail)}}" style="text-align: end;">Rp {{number_format($order->total_payment)}}</td>
                                 @php
                                     $deliveredDate = '';
                                     foreach($order->historyOrders as $history){
                                         $meta = json_decode($history->meta);
                                         if(isset($meta->dataChange->status)){
-                                            if($meta->dataChange->status == 'delivered'){
+                                            if($meta->dataChange->status == 'delivery'){
                                                 $deliveredDate = $meta->dataChange->updated_at;
                                             }
                                         }
                                     }
                                 @endphp
-                                <td rowspan={{count($order->orderDetail)}}>{{date("d/m/Y", strtotime($deliveredDate))}}</td>
+                            @endif
+                            @if($detail->type == 'upgrade')
+                                <td>{{ date("d/m/Y", strtotime($deliveredDate)) }}</td>
+                            @else
+                                <td>{{ $detail->stockInOut['date'] != null ? date("d/m/Y", strtotime($detail->stockInOut['date'])) : 'Belum Terkirim' }}</td>
                             @endif
                         </tr>
                     @endforeach
@@ -109,22 +118,37 @@
                 <tbody>
                     @foreach($order->orderPayment as $payment)
                         <tr>
-                            <td>{{$payment->type}}</td>
-                            <td>Rp {{number_format($payment->total_payment)}}</td>
+                            <td>{{ $payment->type == 'order' ? 'Uang Muka' : 'Pelunasan' }}</td>
+                            <td style="text-align: right;">Rp {{number_format($payment->total_payment)}}</td>
                             <td>{{date("d/m/Y", strtotime($payment->payment_date))}}</td>
-                            <td>{{$payment->type_payment}}</td>
+                            <td>{{ ucwords($payment->type_payment) }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
             <p>
                 Apabila terdapat ketidaksesuaian antara barang yang Bapak / Ibu terima dengan keterangan tersebut diatas, Bapak / Ibu {{strtoupper($order->name)}} dapat menghubungi kami di pesawat (031)5662308 dalam jangka waktu 1 (satu) minggu setelah penerimaan surat ini. <br>
-                Atas kepercayaan yang Bapak / Ibu {{strtoupper($order->name)}} berikan kami ucapkan terima kasih <br>
+                Atas kepercayaan yang Bapak / Ibu {{strtoupper($order->name)}} berikan kami ucapkan terima kasih <br><br>
                 Hormat kami <br><br><br><br><br>
                 Management <br>
                 Email : cs@waki-indonesia.co.id<br>
-                Hotline :
+                Hotline : +62 899-3199-999
             </p>
+
+            
+            <table class="footer">
+                <tr>
+                    <td>
+                        <span style="margin-bottom: 15px;">Kepada Yth. </span><br>
+                        Bapak / Ibu {{strtoupper($order->name)}} <br>
+                        {{strtoupper($order->address)}}<br>
+                        @php
+                            $address = $order->getDistrict();
+                        @endphp
+                        {{strtoupper($address['subdistrict_name'].", ".$address['kota_kab'].", ".$address['province'])}}
+                    </td>
+                </tr>
+            </table>
         </div>
     @endforeach
 </body>

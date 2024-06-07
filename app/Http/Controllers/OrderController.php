@@ -2651,7 +2651,8 @@ class OrderController extends Controller
     public function customerLetter(Request $request)
     {
         $orders = Order::whereBetween('orderDate', [$request->start_date, $request->end_date])
-                    ->whereIn('status', [4,8]);
+                    ->whereIn('status', [4])
+                    ->where('branch_id', '!=', 32);
         if($request->filter_by_team){
             $orders = $orders->where('branch_id', $request->filter_by_team);
         }
