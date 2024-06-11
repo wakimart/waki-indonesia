@@ -820,7 +820,7 @@ $menu_item_second = "list_order";
 
                 <div class="form-group">
                     <label>Export Type</label>
-                    <select class="form-control" id="filter_export_type_modal" name="filter_export_type_modal">
+                    <select class="form-control" id="filter_export_type" name="filter_export_type">
                         <option value="default" selected="">Default</option>
                         <option value="non-komisi">Commission Not Set</option>
                     </select>
@@ -1057,8 +1057,8 @@ $(document).ready(function(e){
             urlParamArray.push("filter_status_modal=" + $('#filter_status_modal').val());
         }
 
-        if($('#filter_export_type_modal').val() != ""){
-            urlParamArray.push("filter_export_type_modal=" + $('#filter_export_type_modal').val());
+        if($('#filter_export_type').val() != ""){
+            urlParamArray.push("filter_export_type=" + $('#filter_export_type').val());
         }
 
         // if($('#categoryReport').val() != "" || $('#categoryReport').val() != null){
