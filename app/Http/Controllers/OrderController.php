@@ -372,6 +372,12 @@ class OrderController extends Controller
             $orders = $orders->where('product', 'like', '%"id":"'.$request->filter_promo.'"%');
         }
 
+
+        if ($request->has('filter_product')) {
+            $orderDetails = OrderDetail::where('product_id', $request->filter_product)->pluck('order_id')->toArray();
+            $orders = $orders->whereIn('id', $orderDetails);
+        }
+
         if ($request->has('filter_status')) {
             $orders = $orders->where('status', $request->filter_status);
         }
