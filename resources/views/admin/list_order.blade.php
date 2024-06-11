@@ -28,8 +28,54 @@ $menu_item_second = "list_order";
 
         <div class="col-12 grid-margin" style="padding: 0;">
             @if (Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso')
+                <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+                    <div class="col-xs-6 col-sm-4" style="display: inline-block;">
+                        <div class="form-group">
+                            <label for="">Filter By Start Date</label>
+                            <input type="date"
+                                class="form-control"
+                                name="filter_start_date"
+                                id="filter_start_date"
+                                required
+                                data-msg="Mohon Isi Tanggal"
+                                value="{{ isset($_GET['filter_start_date']) ? $_GET['filter_start_date'] : '' }}" />
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4" style="display: inline-block;">
+                        <div class="form-group">
+                            <label for="">Filter By End Date</label>
+                            <input type="date"
+                                class="form-control"
+                                name="filter_end_date"
+                                id="filter_end_date"
+                                required
+                                data-msg="Mohon Isi Tanggal"
+                                value="{{ isset($_GET['filter_end_date']) ? $_GET['filter_end_date'] : '' }}" />
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-4" style="display: inline-block;">
+                        <div class="form-group">
+                            <label for="">
+                                Filter Date for
+                            </label>
+                            <select class="form-control"
+                                id="filter_for_date"
+                                name="filter_for_date">
+                                <option value="" selected="">Order</option>
+                                <option {{ isset($_GET['filter_for_date']) ? $_GET['filter_for_date'] == 'all_payment' ? 'selected=""' : '' : '' }} value="all_payment">All Payment</option>
+                                <option {{ isset($_GET['filter_for_date']) ? $_GET['filter_for_date'] == 'dp_payment' ? 'selected=""' : '' : '' }} value="dp_payment">DP Payment</option>
+                                <option {{ isset($_GET['filter_for_date']) ? $_GET['filter_for_date'] == 'settled_payment' ? 'selected=""' : '' : '' }} value="settled_payment">Settled Payment</option>
+                                <option {{ isset($_GET['filter_for_date']) ? $_GET['filter_for_date'] == 'delivery' ? 'selected=""' : '' : '' }} value="delivery">Delivery</option>
+                            </select>
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+                </div>
+
                 @if (Utils::$lang=='id')
-                    <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+                    <div class="col-xs-12 col-sm-12 row d-none" style="margin: 0;padding: 0;">
                         <div class="col-xs-6 col-sm-4" style="display: inline-block;">
                             <div class="form-group">
                                 <label for="">Filter By City</label>
@@ -161,7 +207,6 @@ $menu_item_second = "list_order";
                     </div>
                 @endif
 
-
                 <div class="col-xs-12 col-sm-12 row"
                     style="margin: 0;padding: 0;">
                     <div class="col-xs-6 col-sm-4"
@@ -284,24 +329,24 @@ $menu_item_second = "list_order";
                     <div class="col-xs-6 col-sm-4"
                         style="display: inline-block;">
                         <div class="form-group">
-                            <label for="">Filter By Promo</label>
+                            <label for="">Filter By Products</label>
                             <select class="form-control"
-                                id="filter_promo"
-                                name="filter_promo">
-                                <option value="" selected="">All Promo</option>
-                                @foreach($promos as $promo)
+                                id="filter_product"
+                                name="filter_product">
+                                <option value="" selected="">All Products</option>
+                                @foreach($products as $product)
                                     @php
                                     $selected = "";
-                                    if (isset($_GET['filter_promo'])) {
-                                        if ($_GET['filter_promo'] == $promo['id']) {
+                                    if (isset($_GET['filter_product'])) {
+                                        if ($_GET['filter_product'] == $product['id']) {
                                             $selected = "selected=\"\"";
                                         }
                                     }
                                     @endphp
 
                                     <option {{ $selected }}
-                                        value="{{ $promo['id'] }}">
-                                        {{ $promo['code'] }} ({{ $promo->productName()[0] }} - {{ $promo->productName()[1] }})
+                                        value="{{ $product['id'] }}">
+                                        {{ $product['code'] }} ({{ $product['name'] }})
                                     </option>
                                 @endforeach
                             </select>
@@ -366,6 +411,8 @@ $menu_item_second = "list_order";
                     </div>
                 @endif
             @endif
+
+
 
             @if (Auth::user()->roles[0]['slug'] != 'branch' && Auth::user()->roles[0]['slug'] != 'cso' && Auth::user()->roles[0]['slug'] != 'area-manager')
                 <div class="col-xs-12 col-sm-12 row"
@@ -1162,8 +1209,8 @@ $(document).on("click", "#btn-filter", function (e) {
         urlParamArray.push("filter_string=" + $('#filter_string').val());
     }
 
-    if ($('#filter_promo').val() != "") {
-        urlParamArray.push("filter_promo=" + $('#filter_promo').val());
+    if ($('#filter_product').val() != "") {
+        urlParamArray.push("filter_product=" + $('#filter_product').val());
     }
 
     if ($('#filter_status').val() != "") {
@@ -1172,6 +1219,18 @@ $(document).on("click", "#btn-filter", function (e) {
 
     if ($('#filter_view_as').val() != "") {
         urlParamArray.push("filter_view_as=" + $('#filter_view_as').val());
+    }
+
+    if ($('#filter_start_date').val() != "") {
+        urlParamArray.push("filter_start_date=" + $('#filter_start_date').val());
+    }
+
+    if ($('#filter_end_date').val() != "") {
+        urlParamArray.push("filter_end_date=" + $('#filter_end_date').val());
+    }
+
+    if ($('#filter_for_date').val() != "") {
+        urlParamArray.push("filter_for_date=" + $('#filter_for_date').val());
     }
 
     for (var i = 0; i < urlParamArray.length; i++) {
