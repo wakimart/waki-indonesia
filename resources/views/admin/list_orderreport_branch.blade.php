@@ -134,14 +134,16 @@ $menu_item_second_sub = "list_order_report_branch";
                             <span class="mdi mdi-file-document"></span>
                             Print Total Sale
                         </a>
-                        @php 
-                            $exportParameter['export_type'] = "xls";
-                        @endphp
-                        <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
-                            class="btn btn-gradient-info m-1">
-                            <span class="mdi mdi-file-document"></span>
-                            Export Total Sale
-                        </a>
+                        @if(Auth::user()->inRole("head-admin"))
+                            @php 
+                                $exportParameter['export_type'] = "xls";
+                            @endphp
+                            <a href="{{ route('admin_export_order_report_branch', $exportParameter) }}"
+                                class="btn btn-gradient-info m-1">
+                                <span class="mdi mdi-file-document"></span>
+                                Export Total Sale
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

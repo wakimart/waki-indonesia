@@ -124,7 +124,7 @@ class OfflineSideController extends Controller
                             OrderPayment::Where('order_id', $order->id)->update(['status' => 'rejected']);
                         }
                         $order->reject_reason = $request->reject_reason;
-                        $order->nominal_cancel = $request->nominal_cancel;
+                        $order->nominal_cancel = $request->has('nominal_cancel') ? $request->nominal_cancel : null;
                     }
                     $order->update();
                     

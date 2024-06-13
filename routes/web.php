@@ -451,6 +451,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         Route::get('/export_order_report_cso', 'OrderController@admin_ExportOrderReportCso')
             ->name('admin_export_order_report_cso')
             ->middleware('can:browse-order_report_cso');
+        Route::get('/export_order_total_sale_7030', 'OrderController@admin_ExportTotalSale7030')
+            ->name('admin_export_total_sale_7030');
 
 
         //View order payment (detail)

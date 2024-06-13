@@ -12,6 +12,7 @@ use App\CategoryProduct;
 use App\Exports\OrderReportBranchExport;
 use App\Exports\OrderReportCsoExport;
 use App\Exports\OrderReportExport;
+use App\Exports\TotalSale7030Export;
 use App\User;
 use App\RajaOngkir_City;
 use App\HistoryUpdate;
@@ -290,60 +291,52 @@ class OrderController extends Controller
     public function admin_ListOrder(Request $request)
     {
         $branches = Branch::Where('active', true)->orderBy("code", 'asc')->get();
-        // Khusus head-manager, head-admin, admin
-        $orders = Order::where('active', true);
 
-        // Khusus akun CSO
-        if (Auth::user()->roles[0]['slug'] == 'cso') {
-            $orders = Order::where('cso_id', Auth::user()->cso['id'])->where('active', true);
-        }
+        // Khusus head-manager, head-admin, admin karena ini offline system
+        $orders = Order::select('orders.*')
+            ->leftjoin('order_payments','order_payments.order_id', '=','orders.id')
+            ->leftjoin('order_details','order_details.order_id', '=','orders.id')
+            ->where('orders.active', true);
 
-        // Khusus akun branch dan area-manager
-        if (
-            Auth::user()->roles[0]['slug'] == 'branch'
-            || Auth::user()->roles[0]['slug'] == 'area-manager'
-        ) {
-            $arrbranches = [];
-            foreach (Auth::user()->listBranches() as $value) {
-                array_push($arrbranches, $value['id']);
-            }
-            $orders = Order::WhereIn('branch_id', $arrbranches)->where('active', true);
-        }
 
         // Kalau ada Filter
-        if (
-            $request->has('filter_branch')
-            && Auth::user()->roles[0]['slug'] != 'branch'
-        ) {
-            $orders = $orders->where('branch_id', $request->filter_branch);
+        if ($request->has('filter_branch')) {
+            $orders = $orders->where('orders.branch_id', $request->filter_branch);
         }
 
         if ($request->has('filter_province')) {
-            $orders = $orders->where('province', $request->filter_province);
+            $orders = $orders->where('orders.province', $request->filter_province);
         }
 
         if ($request->has('filter_city')) {
-            $orders = $orders->where('city', $request->filter_city);
+            $orders = $orders->where('orders.city', $request->filter_city);
         }
 
         if ($request->has('filter_district')) {
-            $orders = $orders->where('distric', $request->filter_district);
+            $orders = $orders->where('orders.distric', $request->filter_district);
         }
 
         if ($request->has('filter_cso') && Auth::user()->roles[0]['slug'] != 'cso') {
-            $orders = $orders->where('cso_id', $request->filter_cso);
+            $filterCsoId = $request->filter_cso;
+            $orders = $orders->where(
+                function ($query) use ($filterCsoId) {
+                    $query->where('orders.cso_id', $filterCsoId)
+                        ->orWhere('orders.30_cso_id', $filterCsoId)
+                        ->orWhere('orders.70_cso_id', $filterCsoId);
+                }
+            );
         }
 
         if ($request->has('filter_type') && Auth::user()->roles[0]['slug'] != 'cso') {
-            $orders = $orders->where('customer_type', $request->filter_type);
+            $orders = $orders->where('orders.customer_type', $request->filter_type);
         }
 
-        if ($request->has('filter_promo')) {
-            $orders = $orders->where('product', 'like', '%"id":"'.$request->filter_promo.'"%');
+        if ($request->has('filter_product')) {
+            $orders = $orders->where('order_details.product_id', $request->filter_product);
         }
 
         if ($request->has('filter_status')) {
-            $orders = $orders->where('status', $request->filter_status);
+            $orders = $orders->where('orders.status', $request->filter_status);
         }
 
         if ($request->has("filter_string")) {
@@ -351,22 +344,22 @@ class OrderController extends Controller
             $orders = $orders->where(
                 function ($query) use ($filterString) {
                     $query->where(
-                        "name",
+                        "orders.name",
                         "like",
                         "%" . $filterString . "%"
                     )
                     ->orWhere(
-                        "phone",
+                        "orders.phone",
                         "like",
                         "%" . $filterString . "%"
                     )
                     ->orWhere(
-                        "code",
+                        "orders.code",
                         "like",
                         "%" . $filterString . "%"
                     )
                     ->orWhere(
-                        "temp_no",
+                        "orders.temp_no",
                         "like",
                         "%" . $filterString . "%"
                     );
@@ -374,12 +367,55 @@ class OrderController extends Controller
             );
         }
 
+        if ($request->has('filter_start_date')) {
+            if (!$request->has('filter_for_date')) {
+                $orders = $orders->whereDate('orders.orderDate', '>=', $request->filter_start_date);
+            }
+            elseif($request->filter_for_date == '') {
+                $orders = $orders->whereDate('orders.orderDate', '>=', $request->filter_start_date);
+            }
+            elseif($request->filter_for_date == 'all_payment') {
+                $orders = $orders->whereDate('order_payments.payment_date', '>=', $request->filter_start_date);
+            }
+            elseif($request->filter_for_date == 'dp_payment') {
+                $orders = $orders->whereDate('order_payments.payment_date', '>=', $request->filter_start_date)
+                                ->where('orders.remaining_payment', '>', 0);
+            }
+            elseif($request->filter_for_date == 'settled_payment') {
+                $orders = $orders->whereDate('order_payments.payment_date', '>=', $request->filter_start_date)
+                                ->where('orders.remaining_payment', '=', 0);
+            }
+        }
+
+        if ($request->has('filter_end_date')) {
+            if (!$request->has('filter_for_date')) {
+                $orders = $orders->whereDate('orders.orderDate', '<=', $request->filter_end_date);
+            }
+            elseif($request->filter_for_date == '') {
+                $orders = $orders->whereDate('orders.orderDate', '<=', $request->filter_end_date);
+            }
+            elseif($request->filter_for_date == 'all_payment') {
+                $orders = $orders->whereDate('order_payments.payment_date', '<=', $request->filter_end_date);
+            }
+            elseif($request->filter_for_date == 'dp_payment') {
+                $orders = $orders->whereDate('order_payments.payment_date', '<=', $request->filter_end_date)
+                                ->where('orders.remaining_payment', '>', 0);
+            }
+            elseif($request->filter_for_date == 'settled_payment') {
+                $orders = $orders->whereDate('order_payments.payment_date', '<=', $request->filter_end_date)
+                                ->where('orders.remaining_payment', '=', 0);
+            }
+        }
+
+        $orders = $orders->groupBy('orders.id');
+
         $countOrders = $orders->count();
         $categories = CategoryProduct::all();
         $promos = Promo::all();
+        $products = Product::where('active', true)->get();
         $orders = $orders->sortable(['orderDate' => 'desc'])->paginate(10);
 
-        return view('admin.list_order', compact('orders','countOrders','branches', 'categories', 'promos'));
+        return view('admin.list_order', compact('orders','countOrders','branches', 'categories', 'promos', 'products'));
     }
 
     public function admin_DetailOrder(Request $request)
@@ -1623,6 +1659,39 @@ class OrderController extends Controller
         }
     }
 
+    public function admin_ExportTotalSale7030(Request $request)
+    {
+        $startDate = date('Y-m-01');
+        if ($request->has('filter_start_date')) {
+            $startDate = date('Y-m-d', strtotime($request->filter_start_date));
+        }
+        $endDate = date('Y-m-d');
+        if ($request->has('filter_end_date')) {
+            $endDate = date('Y-m-d', strtotime($request->filter_end_date));
+        }
+
+        $allCso70 = Order::where('orders.orderDate', '>=', $startDate)
+            ->where('orders.orderDate', '<=', $endDate)
+            ->join('csos as cso70', 'orders.70_cso_id', '=', 'cso70.id')
+            ->select('cso70.id')
+            ->get()->toArray();
+        $allCso30 = Order::where('orders.orderDate', '>=', $startDate)
+            ->where('orders.orderDate', '<=', $endDate)
+            ->join('csos as cso30', 'orders.30_cso_id', '=', 'cso30.id')
+            ->select('cso30.id')
+            ->get()->toArray();
+
+        $allCso = Cso::whereIn('id', array_unique(array_merge($allCso70, $allCso30), SORT_REGULAR))->get();
+        // return view('admin.exports.orderreport7030_export', [
+        //     'startDate' => $startDate, 
+        //     'endDate' => $endDate, 
+        //     'allCso' => $allCso, 
+        //     'countCso' => $allCso->count()
+        // ]);
+
+        return Excel::download(new TotalSale7030Export($startDate, $endDate, $allCso, $allCso->count()), 'Order Report 7030 Total Sale.xlsx');
+    }
+
     public function fetchDetailPromo($promo_id)
     {
         $split = explode("_", $promo_id);
@@ -2620,7 +2689,8 @@ class OrderController extends Controller
     public function customerLetter(Request $request)
     {
         $orders = Order::whereBetween('orderDate', [$request->start_date, $request->end_date])
-                    ->whereIn('status', [4,8]);
+                    ->whereIn('status', [4])
+                    ->where('branch_id', '!=', 32);
         if($request->filter_by_team){
             $orders = $orders->where('branch_id', $request->filter_by_team);
         }
