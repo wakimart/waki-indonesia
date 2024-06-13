@@ -42,8 +42,10 @@
 
                 $eachOrderCommission = $perCsoCommission->orderCommission->filter(function($valueNya, $keyNya) use ($startDate, $endDate, $branch){
                     $perOr = $valueNya->order;
-                    if($perOr['orderDate'] >= $startDate && $perOr['orderDate'] <= $endDate && $perOr['status'] != 'reject' && $perOr['branch_id'] == $branch['id']){
-                        return $valueNya;
+                    if($perOr['status'] != 'reject' && $perOr['branch_id'] == $branch['id']){
+                        if($perOr->orderPayment->where('payment_date', '>=', $startDate)->where('payment_date', '<=', $endDate)->count() > 0){
+                            return $valueNya;
+                        }
                     }
                 });
             @endphp
