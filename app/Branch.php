@@ -40,4 +40,9 @@ class Branch extends Model
     {
         return $this->belongsTo('App\Warehouse');
     }
+    
+    public function orderCancel()
+    {
+        return $this->hasMany('App\OrderCancel');
+    }
 }

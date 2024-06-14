@@ -12,6 +12,8 @@ use App\CsoCommission;
 use App\OrderCommission;
 use App\OrderPayment;
 use App\Branch;
+use App\OrderCancel;
+use App\TotalSale;
 use App\Order;
 use App\Cso;
 
@@ -337,26 +339,71 @@ class CsoCommissionController extends Controller
                     ->first()->total_commission_30;
                 $commissionPerCso = (70 / 100 * $order70) + (30 / 100 * $order30);
 
+                //penjualan
+                $penjualan70 = TotalSale::from('total_sales as ts')
+                    ->selectRaw("IFNULL(SUM(ts.bank_in), 0) as sum_ts_bank_in")
+                    ->selectRaw("IFNULL(SUM(ts.netto_debit), 0) as sum_ts_netto_debit")
+                    ->selectRaw("IFNULL(SUM(ts.netto_card), 0) as sum_ts_netto_card")
+                    ->leftJoin('order_payments as op', 'op.id', 'ts.order_payment_id')
+                    ->leftJoin('orders as o', 'o.id', 'op.order_id')
+                    ->where('op.status', 'verified')
+                    ->where('op.payment_date', '>=', $startDate)
+                    ->where('op.payment_date', '<=', $endDate)
+                    ->where('o.branch_id', $branch)
+                    ->where('o.70_cso_id', $perCsoCommission['id'])
+                    ->first();
+
+                $penjualan30 = TotalSale::from('total_sales as ts')
+                    ->selectRaw("IFNULL(SUM(ts.bank_in), 0) as sum_ts_bank_in")
+                    ->selectRaw("IFNULL(SUM(ts.netto_debit), 0) as sum_ts_netto_debit")
+                    ->selectRaw("IFNULL(SUM(ts.netto_card), 0) as sum_ts_netto_card")
+                    ->leftJoin('order_payments as op', 'op.id', 'ts.order_payment_id')
+                    ->leftJoin('orders as o', 'o.id', 'op.order_id')
+                    ->where('op.status', 'verified')
+                    ->where('op.payment_date', '>=', $startDate)
+                    ->where('op.payment_date', '<=', $endDate)
+                    ->where('o.branch_id', $branch)
+                    ->where('o.30_cso_id', $perCsoCommission['id'])
+                    ->first();
+                $total_penjualan = (70 / 100 * ($penjualan70['sum_ts_bank_in'] + $penjualan70['sum_ts_netto_debit'] + $penjualan70['sum_ts_netto_card'])) + (30 / 100 * ($penjualan30['sum_ts_bank_in'] + $penjualan30['sum_ts_netto_debit'] + $penjualan30['sum_ts_netto_card']));
+
+                // cancel old
+                // $cancel70 = Order::selectRaw('IFNULL(SUM(nominal_cancel), 0) as total_cancel_70')
+                //             ->where('status', 'cancel')
+                //             ->where('orderDate', '>=', $startDate)
+                //             ->where('orderDate', '<=', $endDate)
+                //             ->where('branch_id', $branch)
+                //             ->where('70_cso_id', $perCsoCommission['id'])
+                //             ->first()->total_cancel_70;
+                // $cancel30 = Order::selectRaw('IFNULL(SUM(nominal_cancel), 0) as total_cancel_30')
+                //             ->where('status', 'cancel')
+                //             ->where('orderDate', '>=', $startDate)
+                //             ->where('orderDate', '<=', $endDate)
+                //             ->where('branch_id', $branch)
+                //             ->where('30_cso_id', $perCsoCommission['id'])
+                //             ->first()->total_cancel_30;
+                // $cancelPerCso = (70 / 100 * $cancel70) + (30 / 100 * $cancel30);
+                // $perCsoCommission['cancelPerCso'] = $cancel70;
+
+                //new CANCEL
+                $perCsoCommission['cancelPerCso'] = OrderCancel::selectRaw('IFNULL(SUM(order_cancels.nominal_cancel), 0) as total_cancel')
+                    ->leftJoin('orders', 'orders.id', 'order_cancels.order_id')
+                    ->where('order_cancels.cancel_date', '>=', $startDate)
+                    ->where('order_cancels.cancel_date', '<=', $endDate)
+                    ->where(function($q) use($branch, $perCsoCommission) {
+                        $q->where(function($p) use($branch, $perCsoCommission) {
+                            $p->where('orders.branch_id', $branch)
+                                ->where('orders.70_cso_id', $perCsoCommission['id']);
+                        })
+                        ->orWhere(function($p) use($branch, $perCsoCommission) {
+                            $p->where('order_cancels.branch_id', $branch)
+                                ->where('order_cancels.cso_id', $perCsoCommission['id']);
+                        });
+                    })->first()->total_cancel;
+
+                $perCsoCommission['total_sales'] = $total_penjualan;
                 $perCsoCommission['bonusPerCso'] = $bonusPerCso;
                 $perCsoCommission['commissionPerCso'] = $commissionPerCso;
-
-                // cancel
-                $cancel70 = Order::selectRaw('IFNULL(SUM(nominal_cancel), 0) as total_cancel_70')
-                            ->where('status', 'cancel')
-                            ->where('orderDate', '>=', $startDate)
-                            ->where('orderDate', '<=', $endDate)
-                            ->where('branch_id', $branch)
-                            ->where('70_cso_id', $perCsoCommission['id'])
-                            ->first()->total_cancel_70;
-                $cancel30 = Order::selectRaw('IFNULL(SUM(nominal_cancel), 0) as total_cancel_30')
-                            ->where('status', 'cancel')
-                            ->where('orderDate', '>=', $startDate)
-                            ->where('orderDate', '<=', $endDate)
-                            ->where('branch_id', $branch)
-                            ->where('30_cso_id', $perCsoCommission['id'])
-                            ->first()->total_cancel_30;
-                $cancelPerCso = (70 / 100 * $cancel70) + (30 / 100 * $cancel30);
-                $perCsoCommission['cancelPerCso'] = $cancelPerCso;
             }
         }
 

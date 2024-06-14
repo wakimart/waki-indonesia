@@ -69,4 +69,9 @@ class Cso extends Model
     {
         return $this->hasMany("App\CsoCommission")->where('active', true);
     }
+
+    public function orderCancel()
+    {
+        return $this->hasMany('App\OrderCancel');
+    }
 }

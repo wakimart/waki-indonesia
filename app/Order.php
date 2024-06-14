@@ -119,4 +119,9 @@ class Order extends Model
     public function historyOrders(){
         return $this->hasMany("App\HistoryUpdate", 'menu_id', 'id')->where('type_menu', 'Order')->where('method', 'Update Status');
     }
+    
+    public function orderCancel()
+    {
+        return $this->hasMany('App\OrderCancel');
+    }
 }

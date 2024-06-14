@@ -10,7 +10,7 @@
             <th colspan="8" style="font-weight: bold; text-align: left;">Bulan : {{ $periode }}</th>
         </tr>
         <tr>
-            <th colspan="8" style="font-weight: bold; text-align: left;">Sale : Rp. {{ number_format($totalSale['sum_ts_bank_in'] + $totalSale['sum_ts_netto_debit'] + $totalSale['sum_ts_netto_card']) }}</th>
+            <th colspan="8" style="font-weight: bold; text-align: left;">Sale Netto : Rp. {{ number_format($totalSale['sum_ts_bank_in'] + $totalSale['sum_ts_netto_debit'] + $totalSale['sum_ts_netto_card'] - $allCsoCommission->sum('cancelPerCso')) }}</th>
         </tr>
         <tr>
             <th style="background-color: #ADD8E6; font-weight: bold; border: 1px solid black;">Date</th>
