@@ -72,12 +72,20 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                     <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['code'] }}</div>
                                                 </div>
                                                 <div class="row d-flex justify-content-end">
-                                                    <div class="col-10 text-right">Name Acc : </div>
-                                                    <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['name'] }}</div>
+                                                    <div class="col-10 text-right">Name Branch : </div>
+                                                    <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount->branch['name'] }}</div>
                                                 </div>
                                                 <div class="row d-flex justify-content-end">
                                                     <div class="col-10 text-right">No Acc : </div>
                                                     <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['account_number'] }}</div>
+                                                </div>
+                                                <div class="row d-flex justify-content-end">
+                                                    <div class="col-10 text-right">Name Acc : </div>
+                                                    <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['name'] }}</div>
+                                                </div>
+                                                <div class="row d-flex justify-content-end">
+                                                    <div class="col-10 text-right">Bank Acc : </div>
+                                                    <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount->bank['name'] }}</div>
                                                 </div>
                                             </div>
                                             <div style="margin: auto; text-align: center; font-weight: 600;" class="my-4">
@@ -277,12 +285,20 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                         <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['code'] }}</div>
                                                     </div>
                                                     <div class="row d-flex justify-content-end">
-                                                        <div class="col-10 text-right">Name Acc : </div>
-                                                        <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['name'] }}</div>
+                                                        <div class="col-10 text-right">Name Branch : </div>
+                                                        <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount->branch['name'] }}</div>
                                                     </div>
                                                     <div class="row d-flex justify-content-end">
                                                         <div class="col-10 text-right">No Acc : </div>
                                                         <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['account_number'] }}</div>
+                                                    </div>
+                                                    <div class="row d-flex justify-content-end">
+                                                        <div class="col-10 text-right">Name Acc : </div>
+                                                        <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['name'] }}</div>
+                                                    </div>
+                                                    <div class="row d-flex justify-content-end">
+                                                        <div class="col-10 text-right">Bank Acc : </div>
+                                                        <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount->bank['name'] }}</div>
                                                     </div>
                                                 </div>
                                                 <div style="margin: auto; text-align: center; font-weight: 600;" class="my-4">
@@ -408,12 +424,20 @@ if(Route::currentRouteName() === 'print_financial_routine_branch'){
                                                         <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['code'] }}</div>
                                                     </div>
                                                     <div class="row d-flex justify-content-end">
-                                                        <div class="col-10 text-right">Name Acc : </div>
-                                                        <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['name'] }}</div>
+                                                        <div class="col-10 text-right">Name Branch : </div>
+                                                        <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount->branch['name'] }}</div>
                                                     </div>
                                                     <div class="row d-flex justify-content-end">
                                                         <div class="col-10 text-right">No Acc : </div>
                                                         <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['account_number'] }}</div>
+                                                    </div>
+                                                    <div class="row d-flex justify-content-end">
+                                                        <div class="col-10 text-right">Name Acc : </div>
+                                                        <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount['name'] }}</div>
+                                                    </div>
+                                                    <div class="row d-flex justify-content-end">
+                                                        <div class="col-10 text-right">Bank Acc : </div>
+                                                        <div class="col-2 text-left pl-0">{{ $financialRoutine->bankAccount->bank['name'] }}</div>
                                                     </div>
                                                 </div>
                                                 <div style="margin: auto; text-align: center; font-weight: 600;" class="my-4">
