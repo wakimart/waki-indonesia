@@ -79,6 +79,9 @@ $menu_item_page = "stock";
                                                     if(!$stockInOut->warehouse_id){
                                                         continue;
                                                     }
+                                                    if($stockInOut->sum_current_quantity + $stockInOut->today_out - $stockInOut->today_in < 1){
+                                                        continue;
+                                                    }
                                                     $idxNo++;
                                                 @endphp
                                                 <tr>
