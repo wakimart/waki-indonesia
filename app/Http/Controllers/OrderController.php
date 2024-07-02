@@ -2688,13 +2688,21 @@ class OrderController extends Controller
      **/
     public function customerLetter(Request $request)
     {
-        $orders = Order::whereBetween('orderDate', [$request->start_date, $request->end_date])
-                    ->whereIn('status', [4])
-                    ->where('branch_id', '!=', 32);
+        // $orders = Order::whereBetween('orderDate', [$request->start_date, $request->end_date])
+        //             ->whereIn('status', [4])
+        //             ->where('branch_id', '!=', 32);
+        $orders = Order::from('orders as o')
+                ->join('order_payments as op', 'op.order_id', 'o.id')
+                ->where('o.status', '!=', 'reject')
+                ->where('o.branch_id', '!=', 32)
+                ->where('op.payment_date', '>=', $request->start_date)
+                ->where('op.payment_date', '<=', $request->end_date)
+                ->where('op.status', 'verified')
+                ->where('o.remaining_payment', 0);
         if($request->filter_by_team){
-            $orders = $orders->where('branch_id', $request->filter_by_team);
+            $orders = $orders->where('o.branch_id', $request->filter_by_team);
         }
-        $orders = $orders->get();
+        $orders = $orders->select('o.*')->groupBy('o.id')->orderBy('o.distric')->get();
         $data = [
             'orders' => $orders
         ];

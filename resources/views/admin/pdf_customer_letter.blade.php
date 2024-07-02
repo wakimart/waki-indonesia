@@ -106,26 +106,63 @@
                 </tbody>
             </table>
             <p>Dan cara pembayarannya adalah :</p>
-            <table class="border" style="width: 60%; margin-left: auto; margin-right: auto;">
-                <thead>
-                    <tr>
-                        <td style="border-top: 0px; border-left: 0px;"></td>
-                        <td>Jumlah</td>
-                        <td>Tanggal</td>
-                        <td>Keterangan</td>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($order->orderPayment as $payment)
+            @if($order->orderPayment->count() < 7)
+                <table class="border" style="width: 60%; margin-left: auto; margin-right: auto;">
+                    <thead>
                         <tr>
-                            <td>{{ $payment->type == 'order' ? 'Uang Muka' : 'Pelunasan' }}</td>
-                            <td style="text-align: right;">Rp {{number_format($payment->total_payment)}}</td>
-                            <td>{{date("d/m/Y", strtotime($payment->payment_date))}}</td>
-                            <td>{{ ucwords($payment->type_payment) }}</td>
+                            <td style="border-top: 0px; border-left: 0px;"></td>
+                            <td>Jumlah</td>
+                            <td>Tanggal</td>
+                            <td>Keterangan</td>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach($order->orderPayment as $payment)
+                            <tr>
+                                <td>{{ $payment->type == 'order' ? 'Uang Muka' : 'Pelunasan' }}</td>
+                                <td style="text-align: right;">Rp {{number_format($payment->total_payment)}}</td>
+                                <td>{{date("d/m/Y", strtotime($payment->payment_date))}}</td>
+                                <td>{{ ucwords($payment->type_payment) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            @else
+                @for($i = 0; $i < 2; $i++)
+                    <table class="border" style="width: 45%; float: left;">
+                        <thead>
+                            <tr>
+                                <td style="border-top: 0px; border-left: 0px;"></td>
+                                <td>Jumlah</td>
+                                <td>Tanggal</td>
+                                <td>Keterangan</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($order->orderPayment as $payIdx => $payment)
+                                @php
+                                    if($i == 0 && $payIdx > 6){
+                                        continue;
+                                    }
+                                    elseif($i == 1 && $payIdx <= 6) {
+                                        continue;
+                                    }
+                                @endphp
+                                <tr>
+                                    <td>{{ $payment->type == 'order' ? 'Uang Muka' : 'Pelunasan' }}</td>
+                                    <td style="text-align: right;">Rp {{number_format($payment->total_payment)}}</td>
+                                    <td>{{date("d/m/Y", strtotime($payment->payment_date))}}</td>
+                                    <td>{{ ucwords($payment->type_payment) }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @if($i == 0)
+                        <span style="width: 6%; float: left;"></span>
+                    @endif
+                @endfor
+                <div style="clear: both;"></div>
+            @endif
             <p>
                 Apabila terdapat ketidaksesuaian antara barang yang Bapak / Ibu terima dengan keterangan tersebut diatas, Bapak / Ibu {{strtoupper($order->name)}} dapat menghubungi kami di pesawat (031)5662308 dalam jangka waktu 1 (satu) minggu setelah penerimaan surat ini. <br>
                 Atas kepercayaan yang Bapak / Ibu {{strtoupper($order->name)}} berikan kami ucapkan terima kasih <br><br>
