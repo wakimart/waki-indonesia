@@ -36,6 +36,11 @@
 </head>
 <body>
     @foreach($orders as $order)
+        @php
+            if($order->orderDetail->where('stock_id', '!=', null)->count() == 0){
+                continue;
+            }
+        @endphp
         <div>
             <h1 style="font-family: 'Times New Roman', Times, serif">WAKI</h1>
             <p>DARMO PARK I BLOK 2B NO 1-2 <br> JL. MAYJEN SUNGKONO <br> SURABAYA</p>
@@ -75,7 +80,7 @@
                         <tr>
                             <td>{{ucwords($detail->type)}}</td>
                             @if($detail->product_id)
-                                <td>{{$detail->product->code}}</td>
+                                <td>({{$detail->product->code}}) {{$detail->product->name}}</td>
                             @elseif($detail->promo_id)
                                 <td>{{$detail->promo->code}}</td>
                             @else
