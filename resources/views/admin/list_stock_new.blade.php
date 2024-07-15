@@ -166,112 +166,221 @@ $menu_item_second = "list_stock";
 
                 <div class="tab-content" id="myTabContent">
                     @foreach ($stockTypes as $keyType => $stockInOuts)
-                    <div id="tab_{{ $keyType }}" class="tab-pane fade in @if ($tabActive == $keyType) active show @endif" style="overflow-x:auto;">
-                        <div class="col-12 grid-margin stretch-card" style="padding: 0;">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 style="margin-bottom: 0.5em;">Total : {{$stockInOuts->total()}} data</h5>
-                                    <div class="table-responsive" style="border: 1px solid #ebedf2;">
-                                        <div class="table-responsive"
-                                            style="border: 1px solid #ebedf2;">
-                                            <table class="table table-bordered" id="myTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No.</th>
-                                                        <th>Code</th>
-                                                        <th class="text-center">Warehouse (From-To)</th>
-                                                        <th>Date</th>
-                                                        <th>Product</th>
-                                                        <th>Quantity</th>
-                                                        <th colspan="3" class="text-center">
-                                                            View/Edit/Delete
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach ($stockInOuts as $stockInOut)
-                                                        @php
-                                                            $count_sioProduct = $stockInOut->stockInOutProduct->count();
-                                                        @endphp
-                                                        <tr>
-                                                            <td class="text-center" rowspan="{{ $count_sioProduct }}">
-                                                                {{ $loop->iteration + $stockInOuts->firstItem() - 1 }}
-                                                            </td>
-                                                            <td rowspan="{{ $count_sioProduct }}">
-                                                                {{ $stockInOut->code }}
-                                                            </td>
-                                                            <td class="text-center" rowspan="{{ $count_sioProduct }}">
-                                                                <b>{{ $stockInOut->warehouseFrom['code'] }}</b>
-                                                                =>
-                                                                <b>{{ $stockInOut->warehouseTo['code'] }}</b>
-                                                            </td>
-                                                            <td rowspan="{{ $count_sioProduct }}">
-                                                                {{ date("d-m-Y", strtotime($stockInOut->date)) }}
-                                                            </td>
-                                                            <td>
-                                                                {{ $stockInOut->stockInOutProduct[0]->product['code'] }}
-                                                            </td>
-                                                            <td class="text-right">
-                                                                {{ $stockInOut->stockInOutProduct[0]->quantity }}
-                                                            </td>
-                                                            <td class="text-center" rowspan="{{ $count_sioProduct }}">
-                                                                @if (Gate::check('detail-stock_in_out'))
-                                                                <a href="{{ route('detail_stock_in_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
-                                                                    <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
-                                                                </a>
-                                                                @endif
-                                                            </td>
-                                                            <td class="text-center" rowspan="{{ $count_sioProduct }}">
-                                                                @if ($stockInOut->type == "in")
-                                                                    @if (Gate::check('edit-stock_in'))
-                                                                    <a href="{{ route('edit_stock_in', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
-                                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                                    </a>
-                                                                    @endif
-                                                                @else
-                                                                    @if (Gate::check('edit-stock_out'))
-                                                                    <a href="{{ route('edit_stock_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
-                                                                        <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
-                                                                    </a>
-                                                                    @endif
-                                                                @endif
-                                                            </td>
-                                                            <td class="text-center" rowspan="{{ $count_sioProduct }}">
-                                                                @if (Gate::check('delete-stock_in_out'))
-                                                                <a class="btn-delete disabled"
-                                                                    data-toggle="modal"
-                                                                    href="#deleteDoModal"
-                                                                    onclick="submitDelete(this)"
-                                                                    data-id="{{ $stockInOut->id }}">
-                                                                    <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                                </a>
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-
-                                                        @if ($count_sioProduct > 1)
-                                                            @for ($i = 1; $i < $count_sioProduct; $i++)
+                        @if($keyType == 'In Pending')
+                            <div id="tab_{{ $keyType }}" class="tab-pane fade in @if ($tabActive == $keyType) active show @endif" style="overflow-x:auto;">
+                                <div class="col-12 grid-margin stretch-card" style="padding: 0;">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 style="margin-bottom: 0.5em;">Total : {{$stockInOuts->total()}} data</h5>
+                                            <div class="table-responsive" style="border: 1px solid #ebedf2;">
+                                                <div class="table-responsive"
+                                                    style="border: 1px solid #ebedf2;">
+                                                    <table class="table table-bordered" id="myTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No.</th>
+                                                                <th>Code</th>
+                                                                <th class="text-center">Warehouse (From-To)</th>
+                                                                <th>Out Date</th>
+                                                                <th>Product</th>
+                                                                <th>Quantity</th>
+                                                                <th colspan="3" class="text-center">
+                                                                    View
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($stockInOuts as $stockInOut)
+                                                                @php
+                                                                    $count_sioProduct = $stockInOut->stockInOutProduct->count();
+                                                                @endphp
                                                                 <tr>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        {{ $loop->iteration + $stockInOuts->firstItem() - 1 }}
+                                                                    </td>
+                                                                    <td rowspan="{{ $count_sioProduct }}">
+                                                                        {{ $stockInOut->code }}
+                                                                    </td>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        <b>{{ $stockInOut->warehouseFrom['code'] }}</b>
+                                                                        =>
+                                                                        <b>{{ $stockInOut->warehouseTo['code'] }}</b>
+                                                                    </td>
+                                                                    <td rowspan="{{ $count_sioProduct }}">
+                                                                        {{ date("d-m-Y", strtotime($stockInOut->date)) }}
+                                                                    </td>
                                                                     <td>
-                                                                        {{ $stockInOut->stockInOutProduct[$i]->product['code'] }}
+                                                                        {{ $stockInOut->stockInOutProduct[0]->product['code'] }}
                                                                     </td>
                                                                     <td class="text-right">
-                                                                        {{ $stockInOut->stockInOutProduct[$i]->quantity }}
+                                                                        {{ $stockInOut->stockInOutProduct[0]->quantity }}
+                                                                    </td>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        @if (Gate::check('detail-stock_in_out'))
+                                                                        <a href="{{ route('detail_stock_in_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
+                                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                                        </a>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        @if ($stockInOut->type == "in")
+                                                                            @if (Gate::check('edit-stock_in'))
+                                                                            <a href="{{ route('edit_stock_in', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
+                                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                                            </a>
+                                                                            @endif
+                                                                        @else
+                                                                            @if (Gate::check('edit-stock_out'))
+                                                                            <a href="{{ route('edit_stock_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
+                                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                                            </a>
+                                                                            @endif
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        @if (Gate::check('delete-stock_in_out'))
+                                                                        <a class="btn-delete disabled"
+                                                                            data-toggle="modal"
+                                                                            href="#deleteDoModal"
+                                                                            onclick="submitDelete(this)"
+                                                                            data-id="{{ $stockInOut->id }}">
+                                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                                        </a>
+                                                                        @endif
                                                                     </td>
                                                                 </tr>
-                                                            @endfor
-                                                        @endif
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                            <br>
+
+                                                                @if ($count_sioProduct > 1)
+                                                                    @for ($i = 1; $i < $count_sioProduct; $i++)
+                                                                        <tr>
+                                                                            <td>
+                                                                                {{ $stockInOut->stockInOutProduct[$i]->product['code'] }}
+                                                                            </td>
+                                                                            <td class="text-right">
+                                                                                {{ $stockInOut->stockInOutProduct[$i]->quantity }}
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endfor
+                                                                @endif
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                    <br>
+                                                </div>
+                                                {{ $stockInOuts->appends(request()->input())->appends(['tabActive' => $keyType])->links() }}
+                                            </div>
                                         </div>
-                                        {{ $stockInOuts->appends(request()->input())->appends(['tabActive' => $keyType])->links() }}
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        @else
+                            <div id="tab_{{ $keyType }}" class="tab-pane fade in @if ($tabActive == $keyType) active show @endif" style="overflow-x:auto;">
+                                <div class="col-12 grid-margin stretch-card" style="padding: 0;">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 style="margin-bottom: 0.5em;">Total : {{$stockInOuts->total()}} data</h5>
+                                            <div class="table-responsive" style="border: 1px solid #ebedf2;">
+                                                <div class="table-responsive"
+                                                    style="border: 1px solid #ebedf2;">
+                                                    <table class="table table-bordered" id="myTable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No.</th>
+                                                                <th>Code</th>
+                                                                <th class="text-center">Warehouse (From-To)</th>
+                                                                <th>Date</th>
+                                                                <th>Product</th>
+                                                                <th>Quantity</th>
+                                                                <th colspan="3" class="text-center">
+                                                                    View/Edit/Delete
+                                                                </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($stockInOuts as $stockInOut)
+                                                                @php
+                                                                    $count_sioProduct = $stockInOut->stockInOutProduct->count();
+                                                                @endphp
+                                                                <tr>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        {{ $loop->iteration + $stockInOuts->firstItem() - 1 }}
+                                                                    </td>
+                                                                    <td rowspan="{{ $count_sioProduct }}">
+                                                                        {{ $stockInOut->code }}
+                                                                    </td>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        <b>{{ $stockInOut->warehouseFrom['code'] }}</b>
+                                                                        =>
+                                                                        <b>{{ $stockInOut->warehouseTo['code'] }}</b>
+                                                                    </td>
+                                                                    <td rowspan="{{ $count_sioProduct }}">
+                                                                        {{ date("d-m-Y", strtotime($stockInOut->date)) }}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ $stockInOut->stockInOutProduct[0]->product['code'] }}
+                                                                    </td>
+                                                                    <td class="text-right">
+                                                                        {{ $stockInOut->stockInOutProduct[0]->quantity }}
+                                                                    </td>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        @if (Gate::check('detail-stock_in_out'))
+                                                                        <a href="{{ route('detail_stock_in_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
+                                                                            <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                                        </a>
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        @if ($stockInOut->type == "in")
+                                                                            @if (Gate::check('edit-stock_in'))
+                                                                            <a href="{{ route('edit_stock_in', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
+                                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                                            </a>
+                                                                            @endif
+                                                                        @else
+                                                                            @if (Gate::check('edit-stock_out'))
+                                                                            <a href="{{ route('edit_stock_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
+                                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                                            </a>
+                                                                            @endif
+                                                                        @endif
+                                                                    </td>
+                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                        @if (Gate::check('delete-stock_in_out'))
+                                                                        <a class="btn-delete disabled"
+                                                                            data-toggle="modal"
+                                                                            href="#deleteDoModal"
+                                                                            onclick="submitDelete(this)"
+                                                                            data-id="{{ $stockInOut->id }}">
+                                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
+                                                                        </a>
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
+
+                                                                @if ($count_sioProduct > 1)
+                                                                    @for ($i = 1; $i < $count_sioProduct; $i++)
+                                                                        <tr>
+                                                                            <td>
+                                                                                {{ $stockInOut->stockInOutProduct[$i]->product['code'] }}
+                                                                            </td>
+                                                                            <td class="text-right">
+                                                                                {{ $stockInOut->stockInOutProduct[$i]->quantity }}
+                                                                            </td>
+                                                                        </tr>
+                                                                    @endfor
+                                                                @endif
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                    <br>
+                                                </div>
+                                                {{ $stockInOuts->appends(request()->input())->appends(['tabActive' => $keyType])->links() }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     @endforeach
                 </div>
             </div>

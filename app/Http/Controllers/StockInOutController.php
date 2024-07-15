@@ -12,6 +12,7 @@ use App\StockInOut;
 use App\StockInOutProduct;
 use App\StockOrderRequest;
 use App\Warehouse;
+use App\StockInOutConnect;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +39,7 @@ class StockInOutController extends Controller
             ->orderBy("code")
             ->get();
 
-        $types = ["in", "out"];
+        $types = ['In Pending', "in", "out"];
         $stockTypes = [];
         foreach ($types as $type) {
             $stockTypes[$type] = StockInOut::orderBy("created_at", "desc")->orderBy('id', 'asc')
@@ -74,6 +75,17 @@ class StockInOutController extends Controller
 
             $stockTypes[$type] = $stockTypes[$type]->paginate(10, ['*'], $type);
         }
+
+        //khusus untuk in pending outstanding
+        $allStockInOutConnects = null;
+        if($request->has('status')){
+            $allStockInOutConnects = StockInOutConnect::where('status', $request->status);
+        }
+        else{
+            $allStockInOutConnects = StockInOutConnect::where('status', 'outstanding');
+        }
+        $stockTypes['In Pending'] = $allStockInOutConnects->orderBy('created_at', 'desc')->paginate(10, ['*'], $type);
+
         return view("admin.list_stock_new", compact("stockTypes", "warehouses", "stocks"));
     }
 
@@ -173,6 +185,21 @@ class StockInOutController extends Controller
         return view("admin.add_stock_in", compact(
             "products",
         ));
+    }
+
+    //temp
+    public function listInFromOut(Request $request)
+    {
+        $allStockInOutConnects = null;
+        if($request->has('status')){
+            $allStockInOutConnects = StockInOutConnect::where('status', $request->status);
+        }
+        else{
+            $allStockInOutConnects = StockInOutConnect::where('status', 'outstanding');
+        }
+
+        $allStockInOutConnects = $allStockInOutConnects->orderBy('created_at', 'desc')->get();
+        // return view('admin.list_stock_in', compact('allStockInOutConnects'));
     }
 
     public function createOut(Request $request)
@@ -337,6 +364,12 @@ class StockInOutController extends Controller
                 $order->save();
 
                 // (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'stock_request_success', Auth::user()->code);
+            }
+
+            if($stockInOut->warehouseTo['type'] == 'warehouse'){
+                $stockinoutConnection = new StockInOutConnect();
+                $stockinoutConnection->stock_out_id = $stockInOut['id'];
+                $stockinoutConnection->save();
             }
 
             DB::commit();

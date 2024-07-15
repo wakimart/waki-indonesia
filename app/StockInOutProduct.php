@@ -19,7 +19,7 @@ class StockInOutProduct extends Model
 
     public function stockInOut()
     {
-        return $this->belongsTo('App\StockInOut', 'stock_in_ut_id', 'id');
+        return $this->belongsTo('App\StockInOut', 'stock_in_out_id', 'id');
     }
 
     public function stockFrom()
