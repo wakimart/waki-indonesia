@@ -307,10 +307,19 @@ class CsoCommissionController extends Controller
                 $commissionPerCso = 0;
                 $cancelPerCso = 0;
 
-                $bonusPerCso = $perCsoCommission->orderCommission->filter(function($valueNya, $keyNya) use ($startDate, $endDate, $branch){
+                $bonusPerCso = $perCsoCommission->orderCommission->filter(function($valueNya, $keyNya) use ($startDate, $endDate, $branch, $perCsoCommission){
                     $perOr = $valueNya->order;
                     if($perOr['status'] != 'reject' && $perOr['branch_id'] == $branch){
-                        if($perOr->orderPayment->where('payment_date', '>=', $startDate)->where('payment_date', '<=', $endDate)->count() > 0){
+                        // foreach ($perOr->orderPayment as $perPaymentNya) {
+                        //     if($perPaymentNya['payment_date'] >= $startDate && $perPaymentNya['payment_date'] <= $endDate){
+                        //         dd($perPaymentNya);
+                        //     }
+                        // }
+                        // if($perOr->orderPayment->where('payment_date', '>=', $startDate)->where('payment_date', '<=', $endDate)->count() > 0){
+                        //     return $valueNya;
+                        // }
+                        if($perOr->orderPayment->sortBy('payment_date')->last()['payment_date'] >= $startDate && $perOr->orderPayment->sortBy('payment_date')->last()['payment_date'] <= $endDate){
+                            // dd($perOr->orderPayment->sortBy('payment_date')->last());
                             return $valueNya;
                         }
                     }
