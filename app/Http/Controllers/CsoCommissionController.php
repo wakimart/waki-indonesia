@@ -139,21 +139,21 @@ class CsoCommissionController extends Controller
                 $Cso_Commission['bonusPerCso'] = $bonusPerCso;
                 $Cso_Commission['commissionPerCso'] = $commissionPerCso;
                 $Cso_Commission['cancelPerCso'] = $cancelPerCso;
-
-                $totalSaleBranch = Branch::from('branches as b')
-                    ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
-                    ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
-                    ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
-                    ->leftJoin('orders as o', 'o.branch_id', 'b.id')
-                    ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
-                    ->leftJoin('total_sales as ts', 'ts.order_payment_id', 'op.id')
-                    ->whereBetween('op.payment_date', [$startDate, $endDate])
-                    ->where([['b.active', true], ['b.id', $request->input('filter_branch')]])
-                    ->where([['o.active', true], ['o.status', '!=', 'reject']])
-                    ->orderBy('b.code')
-                    ->groupBy('b.id')->first();
-                $totalSaleBranch = $totalSaleBranch['sum_ts_bank_in'] + $totalSaleBranch['sum_ts_netto_debit'] + $totalSaleBranch['sum_ts_netto_card'];
             }
+            
+            $totalSaleBranch = Branch::from('branches as b')
+                ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
+                ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
+                ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
+                ->leftJoin('orders as o', 'o.branch_id', 'b.id')
+                ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
+                ->leftJoin('total_sales as ts', 'ts.order_payment_id', 'op.id')
+                ->whereBetween('op.payment_date', [$startDate, $endDate])
+                ->where([['b.active', true], ['b.id', $request->input('filter_branch')]])
+                ->where([['o.active', true], ['o.status', '!=', 'reject']])
+                ->orderBy('b.code')
+                ->groupBy('b.id')->first();
+            $totalSaleBranch = $totalSaleBranch['sum_ts_bank_in'] + $totalSaleBranch['sum_ts_netto_debit'] + $totalSaleBranch['sum_ts_netto_card'];
         }
 
         return view('admin.list_csocommission', compact('startDate', 'endDate', 'branches', 'CsoCommissions', 'totalSaleBranch'));
@@ -292,11 +292,13 @@ class CsoCommissionController extends Controller
         if($branch){
             $ordersNya = Order::from('orders as o')
                 ->where('o.status', '!=', 'reject')
-                ->where('o.orderDate', '>=', $startDate)
-                ->where('o.orderDate', '<=', $endDate)
+                ->where('o.status', '!=', 'cancel')
+                ->where('op.payment_date', '>=', $startDate)
+                ->where('op.payment_date', '<=', $endDate)
                 ->select('c_30.id as c_30', 'c_70.id as c_70')
                 ->leftJoin('csos as c_30', 'c_30.id', 'o.30_cso_id')
                 ->leftJoin('csos as c_70', 'c_70.id', 'o.70_cso_id')
+                ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
                 ->where('o.branch_id', $branch)->get();
             $c_70 = $ordersNya->pluck('c_70')->toArray();
             $c_30 = $ordersNya->pluck('c_30')->toArray();
@@ -307,10 +309,19 @@ class CsoCommissionController extends Controller
                 $commissionPerCso = 0;
                 $cancelPerCso = 0;
 
-                $bonusPerCso = $perCsoCommission->orderCommission->filter(function($valueNya, $keyNya) use ($startDate, $endDate, $branch){
+                $bonusPerCso = $perCsoCommission->orderCommission->filter(function($valueNya, $keyNya) use ($startDate, $endDate, $branch, $perCsoCommission){
                     $perOr = $valueNya->order;
                     if($perOr['status'] != 'reject' && $perOr['branch_id'] == $branch){
-                        if($perOr->orderPayment->where('payment_date', '>=', $startDate)->where('payment_date', '<=', $endDate)->count() > 0){
+                        // foreach ($perOr->orderPayment as $perPaymentNya) {
+                        //     if($perPaymentNya['payment_date'] >= $startDate && $perPaymentNya['payment_date'] <= $endDate){
+                        //         dd($perPaymentNya);
+                        //     }
+                        // }
+                        // if($perOr->orderPayment->where('payment_date', '>=', $startDate)->where('payment_date', '<=', $endDate)->count() > 0){
+                        //     return $valueNya;
+                        // }
+                        if($perOr->orderPayment->sortBy('payment_date')->last()['payment_date'] >= $startDate && $perOr->orderPayment->sortBy('payment_date')->last()['payment_date'] <= $endDate){
+                            // dd($perOr->orderPayment->sortBy('payment_date')->last());
                             return $valueNya;
                         }
                     }
