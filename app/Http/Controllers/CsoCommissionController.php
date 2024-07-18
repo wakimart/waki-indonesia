@@ -292,11 +292,13 @@ class CsoCommissionController extends Controller
         if($branch){
             $ordersNya = Order::from('orders as o')
                 ->where('o.status', '!=', 'reject')
-                ->where('o.orderDate', '>=', $startDate)
-                ->where('o.orderDate', '<=', $endDate)
+                ->where('o.status', '!=', 'cancel')
+                ->where('op.payment_date', '>=', $startDate)
+                ->where('op.payment_date', '<=', $endDate)
                 ->select('c_30.id as c_30', 'c_70.id as c_70')
                 ->leftJoin('csos as c_30', 'c_30.id', 'o.30_cso_id')
                 ->leftJoin('csos as c_70', 'c_70.id', 'o.70_cso_id')
+                ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
                 ->where('o.branch_id', $branch)->get();
             $c_70 = $ordersNya->pluck('c_70')->toArray();
             $c_30 = $ordersNya->pluck('c_30')->toArray();
