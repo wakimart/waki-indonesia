@@ -139,21 +139,21 @@ class CsoCommissionController extends Controller
                 $Cso_Commission['bonusPerCso'] = $bonusPerCso;
                 $Cso_Commission['commissionPerCso'] = $commissionPerCso;
                 $Cso_Commission['cancelPerCso'] = $cancelPerCso;
-
-                $totalSaleBranch = Branch::from('branches as b')
-                    ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
-                    ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
-                    ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
-                    ->leftJoin('orders as o', 'o.branch_id', 'b.id')
-                    ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
-                    ->leftJoin('total_sales as ts', 'ts.order_payment_id', 'op.id')
-                    ->whereBetween('op.payment_date', [$startDate, $endDate])
-                    ->where([['b.active', true], ['b.id', $request->input('filter_branch')]])
-                    ->where([['o.active', true], ['o.status', '!=', 'reject']])
-                    ->orderBy('b.code')
-                    ->groupBy('b.id')->first();
-                $totalSaleBranch = $totalSaleBranch['sum_ts_bank_in'] + $totalSaleBranch['sum_ts_netto_debit'] + $totalSaleBranch['sum_ts_netto_card'];
             }
+            
+            $totalSaleBranch = Branch::from('branches as b')
+                ->selectRaw("SUM(ts.bank_in) as sum_ts_bank_in")
+                ->selectRaw("SUM(ts.netto_debit) as sum_ts_netto_debit")
+                ->selectRaw("SUM(ts.netto_card) as sum_ts_netto_card")
+                ->leftJoin('orders as o', 'o.branch_id', 'b.id')
+                ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
+                ->leftJoin('total_sales as ts', 'ts.order_payment_id', 'op.id')
+                ->whereBetween('op.payment_date', [$startDate, $endDate])
+                ->where([['b.active', true], ['b.id', $request->input('filter_branch')]])
+                ->where([['o.active', true], ['o.status', '!=', 'reject']])
+                ->orderBy('b.code')
+                ->groupBy('b.id')->first();
+            $totalSaleBranch = $totalSaleBranch['sum_ts_bank_in'] + $totalSaleBranch['sum_ts_netto_debit'] + $totalSaleBranch['sum_ts_netto_card'];
         }
 
         return view('admin.list_csocommission', compact('startDate', 'endDate', 'branches', 'CsoCommissions', 'totalSaleBranch'));
