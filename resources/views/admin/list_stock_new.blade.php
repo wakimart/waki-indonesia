@@ -153,7 +153,10 @@ $menu_item_second = "list_stock";
 
             <div class="col-12">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    @php $tabActive = request()->query('tabActive') ?? "in" @endphp
+                    @php 
+                        $tabActive = request()->query('tabActive') ?? "in";
+                        $tabActive = isset($_GET['status']) ? 'In_Pending' : 'in';
+                    @endphp
                     @foreach ($stockTypes as $keyType => $stockInOuts)
                     <li class="nav-item">
                         <a class="nav-link @if ($tabActive == $keyType) active @endif"
@@ -166,12 +169,42 @@ $menu_item_second = "list_stock";
 
                 <div class="tab-content" id="myTabContent">
                     @foreach ($stockTypes as $keyType => $stockInOuts)
-                        @if($keyType == 'In Pending')
+                        @if($keyType == 'In_Pending')
                             <div id="tab_{{ $keyType }}" class="tab-pane fade in @if ($tabActive == $keyType) active show @endif" style="overflow-x:auto;">
                                 <div class="col-12 grid-margin stretch-card" style="padding: 0;">
                                     <div class="card">
                                         <div class="card-body">
                                             <h5 style="margin-bottom: 0.5em;">Total : {{$stockInOuts->total()}} data</h5>
+                                            <form>
+                                                <div class="row">
+                                                    <div class="col-12" style="margin-bottom: 0;">
+                                                        <div class="col-xs-3 col-sm-3"
+                                                            style="display: inline-block;">
+                                                            <div class="form-group">
+                                                                <label for="filter_stock_connection">Filter By Status</label>
+                                                                <select id="filter_stock_connection" name="filter_stock_connection" class="form-control">
+                                                                    <option value="outstanding" {{ isset($_GET['status']) ? ($_GET['status'] == 'outstanding' ? 'selected' : '') : 'selected' }}>Outstanding</option>
+                                                                    <option value="confirm" {{ isset($_GET['status']) ? ($_GET['status'] == 'confirm' ? 'selected' : '') : '' }}>Confirm</option>
+                                                                    <option value="cancel" {{ isset($_GET['status']) ? ($_GET['status'] == 'cancel' ? 'selected' : '') : '' }}>Cancel</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-3 col-sm-3"
+                                                            style="display: inline-block;">
+                                                            <div class="form-group">
+                                                                <button id="btn-filter-pending"
+                                                                    type="button"
+                                                                    class="btn btn-gradient-primary m-1"
+                                                                    name="filter"
+                                                                    value="-">
+                                                                    <span class="mdi mdi-filter"></span>
+                                                                    Apply Filter
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
                                             <div class="table-responsive" style="border: 1px solid #ebedf2;">
                                                 <div class="table-responsive"
                                                     style="border: 1px solid #ebedf2;">
@@ -179,12 +212,11 @@ $menu_item_second = "list_stock";
                                                         <thead>
                                                             <tr>
                                                                 <th>No.</th>
-                                                                <th>Code</th>
+                                                                <th>Code OUT {{ isset($_GET['status']) ? ($_GET['status'] == 'confirm' ? '- Code IN' : '') : '' }}</th>
                                                                 <th class="text-center">Warehouse (From-To)</th>
                                                                 <th>Out Date</th>
-                                                                <th>Product</th>
-                                                                <th>Quantity</th>
-                                                                <th colspan="3" class="text-center">
+                                                                <th>Status</th>
+                                                                <th colspan="2" class="text-center">
                                                                     View
                                                                 </th>
                                                             </tr>
@@ -192,76 +224,50 @@ $menu_item_second = "list_stock";
                                                         <tbody>
                                                             @foreach ($stockInOuts as $stockInOut)
                                                                 @php
-                                                                    $count_sioProduct = $stockInOut->stockInOutProduct->count();
+                                                                    $count_sioProduct = $stockInOut->stockOut->stockInOutProduct->count();
                                                                 @endphp
                                                                 <tr>
-                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                    <td class="text-center">
                                                                         {{ $loop->iteration + $stockInOuts->firstItem() - 1 }}
                                                                     </td>
-                                                                    <td rowspan="{{ $count_sioProduct }}">
-                                                                        {{ $stockInOut->code }}
+                                                                    <td>
+                                                                        {{ $stockInOut->stockOut->code }} {{ isset($_GET['status']) ? ($_GET['status'] == 'confirm' ? '=> '. $stockInOut->stockIn->code : '') : '' }}
                                                                     </td>
-                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
-                                                                        <b>{{ $stockInOut->warehouseFrom['code'] }}</b>
+                                                                    <td class="text-center">
+                                                                        <b>{{ $stockInOut->stockOut->warehouseFrom['code'] }}</b>
                                                                         =>
-                                                                        <b>{{ $stockInOut->warehouseTo['code'] }}</b>
-                                                                    </td>
-                                                                    <td rowspan="{{ $count_sioProduct }}">
-                                                                        {{ date("d-m-Y", strtotime($stockInOut->date)) }}
+                                                                        <b>{{ $stockInOut->stockOut->warehouseTo['code'] }}</b>
                                                                     </td>
                                                                     <td>
-                                                                        {{ $stockInOut->stockInOutProduct[0]->product['code'] }}
+                                                                        {{ date("d-m-Y", strtotime($stockInOut->stockOut->date)) }}
                                                                     </td>
-                                                                    <td class="text-right">
-                                                                        {{ $stockInOut->stockInOutProduct[0]->quantity }}
+                                                                    <td>
+                                                                        {{ strtoupper($stockInOut['status']) }}
                                                                     </td>
-                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
+                                                                    <td class="text-center">
                                                                         @if (Gate::check('detail-stock_in_out'))
-                                                                        <a href="{{ route('detail_stock_in_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
+                                                                        <a href="{{ route('detail_stock_in_out', ['code' => $stockInOut->stockOut->code, 'id' => $stockInOut->stockOut->id]) }}">
                                                                             <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                                            {!! isset($_GET['status']) ? ($_GET['status'] == 'confirm' ? '<p>OUT</p>' : '') : '' !!}
                                                                         </a>
                                                                         @endif
                                                                     </td>
-                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
-                                                                        @if ($stockInOut->type == "in")
-                                                                            @if (Gate::check('edit-stock_in'))
-                                                                            <a href="{{ route('edit_stock_in', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
-                                                                                <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
+                                                                    <td class="text-center">
+                                                                        @php
+                                                                            $isStatusFilter = isset($_GET['status']) ? ($_GET['status'] == 'confirm' ? true : false) : false;
+                                                                        @endphp
+                                                                        @if($isStatusFilter)
+                                                                            <a href="{{ route('detail_stock_in_out', ['code' => $stockInOut->stockIn->code, 'id' => $stockInOut->stockIn->id]) }}">
+                                                                                <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(76 172 245);"></i>
+                                                                                <p>IN</p>
                                                                             </a>
-                                                                            @endif
                                                                         @else
-                                                                            @if (Gate::check('edit-stock_out'))
-                                                                            <a href="{{ route('edit_stock_out', ['code' => $stockInOut->code, 'id' => $stockInOut->id]) }}">
+                                                                            <a href="{{ route('add_stock_in', ['code' => $stockInOut->stockOut->code, 'id' => $stockInOut->stockOut->id]) }}">
                                                                                 <i class="mdi mdi-border-color" style="font-size: 24px; color: #fed713;"></i>
                                                                             </a>
-                                                                            @endif
-                                                                        @endif
-                                                                    </td>
-                                                                    <td class="text-center" rowspan="{{ $count_sioProduct }}">
-                                                                        @if (Gate::check('delete-stock_in_out'))
-                                                                        <a class="btn-delete disabled"
-                                                                            data-toggle="modal"
-                                                                            href="#deleteDoModal"
-                                                                            onclick="submitDelete(this)"
-                                                                            data-id="{{ $stockInOut->id }}">
-                                                                            <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
-                                                                        </a>
                                                                         @endif
                                                                     </td>
                                                                 </tr>
-
-                                                                @if ($count_sioProduct > 1)
-                                                                    @for ($i = 1; $i < $count_sioProduct; $i++)
-                                                                        <tr>
-                                                                            <td>
-                                                                                {{ $stockInOut->stockInOutProduct[$i]->product['code'] }}
-                                                                            </td>
-                                                                            <td class="text-right">
-                                                                                {{ $stockInOut->stockInOutProduct[$i]->quantity }}
-                                                                            </td>
-                                                                        </tr>
-                                                                    @endfor
-                                                                @endif
                                                             @endforeach
                                                         </tbody>
                                                     </table>
@@ -433,7 +439,7 @@ function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
 $(document).ready(function (e) {
-    $("#btn-filter").click(function (e) {
+    $("#btn-filter, #btn-filter-pending").click(function (e) {
         var urlParamArray = new Array();
         var urlParamStr = "";
         if ($('#filter_date').val() != "") {
@@ -444,6 +450,9 @@ $(document).ready(function (e) {
         }
         if ($('#filter_product_code').val() != "") {
             urlParamArray.push("filter_product_code=" + $('#filter_product_code').val());
+        }
+        if ($('#filter_stock_connection').val() != "") {
+            urlParamArray.push("status=" + $('#filter_stock_connection').val());
         }
         for (var i = 0; i < urlParamArray.length; i++) {
             if (i === 0) {

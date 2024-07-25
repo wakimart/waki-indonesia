@@ -42,4 +42,13 @@ class StockInOut extends Model
     {
         return $this->belongsTo('App\StockOrderRequest');
     }
+
+    public function stockInOutConnect(){
+        if($this->type === "in"){
+            return $this->belongsTo('App\StockInOutConnect', 'id', 'stock_in_id');
+        }
+        elseif($this->type === "out"){
+            return $this->belongsTo('App\StockInOutConnect', 'id', 'stock_out_id');
+        }
+    }
 }

@@ -50,7 +50,7 @@ $menu_item_second = "add_stock_in";
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="page-header">
-            <h3 class="page-title">Add Stock In</h3>
+            <h3 class="page-title">Add Stock In{{ $stockOutNya != null ? ' (Confirmation)' : '' }}</h3>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
@@ -60,7 +60,7 @@ $menu_item_second = "add_stock_in";
                         </a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">
-                        Stock In
+                        Stock In{{ $stockOutNya != null ? ' (Confirmation)' : '' }}
                     </li>
                 </ol>
             </nav>
@@ -80,11 +80,12 @@ $menu_item_second = "add_stock_in";
                                 value="in" />
 
                             <div class="form-group">
-                                <label for="code">Code (Please Select Date and Select From)</label>
+                                <label for="code">Code (Please Select Date{{ $stockOutNya != null ? '' : ' and Select From' }})</label>
                                 <input type="text"
                                     class="form-control"
                                     name="code"
                                     id="code"
+                                    value="{{ $codeConnection != null ? $codeConnection : '' }}" 
                                     required readonly />
                                 <span class="invalid-feedback"><strong></strong></span>
                                 <small id="code_error" style="color: red"></small>
@@ -111,38 +112,60 @@ $menu_item_second = "add_stock_in";
                                 <div class="form-group col-md-6">
                                     <label for="">From Warehouse/Branch/Vendor</label>
                                     <select id="from_warehouse_type" class="form-control mb-3">
-                                        <option value="" selected disabled>Select From</option>
-                                        @foreach (App\Warehouse::$Type as $type)
-                                            <option value="{{ $type }}">{{ ucwords($type) }}</option>
-                                        @endforeach
+                                        @if($stockOutNya == null)
+                                            <option value="" selected disabled>Select From</option>
+                                            @foreach (App\Warehouse::$Type as $type)
+                                                @if ($type != "warehouse")
+                                                    <option value="{{ $type }}">{{ ucwords($type) }}</option>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <option value="{{ $stockOutNya->warehouseFrom['type'] }}" selected>{{ ucwords($stockOutNya->warehouseFrom['type']) }}</option>
+                                        @endif
                                     </select>
                                     <select class="form-control"
                                         name="from_warehouse_id"
                                         id="from_warehouse_id"
                                         required>
-                                        <option value="" disabled selected>
-                                            Select Warehouse
-                                        </option>
+                                        @if($stockOutNya == null)
+                                            <option value="" disabled selected>
+                                                Select Warehouse
+                                            </option>
+                                        @else
+                                            <option value="{{ $stockOutNya->warehouseFrom['id'] }}" selected>
+                                                {{ $stockOutNya->warehouseFrom['code'] .' - '. $stockOutNya->warehouseFrom['name'] }}
+                                            </option>
+                                        @endif
                                     </select>
                                     <span class="invalid-feedback"><strong></strong></span>
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="">To Warehouse/Branch</label>
                                     <select id="to_warehouse_type" class="form-control mb-3">
-                                        <option value="" selected disabled>Select To</option>
-                                        @foreach (App\Warehouse::$Type as $type)
-                                            @if ($type != "vendor")
-                                            <option value="{{ $type }}">{{ ucwords($type) }}</option>
-                                            @endif
-                                        @endforeach
+                                        @if($stockOutNya == null)
+                                            <option value="" selected disabled>Select To</option>
+                                            @foreach (App\Warehouse::$Type as $type)
+                                                @if ($type != "vendor")
+                                                <option value="{{ $type }}">{{ ucwords($type) }}</option>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <option value="{{ $stockOutNya->warehouseTo['type'] }}" selected>{{ ucwords($stockOutNya->warehouseTo['type']) }}</option>
+                                        @endif
                                     </select>
                                     <select class="form-control"
                                         name="to_warehouse_id"
                                         id="to_warehouse_id"
                                         required>
-                                        <option value="" disabled selected>
-                                            Select Warehouse
-                                        </option>
+                                        @if($stockOutNya == null)
+                                            <option value="" disabled selected>
+                                                Select Warehouse
+                                            </option>
+                                        @else
+                                            <option value="{{ $stockOutNya->warehouseTo['id'] }}" selected>
+                                                {{ $stockOutNya->warehouseTo['code'] .' - '. $stockOutNya->warehouseTo['name'] }}
+                                            </option>
+                                        @endif
                                     </select>
                                     <span class="invalid-feedback"><strong></strong></span>
                                 </div>
@@ -167,60 +190,147 @@ $menu_item_second = "add_stock_in";
 
                                 <input type="hidden"
                                     id="product-counter"
-                                    value="0" />
+                                    value="{{ $stockOutNya == null ? 0 : $stockOutNya->stockInOutProduct->count()-1 }}" />
 
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label for="product_0">
-                                                Product
-                                            </label>
-                                            <select class="form-control product_id"
-                                                name="product[]"
-                                                id="product_0"
-                                                required>
-                                                <option value="" disabled selected>
-                                                    Select Product
-                                                </option>
-                                                @foreach ($products as $product)
-                                                    <option value="{{ $product->id }}">
-                                                        {{ $product->code }} - {{ $product->name }}
+                                @if($stockOutNya == null)
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label for="product_0">
+                                                    Product
+                                                </label>
+                                                <select class="form-control product_id"
+                                                    name="product[]"
+                                                    id="product_0"
+                                                    required>
+                                                    <option value="" disabled selected>
+                                                        Select Product
                                                     </option>
-                                                @endforeach
-                                            </select>
-                                            <span class="invalid-feedback"><strong></strong></span>
+                                                    @foreach ($products as $product)
+                                                        <option value="{{ $product->id }}">
+                                                            {{ $product->code }} - {{ $product->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                                <span class="invalid-feedback"><strong></strong></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="quantity_0">
+                                                    Quantity
+                                                </label>
+                                                <input id="quantity_0"
+                                                    class="form-control"
+                                                    type="number"
+                                                    name="quantity[]"
+                                                    placeholder="Quantity"
+                                                    min="0"
+                                                    required />
+                                                <span class="invalid-feedback"><strong></strong></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="koli_0">
+                                                    Koli (Optional)
+                                                </label>
+                                                <input id="koli_0"
+                                                    class="form-control"
+                                                    type="number"
+                                                    name="koli[]"
+                                                    placeholder="Koli" />
+                                                <span class="invalid-feedback"><strong></strong></span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="quantity_0">
-                                                Quantity
-                                            </label>
-                                            <input id="quantity_0"
-                                                class="form-control"
-                                                type="number"
-                                                name="quantity[]"
-                                                placeholder="Quantity"
-                                                min="0"
-                                                required />
-                                            <span class="invalid-feedback"><strong></strong></span>
+                                    <div id="tambahan_product"></div>
+                                @else
+                                    <input type="hidden" name="stock_in_out_connection" value="{{ $stockOutNya->stockInOutConnect['id'] }}">
+                                    @foreach($stockOutNya->stockInOutProduct as $keyNyaProd => $prodOutNya)
+
+                                        @if($keyNyaProd == 1)
+                                            <div id="tambahan_product">
+                                        @endif
+                                        @if($keyNyaProd > 0)
+                                            <div class="row" @if($keyNyaProd > 0) id="row-remove-{{ $keyNyaProd }}" @endif>
+                                                <div class="col-md-12">
+                                                    <div class="text-center" style="display: block; float: right; margin-bottom: 20px;">
+                                                        <button class="btn btn-gradient-danger" type="button" onclick="removeProduct({{ $keyNyaProd }})">Remove Product</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        <div class="row" @if($keyNyaProd > 0) id="row-product-{{ $keyNyaProd }}" @endif>
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label for="product_{{ $keyNyaProd }}">
+                                                        Product
+                                                    </label>
+                                                    <select class="form-control product_id"
+                                                        name="product[]"
+                                                        id="product_{{ $keyNyaProd }}"
+                                                        required>
+                                                        <option value="" disabled selected>
+                                                            Select Product
+                                                        </option>
+                                                        @foreach ($products as $product)
+                                                            @php
+                                                                $isSelected = '';
+                                                                if($stockOutNya != null){
+                                                                    if($prodOutNya['product_id'] == $product['id']){
+                                                                        $isSelected = 'selected';
+                                                                    }
+                                                                }
+                                                            @endphp
+
+                                                            <option value="{{ $product->id }}" {{ $isSelected }}>
+                                                                {{ $product->code }} - {{ $product->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                    <span class="invalid-feedback"><strong></strong></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="quantity_{{ $keyNyaProd }}">
+                                                        Quantity
+                                                    </label>
+                                                    <input id="quantity_{{ $keyNyaProd }}"
+                                                        class="form-control"
+                                                        type="number"
+                                                        name="quantity[]"
+                                                        placeholder="Quantity"
+                                                        min="0"
+                                                        value="{{ $prodOutNya['quantity'] }}" 
+                                                        required />
+                                                    <span class="invalid-feedback"><strong></strong></span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="koli_{{ $keyNyaProd }}">
+                                                        Koli (Optional)
+                                                    </label>
+                                                    <input id="koli_{{ $keyNyaProd }}"
+                                                        class="form-control"
+                                                        type="number"
+                                                        name="koli[]"
+                                                        value="{{ $prodOutNya['koli'] }}" 
+                                                        placeholder="Koli" />
+                                                    <span class="invalid-feedback"><strong></strong></span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="koli_0">
-                                                Koli (Optional)
-                                            </label>
-                                            <input id="koli_0"
-                                                class="form-control"
-                                                type="number"
-                                                name="koli[]"
-                                                placeholder="Koli" />
-                                            <span class="invalid-feedback"><strong></strong></span>
+                                    @endforeach
+
+                                    @if($keyNyaProd == $stockOutNya->stockInOutProduct->count() - 1 && $stockOutNya->stockInOutProduct->count() > 1)
                                         </div>
-                                    </div>
-                                </div>
-                                <div id="tambahan_product"></div>
+                                    @elseif($stockOutNya->stockInOutProduct->count() == 1)
+                                        <div id="tambahan_product"></div>
+                                    @endif
+                                @endif
                             </div>
 
                             <div class="form-group">
@@ -238,7 +348,7 @@ $menu_item_second = "add_stock_in";
                                 <button type="submit"
                                     id="addHistory"
                                     class="btn btn-gradient-primary">
-                                    Save
+                                    {{ $stockOutNya == null ? 'Save' : 'Confirm' }}
                                 </button>
                             </div>
                         </form>
@@ -463,6 +573,7 @@ $(document).on('change', '#date, #from_warehouse_type', function() {
         }
         function completeHandler(event){
             var hasil = JSON.parse(event.target.responseText);
+            console.log(hasil);
             for (var key of frmAdd.keys()) {
                 $("#actionAdd").find("input[name='"+key.name+"']").removeClass("is-invalid");
                 $("#actionAdd").find("select[name='"+key.name+"']").removeClass("is-invalid");

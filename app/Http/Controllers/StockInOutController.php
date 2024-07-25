@@ -39,7 +39,7 @@ class StockInOutController extends Controller
             ->orderBy("code")
             ->get();
 
-        $types = ['In Pending', "in", "out"];
+        $types = ['In_Pending', "in", "out"];
         $stockTypes = [];
         foreach ($types as $type) {
             $stockTypes[$type] = StockInOut::orderBy("created_at", "desc")->orderBy('id', 'asc')
@@ -84,7 +84,7 @@ class StockInOutController extends Controller
         else{
             $allStockInOutConnects = StockInOutConnect::where('status', 'outstanding');
         }
-        $stockTypes['In Pending'] = $allStockInOutConnects->orderBy('created_at', 'desc')->paginate(10, ['*'], $type);
+        $stockTypes['In_Pending'] = $allStockInOutConnects->orderBy('created_at', 'desc')->paginate(10, ['*'], $type);
 
         return view("admin.list_stock_new", compact("stockTypes", "warehouses", "stocks"));
     }
@@ -175,15 +175,33 @@ class StockInOutController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createIn()
+    public function createIn(Request $request)
     {
         $products = Product::select("id", "code", "name")
             ->where("active", true)
             ->orderBy("code")
             ->get();
 
+        $stockOutNya = null;
+        $codeConnection = null;
+        if($request->has('id')){
+            $stockOutNya = StockInOut::find($request->id);
+            if($stockOutNya->stockInOutConnect['status'] != 'outstanding'){
+                abort(404);
+            }
+            $date_d = date('d');
+            $date_m = date('m');
+            $countStockInOut = StockInOut::whereMonth('date', $date_m)
+                ->whereDay('date', $date_d)
+                ->where('type', 'in')->count() + 1;
+            $codeConnection = "DI";
+            $codeConnection .= ($stockOutNya->warehouseFrom['type'] != "warehouse") ? ucfirst(substr($stockOutNya->warehouseFrom['type'], 0, 1)) : "U";
+            $codeConnection .= '-'.$date_d.$date_m;
+            $codeConnection .= '-'.str_pad($countStockInOut, "6", "0", STR_PAD_LEFT);
+        }
+
         return view("admin.add_stock_in", compact(
-            "products",
+            "products", "stockOutNya", "codeConnection",
         ));
     }
 
@@ -366,15 +384,23 @@ class StockInOutController extends Controller
                 // (new OfflineSideController)->sendUpdateOrderStatus($order->code, 'stock_request_success', Auth::user()->code);
             }
 
-            if($stockInOut->warehouseTo['type'] == 'warehouse'){
-                $stockinoutConnection = new StockInOutConnect();
-                $stockinoutConnection->stock_out_id = $stockInOut['id'];
-                $stockinoutConnection->save();
+            if($stockInOut->warehouseTo['type'] == 'warehouse' && $stockInOut->warehouseFrom['type'] == 'warehouse'){
+                if($request->type === "out"){
+                    $stockinoutConnection = new StockInOutConnect();
+                    $stockinoutConnection->stock_out_id = $stockInOut['id'];
+                    $stockinoutConnection->save();
+                }
+                elseif($request->type === "in" && $request->has('stock_in_out_connection')){
+                    $stockinoutConnection = StockInOutConnect::find($request->stock_in_out_connection);
+                    $stockinoutConnection->stock_in_id = $stockInOut['id'];
+                    $stockinoutConnection->status = 'confirm';
+                    $stockinoutConnection->save();
+                }
             }
 
             DB::commit();
 
-            return response()->json(['success' => "Stocck ".ucwords($request->type)." successfully added."]);
+            return response()->json(['success' => "Stock ".ucwords($request->type)." successfully added."]);
         } catch (\Exception $th) {
             DB::rollBack();
 
