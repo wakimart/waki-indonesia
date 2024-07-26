@@ -78,7 +78,15 @@
                 <tbody>
                     @foreach($order->orderDetail as $index => $detail)
                         <tr>
-                            <td>{{ucwords($detail->type)}}</td>
+                            <td>
+                                @if($detail->type == 'pembelian')
+                                    Pembelian
+                                @elseif($detail->type == 'upgrade')
+                                    Tarik-Upgrade
+                                @else
+                                    Hadiah
+                                @endif
+                            </td>
                             @if($detail->product_id)
                                 <td>({{$detail->product->code}}) {{$detail->product->name}}</td>
                             @elseif($detail->promo_id)
@@ -104,7 +112,7 @@
                             @if($detail->type == 'upgrade')
                                 <td>{{ date("d/m/Y", strtotime($deliveredDate)) }}</td>
                             @else
-                                <td>{{ $detail->stockInOut['date'] != null ? date("d/m/Y", strtotime($detail->stockInOut['date'])) : 'Belum Terkirim' }}</td>
+                                <td>{{ $detail->stockInOut['date'] != null ? date("d/m/Y", strtotime($detail->stockInOut['date'])) : '-' }}</td>
                             @endif
                         </tr>
                     @endforeach
