@@ -397,6 +397,7 @@ class ReferenceController extends Controller
                 "delivery_status_prize",
                 "final_status",
                 "order_code",
+                "temp_no"
             ));
 
             if($request->has('status_acc')){
@@ -455,6 +456,23 @@ class ReferenceController extends Controller
             }
             $referenceSouvenir->order_image = json_encode($arrImage);
 
+            //pembentukan array product
+            $index = 0;
+            $arrayProducts = [];
+            $allData = $request->all();
+            foreach ($request->all() as $key => $value) {
+                $arrKey = explode("_", $key);
+                if($arrKey[0] == 'product'){
+                    if(isset($allData['qty_'.$arrKey[1]])){
+                        $arrayProducts[$index] = [];
+                        $arrayProducts[$index]['id'] = $value;
+                        $arrayProducts[$index]['qty'] = $allData['qty_'.$arrKey[1]];
+                        $index++;
+                    }
+                }
+            }
+            $referenceSouvenir->gift_products = json_encode($arrayProducts);
+
             $referenceSouvenir->save();
 
             $userId = Auth::user()["id"];
@@ -477,23 +495,10 @@ class ReferenceController extends Controller
             }
 
             DB::commit();
-
-            if($request->has('status_acc') || $request->has('order_id')){
-                // return response()->json([
-                //     "success" => $reference,
-                // ], 200);
-                return redirect()
-                    ->route("detail_submission_form", [
-                        "id" => $reference->submission['id'],
-                        "type" => "mgm",
-                    ])
-                    ->with('success', 'Data berhasil dimasukkan.');
-            }
-            else{
-                return response()->json([
-                    "success" => $reference,
-                ], 200);
-            }
+            
+            return response()->json([
+                "success" => $reference,
+            ], 200);
         } catch (Exception $e) {
             DB::rollBack();
 

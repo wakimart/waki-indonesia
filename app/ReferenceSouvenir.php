@@ -23,6 +23,8 @@ class ReferenceSouvenir extends Model
         "order_code",
         "order_image",
         "theraphy_service_id",
+        "temp_no",
+        "gift_products"
     ];
 
     public function reference()

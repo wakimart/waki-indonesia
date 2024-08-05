@@ -1154,6 +1154,10 @@ Route::group(['prefix' => 'cms-admin'], function () {
         // export pdf submission mgm form
         Route::get('/mgm/{id}/pdf', 'SubmissionController@exportPDF')
             ->name('submission_mgm_export_pdf');
+
+        // export pdf submission mgm form
+        Route::get('/mgm/{id}/pdf-gift', 'SubmissionController@giftPDF')
+            ->name('pdf_submission_mgm_gift');
     });
 
     Route::group(["prefix" => "reference", "middleware" => "auth"], function () {

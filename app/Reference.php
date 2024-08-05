@@ -33,6 +33,11 @@ class Reference extends Model
 
         return $queryCity->type . " " . $queryCity->city_name;
     }
+    public function province_obj()
+    {
+        return $this->belongsTo("App\RajaOngkir_Province", "province", "province_id");
+    }
+    
     public function reference_souvenir()
     {
         return $this->hasOne('App\ReferenceSouvenir');

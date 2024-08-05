@@ -511,6 +511,7 @@ class SubmissionController extends Controller
         }
 
         $historySubmission = $this->queryHistory($request->id);
+        $products = Product::where('active', true)->get();
 
         return view(
             "admin.detail_submission_" . $request->type,
@@ -521,6 +522,7 @@ class SubmissionController extends Controller
                 "promos",
                 "souvenirs",
                 "prizes",
+                "products"
             )
         );
     }
@@ -1926,5 +1928,31 @@ class SubmissionController extends Controller
         // return view('admin.pdf_submission_mgm', $data);
         $pdf = PDF::loadView('admin.pdf_submission_mgm', $data);
         return $pdf->download($submission->code.'.pdf');
+    }
+
+    public function giftPDF($id)
+    {
+        $reference = Reference::find($id);
+        $giftProducts = [];
+        if($reference->reference_souvenir->gift_products){
+            $array_gift = json_decode($reference->reference_souvenir->gift_products);
+            if(count($array_gift)>0){
+                foreach($array_gift as $value){
+                    $product = Product::find($value->id);
+                    $array = array();                
+                    $array['product'] = $product;
+                    $array['qty'] = $value->qty;
+                    array_push($giftProducts, $array);
+                }
+            }
+        }
+        // return response()->json($giftProducts);
+        $data = [
+            'reference' => $reference,
+            'giftProducts' => $giftProducts
+        ];
+        // return view('admin.pdf_submission_mgm_gift', compact('reference', 'giftProducts'));
+        $pdf = PDF::loadView('admin.pdf_submission_mgm_gift', $data);
+        return $pdf->download($reference->submission->code.'_'.str_replace(' ', '_', $reference->name).'_gift.pdf');
     }
 }

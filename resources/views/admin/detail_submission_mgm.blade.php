@@ -161,7 +161,7 @@ if (
                 <div class="table-responsive">
                     <table class="w-100">
                         <thead>
-                            <td colspan="14">Reference</td>
+                            <td colspan="15">Reference</td>
                         </thead>
                         <thead style="background-color: #80808012 !important;">
                             <tr>
@@ -181,6 +181,7 @@ if (
                                 <td class="text-center">Edit</td>
                                 <td class="text-center">ACC</td>
                                 <td class="text-center">Delete</td>
+                                <td class="text-center">PDF</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -344,6 +345,11 @@ if (
                                             data-target="#delete-reference-modal">
                                             <i class="mdi mdi-delete" style="font-size: 24px; color: #fe7c96;"></i>
                                         </button>
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($reference->status_prize == "success" && $reference->reference_souvenir->temp_no) 
+                                            <a href="{{ route('pdf_submission_mgm_gift', $reference->id) }}" class="btn"><i class="mdi mdi-file-pdf-box" style="font-size: 24px; color: #e74c3c"></i></a>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -777,6 +783,69 @@ if (
                             <input id="ref_city" type="hidden" name="city" />
                             <input id="refs_order" type="hidden" name="order_id" />
 
+                            <div class="row">
+                                <div class="col-3">
+                                    <p>Temp No (optional)</p>
+                                </div>
+                                <div class="col-9">
+                                    <input type="number" min=0 class="form-control" placeholder="Temp No" name="temp_no" value="{{$reference->reference_souvenir->temp_no}}">
+                                </div>
+                            </div>
+                            @php
+                                $product_0 = null;
+                                $qty_0 = null;
+                                $product_1 = null;
+                                $qty_1 = null;
+                                if($reference->reference_souvenir->gift_products){
+                                    $gifts = json_decode($reference->reference_souvenir->gift_products);
+                                    foreach($gifts as $index => $value){
+                                        if($index == 0){
+                                            $product_0 = $value->id;
+                                            $qty_0 = $value->qty;
+                                        }else{
+                                            $product_1 = $value->id;
+                                            $qty_1 = $value->qty;
+                                        }
+                                    }
+                                }
+                            @endphp
+                            <div class="row">
+                                <div class="col-3" style="margin: auto">
+                                    <p style="margin: auto">Product 1</p>
+                                </div>
+                                <div class="col-6">
+                                    <select name="product_0" id="" class="form-control">
+                                        <option value="">select product 1</option>
+                                        @foreach ($products as $key => $product)
+                                            <option value="{{ $product->id }}" {{ $product_0 ? $product_0 == $product->id ? 'selected' : '' : '' }}>
+                                                {{ $product->code }} - {{ $product->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <input type="number" min=0 class="form-control" name="qty_0" value="{{$qty_0}}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-3" style="margin: auto">
+                                    <p style="margin: auto">Product 2</p>
+                                </div>
+                                <div class="col-6">
+                                    <select name="product_1" id="" class="form-control">
+                                        <option value="">select product 2</option>
+                                        @foreach ($products as $key => $product)
+                                            <option value="{{ $product->id }}" {{ $product_1 ? $product_1 == $product->id ? 'selected' : '' : '' }}>
+                                                {{ $product->code }} - {{ $product->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <input type="number" min=0 class="form-control" name="qty_1" value="{{$qty_1}}">
+                                </div>
+                            </div><br>
+
                             <button class="btn btn-primary"
                                 type="submit"
                                 id="btn-confirmUpdate">
@@ -1037,7 +1106,6 @@ function loadDataPerRef(ref_id) {
             var data_order = data['data_order'];
             var data_prize = data['data_prize'];
             var detail_product = data['detail_product'];
-            console.log(data_prize);
 
             // Detail HS
             if (data_hs != null) {
@@ -1288,7 +1356,6 @@ $(document).ready(function () {
     // KHUSUS UNTUK ORDER
     $("#choose-order").on('shown.bs.modal', function (event) {
         originButton = event.relatedTarget.dataset.originbutton;
-        console.log(originButton);
 
         let submission_id = "{{ $submission->id }}";
         getOrderSubmission("", submission_id, originButton);
@@ -1351,7 +1418,6 @@ $(document).ready(function () {
         frmAdd = new FormData(document.getElementById("formUpdateStatus"));
         frmAdd.enctype = "multipart/form-data";
         var URLNya = $("#formUpdateStatus").attr('action');
-        console.log(URLNya);
 
         var ajax = new XMLHttpRequest();
         ajax.upload.addEventListener("progress", progressHandler, false);
