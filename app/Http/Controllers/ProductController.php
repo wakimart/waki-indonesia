@@ -152,6 +152,9 @@ class ProductController extends Controller
         $products->category_id = $request->input('category_id');
         $products->description = $request->description;
         $products->quick_desc = $request->quick_description;
+        if($request->has('in_price')){
+            $products->in_price = $request->input('in_price');
+        }
 
         // Restore image
         $codePath = strtolower($request->input('code'));

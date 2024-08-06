@@ -131,6 +131,17 @@ $menu_item_second = "add_product";
                                     name="price"
                                     required />
                             </div>
+                            @can('in-price-product')
+                                <div class="form-group">
+                                    <label for="in_price">In Price (Rp.)</label>
+                                    <input type="number"
+                                        class="form-control"
+                                        id="in_price"
+                                        placeholder="In Product Price (Rp)"
+                                        name="in_price"
+                                        required />
+                                </div>
+                            @endcan
 
 
                             <div class="form-group">

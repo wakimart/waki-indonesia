@@ -312,6 +312,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-product', function ($user) {
             return $user->hasAccess(['delete-product']);
         });
+        Gate::define('in-price-product', function ($user) {
+            return $user->hasAccess(['in-price-product']);
+        });
 
         //-- PROMO --//
         Gate::define('add-promo', function ($user) {
