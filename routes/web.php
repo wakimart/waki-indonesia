@@ -206,6 +206,11 @@ Route::group(['prefix' => 'api-apps'], function () {
     Route::group(["prefix" => "prize"], function () {
         Route::post("fetch_prize", "PrizeController@fetchPrize");
     });
+
+    //stock online offline
+    Route::group(["prefix" => "store_display_to_ready"], function() {
+        Route::post("/add/out", "StockInOutController@store");
+    });
 });
 
 Auth::routes(['verify' => true]);
