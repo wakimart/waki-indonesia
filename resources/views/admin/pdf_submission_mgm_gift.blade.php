@@ -13,7 +13,7 @@
 
 @for ($i=1; $i<=2; $i++)
     <div style="display: block; border-bottom: 1px solid black;">
-        <img src="{{public_path('sources/Logo Since.png')}}" style="max-width: 140px; height: 50px; float: left;">
+        <img src="{{asset('sources/Logo Since.png')}}" style="max-width: 140px; height: 50px; float: left;">
         <div style="text-align: right; height: 50px;">
             <div>Kompl. Darmo Park I Blok 2B No. 1-6</div>
             <div>Jl. Mayjend Sungkono - Surabaya</div>
@@ -94,7 +94,7 @@
     <table style="width: 100%; border-collapse: collapse;">
         <tr>
             <td>
-                <small style="font-style: italic;">Lembar ke-{{ $i }} untuk 
+                <small style="font-style: italic;">Lembar ke-{{ $i }} untuk
                     @if($i == 1) Customer
                     @elseif($i == 2) Arsip Office
                     @endif
