@@ -137,6 +137,7 @@ class RolesSeeder extends Seeder
                 'browse-product' => true,
         		'edit-product' => true,
                 'delete-product' => true,
+                'in-price-product' => true,
 
                 //Promo
         		'add-promo' => true,
@@ -426,6 +427,7 @@ class RolesSeeder extends Seeder
                 'browse-product' => true,
         		'edit-product' => true,
                 'delete-product' => true,
+                'in-price-product' => false,
 
                 //Promo
         		'add-promo' => true,
@@ -715,6 +717,7 @@ class RolesSeeder extends Seeder
                 'browse-product' => false,
                 'edit-product' => false,
                 'delete-product' => false,
+                'in-price-product' => false,
 
                 //Promo
                 'add-promo' => false,
@@ -999,6 +1002,7 @@ class RolesSeeder extends Seeder
                 'browse-product' => false,
                 'edit-product' => false,
                 'delete-product' => false,
+                'in-price-product' => false,
 
                 //Promo
                 'add-promo' => false,
@@ -1282,6 +1286,7 @@ class RolesSeeder extends Seeder
                 'browse-product' => false,
                 'edit-product' => false,
                 'delete-product' => false,
+                'in-price-product' => false,
 
                 //Promo
                 'add-promo' => false,
@@ -1565,6 +1570,7 @@ class RolesSeeder extends Seeder
                 'browse-product' => false,
                 'edit-product' => false,
                 'delete-product' => false,
+                'in-price-product' => false,
 
                 //Promo
                 'add-promo' => false,
@@ -1848,6 +1854,7 @@ class RolesSeeder extends Seeder
                 'browse-product' => false,
                 'edit-product' => false,
                 'delete-product' => false,
+                'in-price-product' => false,
 
                 //Promo
                 'add-promo' => false,
