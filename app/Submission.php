@@ -55,5 +55,11 @@ class Submission extends Model
     public function reference()
     {
         return $this->hasMany('App\Reference')->where('active', true);
+    }    
+    public function getCityFullName()
+    {
+        $queryCity = RajaOngkir_City::where("city_id", $this->city)->first();
+
+        return $queryCity->type . " " . $queryCity->city_name;
     }
 }

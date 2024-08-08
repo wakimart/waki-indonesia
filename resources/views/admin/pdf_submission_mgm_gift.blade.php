@@ -37,25 +37,25 @@
             <td style="text-align: right; vertical-align: top;">Tanggal :</td>
             <td>{{ date('d/m/Y') }}</td>
             <td style="text-align: right; vertical-align: top;">Customer :</td>
-            <td colspan="4">{{$reference->name}}</td>
+            <td colspan="4">{{$reference->submission->name}}</td>
         </tr>
         <tr>
             <td style="text-align: right; vertical-align: top;">No SP :</td>
-            <td>GIFT/{{strtotime('now')}}/{{substr($reference->phone, -4)}} Temp No : {{$reference->reference_souvenir->temp_no}}</td>
+            <td>GIFT/{{strtotime('now')}}/{{substr($reference->submission->phone, -4)}} Temp No : {{$reference->reference_souvenir->temp_no}}</td>
             <td></td>
-            <td colspan="4">{{$reference->getCityFullName()}}, {{$reference->province_obj->province}}</td>
+            <td colspan="4">{{$reference->submission->address}}</td>
         </tr>
         <tr>
             <td style="text-align: right; vertical-align: top;">Cabang :</td>
             <td>{{$reference->submission->branch->name}}</td>
             <td></td>
-            <td colspan="4"></td>
+            <td colspan="4">{{$reference->submission->district_obj->subdistrict_name}}, {{$reference->submission->getCityFullName()}}, {{$reference->submission->province_obj->province}}</td>
         </tr>
         <tr>
             <td style="text-align: right; vertical-align: top;">Sales :</td>
             <td>{{$reference->submission->cso->name}}</td>
             <td></td>
-            <td colspan="4">{{$reference->phone}}</td>
+            <td colspan="4">{{$reference->submission->phone}}</td>
         </tr>
         <tr>
             <td style="text-align: right; vertical-align: top;">Keterangan :</td>
