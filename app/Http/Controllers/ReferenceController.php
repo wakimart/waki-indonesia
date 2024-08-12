@@ -496,9 +496,7 @@ class ReferenceController extends Controller
 
             DB::commit();
             
-            return response()->json([
-                "success" => $reference,
-            ], 200);
+            return redirect()->route('detail_submission_form', ['id'=>$reference->submission->id, 'type'=>'mgm'])->with("success", "Reference data entered successfully.");
         } catch (Exception $e) {
             DB::rollBack();
 
