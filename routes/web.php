@@ -1722,7 +1722,7 @@ Route::group(['prefix' => 'cms-admin'], function () {
     Route::group(['prefix' => 'cso-commission', 'middleware' => 'auth'], function() {
         Route::get('/list', 'CsoCommissionController@index')->name('list_cso_commission')->middleware('can:list-cso_commission');
         Route::get('/edit/{id}', 'CsoCommissionController@edit')->name('edit_cso_commission')->middleware('can:edit-cso_commission');
-        Route::get('/detail/{id}', 'CsoCommissionController@show')->name('detail_cso_commission')->middleware('can:detail-cso_commission');
+        Route::get('/detail/{cso_commission_id}/{branch_id}', 'CsoCommissionController@show')->name('detail_cso_commission')->middleware('can:detail-cso_commission');
         Route::post('/delete/{id}', 'CsoCommissionController@destroy')->name('delete_cso_commission')->middleware('can:delete-cso_commission');
         Route::match(['put', 'patch'], '/update/{id}', 'CsoCommissionController@update')->name('update_cso_commission')->middleware('can:edit-cso_commission');
         Route::get('/export-commission', 'CsoCommissionController@exportCsoCommission')->name('exportCsoCommission');

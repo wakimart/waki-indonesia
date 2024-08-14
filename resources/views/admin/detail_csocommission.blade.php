@@ -78,86 +78,109 @@
                 <br />
                 <table class="w-100 table-bordered my-2">
                     <thead class="font-weight-bold" align="center">
-                        <td>Commision</td>
+                        <td>Netto Sale</td>
+                        <td>Cancel</td>
+                        <td>Commission</td>
                         <td>Bonus</td>
-                        <td>Upgrade</td>
-                        <td>Bonus Semangat</td>
-                        <td>Lebih Harga</td>
-                        <td>Total Commision</td>
+                        <td>Tax</td>
+                        <td>Total Commission Bonus</td>
                     </thead>
                     <tr align="center">
                         @php
-                            $commissionCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->commission);});
-                            $bonusCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->bonus);});
-                            $upgradeCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->upgrade);});
-                            $smgt_nominalCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->smgt_nominal);});
-                            $excess_priceCso = $cso_commission->orderCommission->sum(function ($row) {return ($row->excess_price);});
+                            $netto_sale = floor($cso_commission['total_sales']);
+                            $cancel_cso = floor($cso_commission['cancel_cso']);
+                            $commission = floor($cso_commission['commission']);
+                            $bonus_cso = floor($cso_commission['bonus_cso']);
                         @endphp
-
-                        <td>Rp. {{ number_format($commissionCso) }}</td>
-                        <td rowspan="2">Rp. {{ number_format($bonusCso) }}</td>
-                        <td rowspan="2">Rp. {{ number_format($upgradeCso) }}</td>
-                        <td rowspan="2">Rp. {{ number_format($smgt_nominalCso) }}</td>
-                        <td rowspan="2">Rp. {{ number_format($excess_priceCso) }}</td>
-                        <td>Rp. {{ number_format($commissionCso + $bonusCso + $upgradeCso + $smgt_nominalCso + $excess_priceCso) }}</td>
+                        <td>Rp. {{number_format($netto_sale)}}</td>
+                        <td>Rp. {{number_format($cancel_cso)}}</td>
+                        <td>Rp. {{ number_format($commission - (0.03*$cancel_cso)) }}</td>
+                        <td>Rp. {{number_format($bonus_cso)}}</td>
+                        <td>Rp. 0</td>
+                        <td>Rp. {{ number_format($commission + $bonus_cso) }}</td>
                     </tr>
-                    @if($cso_commission['commission'] > 0)
-                        <tr align="center">
-                            <td {!! ($cso_commission['commission'] > 0) ? 'style="background-color: #cde9ff;"' : '' !!}>Rp. {{ number_format($cso_commission['commission']) }}</td>
-                            <td {!! ($cso_commission['commission'] > 0) ? 'style="background-color: #cde9ff;"' : '' !!}>Rp. {{ number_format($cso_commission['commission'] + $bonusCso + $upgradeCso + $smgt_nominalCso + $excess_priceCso) }}</td>
-                        </tr>
-                    @endif
                 </table>
                 <br />
                 <table class="w-100 table-bordered my-2">
                     <thead class="font-weight-bold" align="center">
                         <td>Order Date</td>
-                        <td>Order DO</td>
                         <td>Percentage</td>
-                        <td>Commission</td>
+                        <td>Order DO</td>
+                        <td>Price</td>
                         <td>Bonus</td>
                         <td>Upgrade</td>
-                        <td>Bonus Semangat</td>
                         <td>Lebih Harga</td>
-                        <td>Total Commmission + Bonus</td>
+                        <td>Product</td>
                         <td>View</td>
                     </thead>
-                    @foreach($cso_commission->orderCommission as $orderPerCommission)
-                        <tr align="center">
-                            <td>{{ date('d/m/Y', strtotime($orderPerCommission->order['orderDate'])) }}</td>
-                            <td>{{ $orderPerCommission->order['temp_no'] }}</td>
-                            <td>
-                                {{ $orderPerCommission->order['30_cso_id'] == $orderPerCommission->order['70_cso_id'] ? "100%" : ($orderPerCommission->order['30_cso_id'] == $cso_commission->cso['id'] ? "30%" : "70%") }}
-                            </td>
-                            <td>Rp. {{ number_format($orderPerCommission['commission']) }}</td>
-                            <td>Rp. {{ number_format($orderPerCommission['bonus']) }}</td>
-                            <td>Rp. {{ number_format($orderPerCommission['upgrade']) }}</td>
-                            <td>Rp. {{ number_format($orderPerCommission['smgt_nominal']) }}</td>
-                            <td>Rp. {{ number_format($orderPerCommission['excess_price']) }}</td>
-                            <td>Rp. {{ number_format($orderPerCommission['commission'] + $orderPerCommission['bonus'] + $orderPerCommission['upgrade'] + $orderPerCommission['smgt_nominal'] + $orderPerCommission['excess_price']) }}</td>
-                            <td>
-                                <a href="{{ route('detail_order') }}?code={{ $orderPerCommission->order['code'] }}" target="_blank">
-                                    <i class="mdi mdi-eye text-info" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                    <tr class="font-weight-bold" align="center">
-                        <td colspan="3" rowspan="2" class="text-right">Total Commission + Bonus</td>
-                        <td>Rp. {{ number_format($commissionCso) }}</td>
-                        <td rowspan="2">Rp. {{ number_format($bonusCso) }}</td>
-                        <td rowspan="2">Rp. {{ number_format($upgradeCso) }}</td>
-                        <td rowspan="2">Rp. {{ number_format($smgt_nominalCso) }}</td>
-                        <td rowspan="2">Rp. {{ number_format($excess_priceCso) }}</td>
-                        <td>Rp. {{ number_format($commissionCso + $bonusCso + $upgradeCso + $smgt_nominalCso + $excess_priceCso) }}</td>
-                        <td rowspan="2"></td>
-                    </tr>
-                    @if($cso_commission['commission'] > 0)
-                        <tr class="font-weight-bold" align="center">
-                            <td {!! ($cso_commission['commission'] > 0) ? 'style="background-color: #cde9ff;"' : '' !!}>Rp. {{ number_format($cso_commission['commission']) }}</td>
-                            <td {!! ($cso_commission['commission'] > 0) ? 'style="background-color: #cde9ff;"' : '' !!}>Rp. {{ number_format($cso_commission['commission'] + $bonusCso + $upgradeCso + $smgt_nominalCso + $excess_priceCso) }}</td>
-                        </tr>
-                    @endif
+                    <tbody>
+                       @foreach($orders as $val)
+                            <tr align="center">
+                                <td>{{date('j-M', strtotime($val->order->orderDate))}}</td>
+                                <td>{{$val->order['30_cso_id'] == $val->order['70_cso_id'] ? "100%" : ($val->order['30_cso_id'] == $val->cso_id ? "30%" : "70%")}}</td>
+                                <td>{{$val->order->temp_no}}</td>
+                                <td>Rp. {{number_format($val->order->total_payment)}}</td>
+                                <td>Rp. {{number_format($val->bonus)}}</td>
+                                <td>Rp. {{number_format($val->upgrade)}}</td>
+                                <td>Rp. {{number_format($val->excess_price)}}</td>
+                                @php
+                                    $curnt_beli = 1;
+                                    $curnt_hadiah = 1;
+                                    $curnt_upgrade = 1;
+                                    $product_beli = "";
+                                    $product_hadiah = "";
+                                    $product_upgrade = "";
+
+                                    foreach($val->order->orderDetail as $order_detail){
+                                        if($order_detail['type'] == "pembelian"){
+                                            if(isset($order_detail->product['code'])){
+                                                $product_beli .= $order_detail->product['code']."-".$order_detail->product['name']." (Pembelian)";
+                                            }else{
+                                                $product_beli .= $order_detail['other']." (Pembelian)";
+                                            }
+                                            $tempTot = $val->order->orderDetail->where('type', "pembelian")->count();
+                                            if($tempTot > 1 && $curnt_beli < $tempTot){
+                                                $curnt_beli++;
+                                                $product_beli .= "<br>";
+                                            }
+                                        }elseif($order_detail['type'] == "prize"){
+                                            if(isset($order_detail->product['code'])){
+                                                $product_hadiah .= $order_detail->product['code']."-".$order_detail->product['name']." (Hadiah)";
+                                            }
+                                            else{
+                                                $product_hadiah .= $order_detail['other']." (Hadiah)";
+                                            }
+                                            $tempTot = $val->order->orderDetail->where('type', "prize")->count();
+                                            if($tempTot > 1 && $curnt_hadiah < $tempTot){
+                                                $curnt_hadiah++;
+                                                $product_hadiah .= "<br>";
+                                            }
+                                        }elseif($order_detail['type'] == "upgrade"){
+                                            if(isset($order_detail->product['code'])){
+                                                $product_upgrade .= $order_detail->product['code']."-".$order_detail->product['name']." (Upgrade)";
+                                            }
+                                            else{
+                                                $product_upgrade .= $order_detail['other']." (Upgrade)";
+                                            }
+                                            $tempTot = $val->order->orderDetail->where('type', "upgrade")->count();
+                                            if($tempTot > 1 && $curnt_upgrade < $tempTot){
+                                                $curnt_upgrade++;
+                                                $product_upgrade .= "<br>";
+                                            }
+                                        }
+                                    }
+                                @endphp
+                                <td style="font-size: 12px">
+                                    {!! $product_beli !!}<br>{!! $product_hadiah !!}<br>{!! $product_upgrade !!}
+                                </td>
+                                <td>
+                                    <a href="{{ route('detail_order') }}?code={{ $val->order->code }}" target="_blank">
+                                        <i class="mdi mdi-eye text-info" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                       @endforeach
+                    </tbody>
                 </table>
             </div>
 
