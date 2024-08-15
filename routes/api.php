@@ -28,4 +28,9 @@ Route::group(['middleware' => 'cors'], function() {
     Route::post('/replicate-cso-data', 'Api\OfflineSideController@replicateCSOData');
     Route::post('/update-cso-data', 'Api\OfflineSideController@updateCSOData');
     Route::post('/delete-cso-data', 'Api\OfflineSideController@deleteCSOData');
+
+    //stock online offline
+    Route::group(["prefix" => "store_stock_api"], function() {
+        Route::post("add", 'Api\OfflineSideController@storeStockInOut');
+    });
 });

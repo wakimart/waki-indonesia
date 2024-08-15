@@ -11,6 +11,7 @@ use App\OrderPayment;
 use App\HistoryUpdate;
 use App\CsoCommission;
 use App\Http\Controllers\StockOrderRequestController;
+use App\Http\Controllers\StockInOutController;
 use App\User;
 use App\Cso;
 use App\Branch;
@@ -745,5 +746,15 @@ class OfflineSideController extends Controller
             $data['updated_at'] = date("Y-m-01 00:00:00");
             CsoCommission::create($data);
         }
+    }
+
+    public function storeStockInOut(Request $request)
+    {
+        $stockInOut = new StockInOutController();
+        $data = $request->all();
+        dd(json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $stockInOut->generateCode($request))));
+        $data['code'] = json_decode($stockInOut->generateCode($request), true);
+        dd($data);
+        return $stockInOut->store($request);
     }
 }
