@@ -622,12 +622,16 @@ class CsoCommissionController extends Controller
                 $orderCommissions = OrderCommission::from('order_commissions as oc')
                     ->select('oc.*')
                     ->join('orders as o', 'o.id', 'oc.order_id')
+                    ->join('order_payments as op', 'op.order_id', 'o.id')
                     ->where('o.status', '!=', 'reject')
-                    ->where('o.orderDate', '>=', $startDate)
-                    ->where('o.orderDate', '<=', $endDate)
+                    ->where('op.payment_date', '>=', $startDate)
+                    ->where('op.payment_date', '<=', $endDate)
+                    ->where('op.status', 'verified')
                     ->where('o.branch_id', $branch)
                     ->where('o.active', true)
-                    ->orderBy('o.id', 'asc')
+                    ->where('oc.active', true)
+                    ->orderBy('op.id', 'asc')
+                    ->whereNull('oc.remarks')
                     ->get();
 
                 // array for percentage calculation cut commission
