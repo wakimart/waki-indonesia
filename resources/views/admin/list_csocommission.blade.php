@@ -49,6 +49,7 @@ $menu_item_page_sub = "cso_commission";
                             <option value="" selected="">
                                 Please select branch
                             </option>
+                            <option value="all" {{isset($_GET['filter_branch']) ? $_GET['filter_branch'] == 'all' ? 'selected' : '' : ''}}>All Branch</option>
                             @foreach ($branches as $branch)
                                 @php
                                 $selected = "";
@@ -129,113 +130,115 @@ $menu_item_page_sub = "cso_commission";
             <div class="card">
                 <div class="card-body">
                     @if($allCsoCommission)
-                        <div class="mb-3">
-                            <h4>Branch : {{ $branches->where('id', $_GET['filter_branch']) ? $branches->where('id', $_GET['filter_branch'])->first()['code'].' - '.$branches->where('id', $_GET['filter_branch'])->first()['name'] : "-"}}</h4>
-                        </div>
-                        <h5>Date: {{ date("d/m/Y", strtotime($startDate)) }} - {{ date("d/m/Y", strtotime($endDate)) }}</h5>
-                        <h5 style="margin-bottom: 0.5em;">
-                            Total : {{ count($allCsoCommission) }} data
-                        </h5>
-                        <div class="table-responsive" style="border: 1px solid #ebedf2;">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr class="text-center">
-                                        <th>No. </th>
-                                        <th class="text-left">CSO - Name </th>
-                                        <th>Bank Account</th>
-                                        <th>Netto Sale</th>
-                                        <th>Cancel</th>
-                                        <th>Commission</th>
-                                        <th>Bonus</th>
-                                        <th>Tax</th>
-                                        <th>Total Commission Bonus</th>
-                                        <th colspan="3">Detail/Edit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        $tot_netto_sale = 0;
-                                        $tot_commission = 0;
-                                        $tot_pajak = 0;
-                                        $tot_result = 0;
-                                        $tot_bonus = 0;
-                                        $tot_cancel = 0;
-                                    @endphp
-
-                                    @foreach ($allCsoCommission as $key => $perCsoCommission)
-                                        @php
-                                            $netto_sale = floor($perCsoCommission['total_sales']);
-                                            $bonusPerCso = floor($perCsoCommission['bonusPerCso']);
-                                            $commissionPerCso = floor($perCsoCommission['commissionPerCso']);
-                                            $cancelPerCso = floor($perCsoCommission['cancelPerCso']);
-
-                                            $tot_netto_sale += $netto_sale;
-                                            $tot_commission += $commissionPerCso;
-                                            $tot_bonus += $bonusPerCso;
-                                            $tot_cancel += $cancelPerCso;
-
-                                            $tot_result += $commissionPerCso + $bonusPerCso - $cancelPerCso;
-
-                                            $getCsoCommission = 0;
-                                            foreach($perCsoCommission->csoCommission as $value){
-                                                if($startDate." 00:00:00" == $value->created_at){
-                                                    $getCsoCommission = $value->id;
-                                                }
-                                            }
-                                        @endphp
-
-                                        <tr>
-                                            <td class="text-center">{{ $key+1 }}</td>
-                                            <td>{{ $perCsoCommission['code'] }} - {{ $perCsoCommission['name'] }}</td>
-                                            <td>{{ $perCsoCommission['no_rekening'] }}</td>
-                                            <td class="text-right">Rp. {{ number_format($netto_sale) }}</td>
-                                            <td class="text-right">Rp. {{ number_format($cancelPerCso) }}</td>
-                                            <td class="text-right">Rp. {{ number_format($commissionPerCso - (0.03*$cancelPerCso)) }}</td>
-                                            <td class="text-right">Rp. {{ number_format($bonusPerCso) }}</td>
-                                            <td class="text-right">Rp. 0</td>
-                                            <td class="text-right">Rp. {{ number_format($commissionPerCso + $bonusPerCso) }}</td>
-                                            <td class="text-center">
-                                                @if(Gate::check('detail-cso_commission') && $getCsoCommission)
-                                                <a href="{{ route('detail_cso_commission', ['cso_commission_id' => $getCsoCommission, 'branch_id' => $_GET['filter_branch']]) }}" target="_blank">
-                                                    <i class="mdi mdi-eye text-info" style="font-size: 24px;"></i>
-                                                </a>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                @if(Gate::check('edit-cso_commission') && $getCsoCommission)
-                                                <button class="btn-delete btn-edit_cso_commission" value="{{ $getCsoCommission }}">
-                                                    <i class="mdi mdi-border-color text-warning" style="font-size: 24px;"></i>
-                                                </button>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                @if(Gate::check('delete-cso_commission') && $getCsoCommission)
-                                                <button class="btn-delete btn-delete_cso_commission" value="{{ $getCsoCommission }}">
-                                                    <i class="mdi mdi-delete text-danger" style="font-size: 24px;"></i>
-                                                </button>
-                                                @endif
-                                            </td>
+                        @if($_GET['filter_branch'] !== 'all')
+                            <div class="mb-3">
+                                <h4>Branch : {{ $branches->where('id', $_GET['filter_branch']) ? $branches->where('id', $_GET['filter_branch'])->first()['code'].' - '.$branches->where('id', $_GET['filter_branch'])->first()['name'] : "-"}}</h4>
+                            </div>
+                            <h5>Date: {{ date("d/m/Y", strtotime($startDate)) }} - {{ date("d/m/Y", strtotime($endDate)) }}</h5>
+                            <h5 style="margin-bottom: 0.5em;">
+                                Total : {{ count($allCsoCommission) }} data
+                            </h5>
+                            <div class="table-responsive" style="border: 1px solid #ebedf2;">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th>No. </th>
+                                            <th class="text-left">CSO - Name </th>
+                                            <th>Bank Account</th>
+                                            <th>Netto Sale</th>
+                                            <th>Cancel</th>
+                                            <th>Commission</th>
+                                            <th>Bonus</th>
+                                            <th>Tax</th>
+                                            <th>Total Commission Bonus</th>
+                                            <th colspan="3">Detail/Edit</th>
                                         </tr>
+                                    </thead>
+                                    <tbody>
                                         @php
-
+                                            $tot_netto_sale = 0;
+                                            $tot_commission = 0;
+                                            $tot_pajak = 0;
+                                            $tot_result = 0;
+                                            $tot_bonus = 0;
+                                            $tot_cancel = 0;
                                         @endphp
-                                    @endforeach
-                                    <tr class="text-right">
-                                        <th colspan="3" rowspan="2">TOTAL COMMISSION</th>
-                                        <th>Rp. {{ number_format($tot_netto_sale) }}</th>
-                                        <th>Rp. {{ number_format($tot_cancel) }}</th>
-                                        <th>Rp. {{ number_format($tot_commission) }}</th>
-                                        <th>Rp. {{ number_format($tot_bonus) }}</th>
-                                        <th>Rp. 0</th>
-                                        <th>Rp. {{ number_format($tot_result) }}</th>
-                                    </tr>
-                                    {{-- <tr class="text-right">
-                                        <th colspan="4">Rp. {{ number_format($tot_commission + $tot_bonus + $tot_pajak + $tot_result) }}</th>
-                                    </tr> --}}
-                                </tbody>
-                            </table>
-                            <br/>
-                        </div>
+
+                                        @foreach ($allCsoCommission as $key => $perCsoCommission)
+                                            @php
+                                                $netto_sale = floor($perCsoCommission['total_sales']);
+                                                $bonusPerCso = floor($perCsoCommission['bonusPerCso']);
+                                                $commissionPerCso = floor($perCsoCommission['commissionPerCso']);
+                                                $cancelPerCso = floor($perCsoCommission['cancelPerCso']);
+
+                                                $tot_netto_sale += $netto_sale;
+                                                $tot_commission += $commissionPerCso;
+                                                $tot_bonus += $bonusPerCso;
+                                                $tot_cancel += $cancelPerCso;
+
+                                                $tot_result += $commissionPerCso + $bonusPerCso - $cancelPerCso;
+
+                                                $getCsoCommission = 0;
+                                                foreach($perCsoCommission->csoCommission as $value){
+                                                    if($startDate." 00:00:00" == $value->created_at){
+                                                        $getCsoCommission = $value->id;
+                                                    }
+                                                }
+                                            @endphp
+
+                                            <tr>
+                                                <td class="text-center">{{ $key+1 }}</td>
+                                                <td>{{ $perCsoCommission['code'] }} - {{ $perCsoCommission['name'] }}</td>
+                                                <td>{{ $perCsoCommission['no_rekening'] }}</td>
+                                                <td class="text-right">Rp. {{ number_format($netto_sale) }}</td>
+                                                <td class="text-right">Rp. {{ number_format($cancelPerCso) }}</td>
+                                                <td class="text-right">Rp. {{ number_format($commissionPerCso - (0.03*$cancelPerCso)) }}</td>
+                                                <td class="text-right">Rp. {{ number_format($bonusPerCso) }}</td>
+                                                <td class="text-right">Rp. 0</td>
+                                                <td class="text-right">Rp. {{ number_format($commissionPerCso + $bonusPerCso) }}</td>
+                                                <td class="text-center">
+                                                    @if(Gate::check('detail-cso_commission') && $getCsoCommission)
+                                                    <a href="{{ route('detail_cso_commission', ['cso_commission_id' => $getCsoCommission, 'branch_id' => $_GET['filter_branch']]) }}" target="_blank">
+                                                        <i class="mdi mdi-eye text-info" style="font-size: 24px;"></i>
+                                                    </a>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    @if(Gate::check('edit-cso_commission') && $getCsoCommission)
+                                                    <button class="btn-delete btn-edit_cso_commission" value="{{ $getCsoCommission }}">
+                                                        <i class="mdi mdi-border-color text-warning" style="font-size: 24px;"></i>
+                                                    </button>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    @if(Gate::check('delete-cso_commission') && $getCsoCommission)
+                                                    <button class="btn-delete btn-delete_cso_commission" value="{{ $getCsoCommission }}">
+                                                        <i class="mdi mdi-delete text-danger" style="font-size: 24px;"></i>
+                                                    </button>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @php
+
+                                            @endphp
+                                        @endforeach
+                                        <tr class="text-right">
+                                            <th colspan="3" rowspan="2">TOTAL COMMISSION</th>
+                                            <th>Rp. {{ number_format($tot_netto_sale) }}</th>
+                                            <th>Rp. {{ number_format($tot_cancel) }}</th>
+                                            <th>Rp. {{ number_format($tot_commission) }}</th>
+                                            <th>Rp. {{ number_format($tot_bonus) }}</th>
+                                            <th>Rp. 0</th>
+                                            <th>Rp. {{ number_format($tot_result) }}</th>
+                                        </tr>
+                                        {{-- <tr class="text-right">
+                                            <th colspan="4">Rp. {{ number_format($tot_commission + $tot_bonus + $tot_pajak + $tot_result) }}</th>
+                                        </tr> --}}
+                                    </tbody>
+                                </table>
+                                <br/>
+                            </div>
+                        @endif
                     @else
                         <h2 class="text-info text-center m-0">Please Select Month & Branch Filter First</h2>
                     @endif

@@ -13,7 +13,7 @@ class Branch extends Model
 
     public function cso()
     {
-        return $this->hasMany('App\Cso');
+        return $this->hasMany('App\Cso')->where('active', true);
     }
 
     public function deliveryOrder()
