@@ -514,6 +514,7 @@ function getGenerateCode() {
         }
         function completeHandler(event){
             var hasil = JSON.parse(event.target.responseText);
+            console.log(hasil);
             for (var key of frmAdd.keys()) {
                 $("#actionAdd").find("input[name='"+key.name+"']").removeClass("is-invalid");
                 $("#actionAdd").find("select[name='"+key.name+"']").removeClass("is-invalid");

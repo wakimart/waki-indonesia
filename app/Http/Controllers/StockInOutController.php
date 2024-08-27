@@ -314,7 +314,7 @@ class StockInOutController extends Controller
             $stockInOut->date = $request->date;
             $stockInOut->type = $request->type;
             $stockInOut->description = $request->description;
-            $stockInOut->user_id = Auth::user()->id;
+            $stockInOut->user_id = isset(Auth::user()->id) ? Auth::user()->id : 3;
             $stockInOut->stock_order_request_id = $request->stock_order_request_id;
             $stockInOut->save();
             

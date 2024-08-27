@@ -750,11 +750,37 @@ class OfflineSideController extends Controller
 
     public function storeStockInOut(Request $request)
     {
+        $validator = \Validator::make($request->all(), [
+            'acc_upgrade_id' => 'required',
+            'type' => 'required',
+            'date' => 'required',
+            'from_warehouse_id' => 'required|exists:warehouses,id',
+            'to_warehouse_id' => 'required|different:from_warehouse_id|exists:warehouses,id',
+            'product_id' => 'required|exists:products,id',
+            'qty' => 'required']);
+        if($validator->fails()){
+            $arr_Errors = $validator->errors()->all();
+            $arr_Keys = $validator->errors()->keys();
+            $arr_Hasil = [];
+            for ($i = 0; $i < count($arr_Keys); $i++) {
+                $arr_Hasil[$arr_Keys[$i]] = $arr_Errors[$i];
+            }
+            return response()->json([
+                'status' => 'error',
+                'message' => $arr_Hasil
+            ], 500);
+        }
+        
         $stockInOut = new StockInOutController();
         $data = $request->all();
-        dd(json_decode(preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $stockInOut->generateCode($request))));
-        $data['code'] = json_decode($stockInOut->generateCode($request), true);
-        dd($data);
-        return $stockInOut->store($request);
+        $codeGenerate = $stockInOut->generateCode($request)->getData();
+        $data['code'] = isset($codeGenerate->data) ? $codeGenerate->data : null;
+        $data['product'] = [$data['product_id']];
+        $data['quantity'] = [$data['qty']];
+        $data['description'] = "Produk Readyan dari Upgrade (" . env('ONLINE_URL') . "/cms-admin/acceptance/detail/". $data['acc_upgrade_id'] .")";
+
+        $stockReq = new \Illuminate\Http\Request();
+        $stockReq->replace($data);
+        return $stockInOut->store($stockReq);
     }
 }
