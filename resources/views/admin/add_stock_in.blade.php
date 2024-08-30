@@ -573,7 +573,6 @@ $(document).on('change', '#date, #from_warehouse_type', function() {
         }
         function completeHandler(event){
             var hasil = JSON.parse(event.target.responseText);
-            console.log(hasil);
             for (var key of frmAdd.keys()) {
                 $("#actionAdd").find("input[name='"+key.name+"']").removeClass("is-invalid");
                 $("#actionAdd").find("select[name='"+key.name+"']").removeClass("is-invalid");
@@ -599,7 +598,11 @@ $(document).on('change', '#date, #from_warehouse_type', function() {
             }
             else{
                 alert("Input Success !!!");
-                window.location.reload()
+                @if(isset($_GET['id']))
+                    window.location.href = '{{ route('list_stock') }}';
+                @else
+                    window.location.reload()
+                @endif
             }
             document.getElementById("addHistory").innerHTML = "SAVE";
         }

@@ -119,7 +119,7 @@
                 </tbody>
             </table>
             <p>Dan cara pembayarannya adalah :</p>
-            @if($order->orderPayment->count() < 7)
+            @if($order->orderPayment->count() <= 7)
                 <table class="border" style="width: 60%; margin-left: auto; margin-right: auto;">
                     <thead>
                         <tr>
@@ -174,9 +174,9 @@
                         <span style="width: 6%; float: left;"></span>
                     @endif
                 @endfor
-                <div style="clear: both;"></div>
+                {{-- <div style="clear: both;"></div> --}}
             @endif
-            <p>
+            <p style="clear: left;">
                 Apabila terdapat ketidaksesuaian antara barang yang Bapak / Ibu terima dengan keterangan tersebut diatas, Bapak / Ibu {{strtoupper($order->name)}} dapat menghubungi kami di pesawat (031)5662308 dalam jangka waktu 1 (satu) minggu setelah penerimaan surat ini. <br>
                 Atas kepercayaan yang Bapak / Ibu {{strtoupper($order->name)}} berikan kami ucapkan terima kasih <br><br>
                 Hormat kami <br><br><br><br><br>
