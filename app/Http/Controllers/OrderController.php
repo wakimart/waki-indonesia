@@ -915,9 +915,10 @@ class OrderController extends Controller
             } else if ($order->status == Order::$status['5'] || $order->status == Order::$status['9']) { // reject or cancel
                 if($order->status == Order::$status['5']){
                     OrderPayment::Where('order_id', $order->id)->update(['status' => 'rejected']);
+                }else{
+                    $order->nominal_cancel = $request->has('nominal_cancel') ? str_replace(",","",$request->nominal_cancel) : null;
                 }
                 $order->reject_reason = $request->reject_reason;
-                $order->nominal_cancel = $request->has('nominal_cancel') ? str_replace(",","",$request->nominal_cancel) : null;
             }
             $order->save();
             
