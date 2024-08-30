@@ -781,6 +781,25 @@ class OfflineSideController extends Controller
 
         $stockReq = new \Illuminate\Http\Request();
         $stockReq->replace($data);
-        return $stockInOut->store($stockReq);
+        $stockResult = $stockInOut->store($stockReq)->getData();
+        
+        if(isset($stockResult->success)){
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Stok has been Out to Warehouse. Check Offline Side.'
+            ], 200);
+        }
+        elseif(isset($stockResult->errors)){
+            return response()->json([
+                'status' => 'error',
+                'message' => $stockResult->errors
+            ], 500);
+        }
+        else{
+            return response()->json([
+                'status' => 'error',
+                'message' => 'There\'s something wrong with server. Please call IT.'
+            ], 500);
+        }
     }
 }
