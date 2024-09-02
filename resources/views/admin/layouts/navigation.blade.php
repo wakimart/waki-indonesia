@@ -276,6 +276,24 @@
 </li>
 @endif
 
+{{-- MASTER REPORT --}}
+{{-- @if(Gate::check('brwose-stock') || Gate::check('add-stock_in') || Gate::check('add-stock_out') || Gate::check('browse-stock_in_out')) --}}
+<li class="{{isset($menu_item_page) && $menu_item_page == 'report'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#report-dd" aria-expanded="false" aria-controls="report-dd">
+    <span class="menu-title">Report</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-table-edit menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'report'? 'show': '' }}" id="report-dd">
+    <ul class="nav flex-column sub-menu">
+      {{-- @if(Gate::check('add-stock_in')) --}}
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'report_provit'? 'active': '' }}" href="{{route('add_stock_in')}}">Provit & Loss</a></li>
+      {{-- @endif --}}
+    </ul>
+  </div>
+</li>
+{{-- @endif --}}
+
 @if(Gate::check('add-data_sourcing') || Gate::check('browse-data_sourcing') || Gate::check('add-data_therapy') || Gate::check('browse-data_therapy'))
 <li class="nav-item {{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' || isset($menu_item_page) && $menu_item_page == 'list_cust_image' ? 'active': ''}}">
   <a class="nav-link" data-toggle="collapse" href="#masterData-dd" aria-expanded="{{isset($menu_item_page) && $menu_item_page == 'data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_therapy' || isset($menu_item_page) && $menu_item_page == 'mpc_waki' || isset($menu_item_page) && $menu_item_page == 'import_data_sourcing' || isset($menu_item_page) && $menu_item_page == 'data_stock' || isset($menu_item_page) && $menu_item_page == 'list_cust_image' ? 'true': '' }}" aria-controls="masterData-dd">
