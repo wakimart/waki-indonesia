@@ -1736,6 +1736,11 @@ Route::group(['prefix' => 'cms-admin'], function () {
         ->name("list_cust_image");
     Route::get("download-cust-image", "OrderController@downloadCustImage")
         ->name("download_cust_image");
+
+    Route::group(['prefix' => 'report', 'middleware' => 'auth'], function() {
+        Route::get('/provit-and-loss', 'ReportController@ReportProvitAndLoss_index')->name('list_provit_and_loss');
+        Route::get('/provit-and-loss-detail/{product_id}', 'ReportController@ReportProvitAndLoss_detail')->name('detail_provit_and_loss');
+    });
     
 });
 

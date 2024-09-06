@@ -124,4 +124,8 @@ class Order extends Model
     {
         return $this->hasMany('App\OrderCancel');
     }
+    public function stockInOut()
+    {
+        return $this->hasMany('\App\StockInOut');
+    }
 }

@@ -280,14 +280,14 @@
 {{-- @if(Gate::check('brwose-stock') || Gate::check('add-stock_in') || Gate::check('add-stock_out') || Gate::check('browse-stock_in_out')) --}}
 <li class="{{isset($menu_item_page) && $menu_item_page == 'report'? 'active': '' }} nav-item">
   <a class="nav-link" data-toggle="collapse" href="#report-dd" aria-expanded="false" aria-controls="report-dd">
-    <span class="menu-title">Report</span>
+    <span class="menu-title">Master Report</span>
     <i class="menu-arrow"></i>
     <i class="mdi mdi-table-edit menu-icon"></i>
   </a>
   <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'report'? 'show': '' }}" id="report-dd">
     <ul class="nav flex-column sub-menu">
       {{-- @if(Gate::check('add-stock_in')) --}}
-      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'report_provit'? 'active': '' }}" href="{{route('add_stock_in')}}">Provit & Loss</a></li>
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'report_provit'? 'active': '' }}" href="{{route('list_provit_and_loss')}}">Provit & Loss</a></li>
       {{-- @endif --}}
     </ul>
   </div>
