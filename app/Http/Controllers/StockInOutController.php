@@ -58,10 +58,12 @@ class StockInOutController extends Controller
             }
 
             if ($request->has("filter_product_code")) {
-                $filterProduct = Product::where('code', $request->filter_product_code)->first();
-                $stockTypes[$type]->whereHas('stockInOutProduct', function ($q) use ($filterProduct) {
-                    $q->where('product_id', $filterProduct->id ?? '');
-                });
+                if($request->filter_product_code != "" && $request->filter_product_code != null){
+                    $filterProduct = Product::where('code', $request->filter_product_code)->first();
+                    $stockTypes[$type]->whereHas('stockInOutProduct', function ($q) use ($filterProduct) {
+                        $q->where('product_id', $filterProduct->id ?? '');
+                    });
+                }                
             }
 
             if ($request->has("filter_date")) {

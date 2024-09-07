@@ -500,7 +500,7 @@ $(document).ready(function (e) {
         if ($('#filter_code').val() != "") {
             urlParamArray.push("filter_code=" + $('#filter_code').val());
         }
-        if ($('#filter_product_code').val() != "") {
+        if ($('#filter_product_code').val() != "" && $('#filter_product_code').val() != null) {
             urlParamArray.push("filter_product_code=" + $('#filter_product_code').val());
         }
         if ($('#filter_from_warehouse').val() != "") {
