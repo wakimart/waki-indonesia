@@ -29,9 +29,13 @@ class StockInOutController extends Controller
      */
     public function index(Request $request)
     {
+        $products = Product::where('active', true)->orderBy("code")->get();
+
         $warehouses = Warehouse::select("id", "code", "name")
             ->where("active", true)
-            ->orderBy("code")
+            ->where('parent_warehouse_id', '!=', null)
+            ->where('type', '!=', 'vendor')
+            ->orderBy("code", 'desc')
             ->get();
 
         $stocks = Product::select("id", "code", "name")
@@ -42,7 +46,7 @@ class StockInOutController extends Controller
         $types = ['In_Pending', "in", "out"];
         $stockTypes = [];
         foreach ($types as $type) {
-            $stockTypes[$type] = StockInOut::orderBy("created_at", "desc")->orderBy('id', 'asc')
+            $stockTypes[$type] = StockInOut::orderBy("date", "desc")->orderBy('id', 'asc')
                 ->where('active', true)
                 ->where('type', $type);
 
@@ -54,24 +58,34 @@ class StockInOutController extends Controller
             }
 
             if ($request->has("filter_product_code")) {
-                $filterProduct = Product::where('code', $request->filter_product_code)->first();
-                $stockTypes[$type]->whereHas('stockInOutProduct', function ($q) use ($filterProduct) {
-                    $q->where('product_id', $filterProduct->id ?? '');
-                });
+                if($request->filter_product_code != "" && $request->filter_product_code != null){
+                    $filterProduct = Product::where('code', $request->filter_product_code)->first();
+                    $stockTypes[$type]->whereHas('stockInOutProduct', function ($q) use ($filterProduct) {
+                        $q->where('product_id', $filterProduct->id ?? '');
+                    });
+                }                
             }
 
             if ($request->has("filter_date")) {
                 $stockTypes[$type]->where('date', $request->filter_date);
             }
 
-            if ($request->has("filter_warehouse")){
-                if($type == "in"){
-                    $stockTypes[$type]->where('warehouse_to_id', $request->filter_warehouse);
-                }
-                elseif($type == "out"){
-                    $stockTypes[$type]->where('warehouse_from_id', $request->filter_warehouse);
-                }
+            if ($request->has("filter_from_warehouse")) {
+                $stockTypes[$type]->where('warehouse_from_id', $request->filter_from_warehouse);
             }
+
+            if ($request->has("filter_to_warehouse")) {
+                $stockTypes[$type]->where('warehouse_to_id', $request->filter_to_warehouse);
+            }
+
+            // if ($request->has("filter_warehouse")){
+            //     if($type == "in"){
+            //         $stockTypes[$type]->where('warehouse_to_id', $request->filter_warehouse);
+            //     }
+            //     elseif($type == "out"){
+            //         $stockTypes[$type]->where('warehouse_from_id', $request->filter_warehouse);
+            //     }
+            // }
 
             $stockTypes[$type] = $stockTypes[$type]->paginate(10, ['*'], $type);
         }
@@ -86,7 +100,7 @@ class StockInOutController extends Controller
         }
         $stockTypes['In_Pending'] = $allStockInOutConnects->orderBy('created_at', 'desc')->paginate(10, ['*'], $type);
 
-        return view("admin.list_stock_new", compact("stockTypes", "warehouses", "stocks"));
+        return view("admin.list_stock_new", compact("stockTypes", "warehouses", "stocks", 'products'));
     }
 
     public function indexInOut(Request $request)

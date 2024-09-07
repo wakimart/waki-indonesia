@@ -5,6 +5,8 @@ $menu_item_second = "list_stock";
 @extends('admin.layouts.template')
 
 @section('style')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
+<link rel="stylesheet" href="{{ asset("css/lib/select2/select2-bootstrap4.min.css") }}" />
 <style type="text/css">
     .table th img, .table td img {
         border-radius: 0% !important;
@@ -89,7 +91,7 @@ $menu_item_second = "list_stock";
 
         <div class="row">
             <div class="col-12" style="margin-bottom: 0;">
-                <div class="col-xs-6 col-sm-4"
+                <div class="col-xs-6 col-sm-3"
                     style="display: inline-block;">
                     <div class="form-group">
                         <label for="filter_date">Filter By Date</label>
@@ -102,7 +104,8 @@ $menu_item_second = "list_stock";
                             required />
                     </div>
                 </div>
-                <div class="col-xs-6 col-sm-4"
+
+                <div class="col-xs-6 col-sm-3"
                     style="display: inline-block;">
                     <div class="form-group">
                         <label for="filter_code">Filter By Code</label>
@@ -113,17 +116,61 @@ $menu_item_second = "list_stock";
                             value="{{ isset($_GET['filter_code']) ? $_GET['filter_code'] : '' }}" />
                     </div>
                 </div>
-                <div class="col-xs-6 col-sm-4"
+                <div class="col-xs-6 col-sm-3"
                     style="display: inline-block;">
-                    <div class="form-group">
+                    <div class="form-group" style="position: relative; top: 1rem;">
                         <label for="filter_product_code">
                             Filter By Product Code
                         </label>
-                        <input class="form-control"
+                        {{-- <input class="form-control"
                             id="filter_product_code"
                             name="filter_product_code"
                             placeholder="Filter By Product Code"
-                            value="{{ isset($_GET['filter_product_code']) ? $_GET['filter_product_code'] : '' }}" />
+                            value="{{ isset($_GET['filter_product_code']) ? $_GET['filter_product_code'] : '' }}" /> --}}
+                        <select class="form-control"
+                            id="filter_product_code"
+                            name="filter_product_code"
+                            required>
+                            <option selected disabled value="">
+                                All Product
+                            </option>
+                            @foreach($products as $product)
+                                <option {{ isset($_GET['filter_product_code']) ? ($_GET['filter_product_code'] == $product->code ? 'selected' : '') : '' }} value="{{ $product->code }}">
+                                    {{ $product->code }} 
+                                    - ({{ $product->name }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>                
+                <div class="col-xs-6 col-sm-4"
+                    style="display: inline-block;">
+                    <div class="form-group">
+                        <label for="filter_from_warehouse">Filter From Warehouse</label>
+                        <select id="filter_from_warehouse" name="filter_from_warehouse" class="form-control">
+                            <option value="" selected>Choose From Warehouse</option>
+                            @foreach ($warehouses as $warehouse)
+                            <option value="{{ $warehouse->id }}"
+                                @if(request()->input('filter_from_warehouse') ==  $warehouse->id) selected @endif>
+                                {{ $warehouse->code }} - {{ $warehouse->name }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>                
+                <div class="col-xs-6 col-sm-4"
+                    style="display: inline-block;">
+                    <div class="form-group">
+                        <label for="filter_to_warehouse">Filter To Warehouse</label>
+                        <select id="filter_to_warehouse" name="filter_to_warehouse" class="form-control">
+                            <option value="" selected>Choose To Warehouse</option>
+                            @foreach ($warehouses as $warehouse)
+                            <option value="{{ $warehouse->id }}"
+                                @if(request()->input('filter_to_warehouse') ==  $warehouse->id) selected @endif>
+                                {{ $warehouse->code }} - {{ $warehouse->name }}
+                            </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
 
@@ -183,7 +230,7 @@ $menu_item_second = "list_stock";
                                                             <div class="form-group">
                                                                 <label for="filter_stock_connection">Filter By Status</label>
                                                                 <select id="filter_stock_connection" name="filter_stock_connection" class="form-control">
-                                                                    <option value="outstanding" {{ isset($_GET['status']) ? ($_GET['status'] == 'outstanding' ? 'selected' : '') : 'selected' }}>Outstanding</option>
+                                                                    <option value="outstanding" {{ isset($_GET['status']) ? ($_GET['status'] == 'outstanding' ? 'selected' : '') : '' }}>Outstanding</option>
                                                                     <option value="confirm" {{ isset($_GET['status']) ? ($_GET['status'] == 'confirm' ? 'selected' : '') : '' }}>Confirm</option>
                                                                     <option value="cancel" {{ isset($_GET['status']) ? ($_GET['status'] == 'cancel' ? 'selected' : '') : '' }}>Cancel</option>
                                                                 </select>
@@ -434,11 +481,16 @@ $menu_item_second = "list_stock";
 @endsection
 
 @section("script")
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" defer></script>
 <script type="application/javascript">
 function submitDelete(e) {
     document.getElementById("id-delete").value = e.dataset.id;
 }
 $(document).ready(function (e) {
+    $("#filter_product_code").select2({
+        theme: "bootstrap4",
+    });
+
     $("#btn-filter, #btn-filter-pending").click(function (e) {
         var urlParamArray = new Array();
         var urlParamStr = "";
@@ -448,10 +500,16 @@ $(document).ready(function (e) {
         if ($('#filter_code').val() != "") {
             urlParamArray.push("filter_code=" + $('#filter_code').val());
         }
-        if ($('#filter_product_code').val() != "") {
+        if ($('#filter_product_code').val() != "" && $('#filter_product_code').val() != null) {
             urlParamArray.push("filter_product_code=" + $('#filter_product_code').val());
         }
-        if ($('#filter_stock_connection').val() != "") {
+        if ($('#filter_from_warehouse').val() != "") {
+            urlParamArray.push("filter_from_warehouse=" + $('#filter_from_warehouse').val());
+        }
+        if ($('#filter_to_warehouse').val() != "") {
+            urlParamArray.push("filter_to_warehouse=" + $('#filter_to_warehouse').val());
+        }
+        if ($('#filter_stock_connection').val() != "" && $(this)[0].id == "btn-filter-pending") {
             urlParamArray.push("status=" + $('#filter_stock_connection').val());
         }
         for (var i = 0; i < urlParamArray.length; i++) {
