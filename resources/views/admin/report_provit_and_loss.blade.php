@@ -76,7 +76,8 @@
 						              	<th> Name </th>
                             <th> Price In </th>
 						              	<th> Quantity </th>
-                            <th> Sub Total </th>
+                            <th class="text-right"> Sub Total </th>
+                            <th> View </th>
 						            </tr>
           						</thead>
           						<tbody>

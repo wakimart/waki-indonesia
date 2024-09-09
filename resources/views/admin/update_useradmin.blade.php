@@ -2282,6 +2282,23 @@ $menu_item_page = "user";
                                 </div>
                             </div>
 
+
+
+                            <div class="form-group" id="">
+                                <span style="display:block;">Master Report</span>
+                                <div class="div-CheckboxGroup">
+                                    <div class="form-check form-check-inline">
+                                        <label class="form-check-label"
+                                            for="master_report-provit_loss">
+                                            <input class="form-check-input"
+                                                type="checkbox"
+                                                id="master_report-provit_loss" />
+                                            Provit and Loss
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <input type="hidden"
                                 name="idUserAdmin"
                                 id="idUserAdmin"

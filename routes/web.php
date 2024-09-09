@@ -1738,8 +1738,8 @@ Route::group(['prefix' => 'cms-admin'], function () {
         ->name("download_cust_image");
 
     Route::group(['prefix' => 'report', 'middleware' => 'auth'], function() {
-        Route::get('/provit-and-loss', 'ReportController@ReportProvitAndLoss_index')->name('list_provit_and_loss');
-        Route::get('/provit-and-loss-detail/{product_id}', 'ReportController@ReportProvitAndLoss_detail')->name('detail_provit_and_loss');
+        Route::get('/provit-and-loss', 'ReportController@ReportProvitAndLoss_index')->name('list_provit_and_loss')->middleware('can:master_report-provit_loss');
+        Route::get('/provit-and-loss-detail/{product_id}', 'ReportController@ReportProvitAndLoss_detail')->name('detail_provit_and_loss')->middleware('can:master_report-provit_loss');
     });
     
 });

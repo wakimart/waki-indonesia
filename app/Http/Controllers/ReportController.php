@@ -59,21 +59,13 @@ class ReportController extends Controller
                     ->whereIn("id", [29,4])
                     ->get();
 
-        $stockOutOrder = StockInOutProduct::select('siop.*')
-                        ->from('stock_in_out_products as siop')
-                        ->leftJoin('stock_in_outs as s', 'siop.stock_in_out_id', 's.id')
-                        ->where('siop.order_detail_id', '!=', null)
-                        ->where('siop.product_id', $product_id)
-                        ->where('siop.active', true);
+        $stockOutOrder = OrderDetail::select('od.*')
+                        ->from('order_details as od')
+                        ->leftJoin('stock_in_outs as s', 's.id', 'od.stock_id')
+                        ->where('od.stock_id', '!=', null)
+                        ->where('od.product_id', $product_id);
 
-        $stockOutOrder = StockInOutProduct::select('siop.*')
-                        ->from('stock_in_out_products as siop')
-                        ->leftJoin('stock_in_outs as s', 'siop.stock_in_out_id', 's.id')
-                        ->where('siop.order_detail_id', '!=', null)
-                        ->where('siop.product_id', $product_id)
-                        ->where('siop.active', true);
-
-        $yearChoice = $request->has("filter_year") ? $year : date('Y');
+        $yearChoice = $request->has("filter_year") ? $request->filter_year : date('Y');
         $stockOutOrder->whereYear('s.date', $yearChoice);
 
         if ($request->has("filter_warehouse")){
@@ -81,9 +73,8 @@ class ReportController extends Controller
         }
         $stockOutOrder = $stockOutOrder
                         ->orderBy('s.date')
-                        ->groupBy('siop.order_detail_id')
                         ->paginate(10);
 
-        return view("admin.report_out_provit_and_loss_detail", compact("stockOutOrder", "warehouses"));
+        return view("admin.report_out_provit_and_loss_detail", compact("stockOutOrder", "warehouses", "product_id"));
     }
 }

@@ -303,6 +303,9 @@ class RolesSeeder extends Seeder
                 'detail-cso_commission' => true,
                 'edit-cso_commission' => true,
                 'delete-cso_commission' => true,
+
+                //Master Report
+                'master_report-provit_loss' => true,
             ]),
         ]);
 
@@ -593,6 +596,9 @@ class RolesSeeder extends Seeder
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
+
+                //Master Report
+                'master_report-provit_loss' => false,
         	]),
         ]);
 
@@ -877,7 +883,9 @@ class RolesSeeder extends Seeder
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
-                
+
+                //Master Report
+                'master_report-provit_loss' => false,                
             ]),
         ]);
 
@@ -1162,6 +1170,9 @@ class RolesSeeder extends Seeder
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
+
+                //Master Report
+                'master_report-provit_loss' => false,
             ]),
         ]);
 
@@ -1446,6 +1457,9 @@ class RolesSeeder extends Seeder
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
+
+                //Master Report
+                'master_report-provit_loss' => false,
             ]),
         ]);
 
@@ -1730,6 +1744,9 @@ class RolesSeeder extends Seeder
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
+
+                //Master Report
+                'master_report-provit_loss' => false,
             ]),
         ]);
 
@@ -2020,6 +2037,9 @@ class RolesSeeder extends Seeder
                 'detail-cso_commission' => false,
                 'edit-cso_commission' => false,
                 'delete-cso_commission' => false,
+
+                //Master Report
+                'master_report-provit_loss' => false,
             ]),
         ]);
     }

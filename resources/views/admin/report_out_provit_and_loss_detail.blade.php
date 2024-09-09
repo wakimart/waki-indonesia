@@ -66,7 +66,7 @@
   			<div class="col-12 grid-margin stretch-card">
     			<div class="card">
       				<div class="card-body">
-      					<h5 style="margin-bottom: 0.5em;">Total : {{ $stockOutOrder->count() }} data order</h5>
+      					<h5 style="margin-bottom: 0.5em;">Total : {{ $stockOutOrder->total() }} data order</h5>
         				<div class="table-responsive" style="border: 1px solid #ebedf2;">
         					<table class="table table-bordered">
           						<thead>
@@ -88,7 +88,7 @@
 
           							@foreach($stockOutOrder as $key => $perStock)
                           @php
-                            $orderNya = $perStock->orderDetail->order;
+                            $orderNya = $perStock->order;
                           @endphp
                           <tr>
                           	<td>{{$key+1}}</td>
@@ -99,7 +99,7 @@
                               <td>{{ $orderNya->branch['code'] }} - {{ $orderNya->branch['name'] }}</td>
                               <td>{{ date("d/m/Y", strtotime($perStock->stockInOut['date'])) }}</td>
                               <td class="text-center">
-                                <a href="{{ route('detail_provit_and_loss', ['product_id' => $perStock['product_id']]) }}" target="_blank">
+                                <a href="{{ route('detail_order') }}?code={{ $orderNya['code'] }}" target="_blank">
                                     <i class="mdi mdi-eye" style="font-size: 24px; color: rgb(99, 110, 114);"></i>
                                 </a>
                               </td>
@@ -137,7 +137,7 @@
         }
       }
 
-      window.location.href = "{{route('list_provit_and_loss')}}" + urlParamStr;
+      window.location.href = "{{ route('detail_provit_and_loss', ['product_id' => $product_id]) }}" + urlParamStr;
     });
   </script>
 @endsection

@@ -777,5 +777,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-cso_commission', function ($user) {
             return $user->hasAccess(['delete-cso_commission']);
         });
+
+
+        //-- MASTER REPORT --//
+        Gate::define('master_report-provit_loss', function ($user) {
+            return $user->hasAccess(['master_report-provit_loss']);
+        });
     }
 }
