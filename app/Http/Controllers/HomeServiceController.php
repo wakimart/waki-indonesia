@@ -592,6 +592,8 @@ class HomeServiceController extends Controller
             "h.updated_at AS updated_at",
             "o.code as order_code",
             "o.id as order_id",
+            "o.status as order_status",
+            "o.delivered_image",
             "hsv.id as home_service_survey_id"
         )
         ->from("home_services AS h")
@@ -989,16 +991,26 @@ class HomeServiceController extends Controller
                         }
 
                         if(Auth::user()->hasPermission('edit-home_service')){
-                            $result .= '<button '
-                                . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
-                                . 'type="button" '
-                                . 'data-toggle="modal" '
-                                . 'data-target="#cashHomeServiceModal" '
-                                . 'onclick=clickCash(this) '
-                                . 'value="' . $dayData->hs_id . '">'
-                                . '</button>'
-                                . '</td>'
-                                . '<td style="text-align: center">';
+                            if(Auth::user()->hasPermission('upload_proof_of_delivery_on_home_service') && $dayData->order_status == 'delivery'){
+                                $result .= '<button '
+                                    . 'class="btnappoint btn-gradient-warning mdi mdi-image-plus" '
+                                    . 'type="button" '
+                                    . 'onclick=uploadProofOfDelivery("'.$dayData->order_id.'","'.$dayData->order_code.'","'.$dayData->delivered_image.'")>'
+                                    . '</button>'
+                                    . '</td>'
+                                    . '<td style="text-align: center">';
+                            }else{
+                                $result .= '<button '
+                                    . 'class="btnappoint btn-gradient-success mdi mdi-cash-multiple btn-homeservice-cash" '
+                                    . 'type="button" '
+                                    . 'data-toggle="modal" '
+                                    . 'data-target="#cashHomeServiceModal" '
+                                    . 'onclick=clickCash(this) '
+                                    . 'value="' . $dayData->hs_id . '">'
+                                    . '</button>'
+                                    . '</td>'
+                                    . '<td style="text-align: center">';
+                            }
 
                             $result .= '<button '
                                 . 'class="btnappoint btn-gradient-info mdi mdi-border-color btn-homeservice-edit" '

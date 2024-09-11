@@ -153,6 +153,27 @@ $menu_item_second = "list_homeservice";
         content: "\2606";
         color: #ffa500;
     }
+
+    .imagePreview {
+        width: 100%;
+        height: 150px;
+        background-position: center center;
+        background-color: #fff;
+        background-size: cover;
+        background-repeat: no-repeat;
+        display: inline-block;
+    }
+    .del {
+        position: absolute;
+        top: 0px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        background-color: rgba(255, 255, 255, 0.6);
+        cursor: pointer;
+    }
 </style>
 @endsection
 
@@ -1769,6 +1790,102 @@ $menu_item_second = "list_homeservice";
     <!-- End Modal Survey -->
 
 
+    <!-- Modal Upload Proof Of Delivery -->
+        <div class="modal fade"
+            id="uploadProofOfDeliveryModal"
+            tabindex="-1"
+            role="dialog"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form id="proofUploadForm"
+                        class="forms-sample"
+                        method="POST"
+                        action="{{route('update_status_order')}}"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-header">
+                            <button type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <h5 class="modal-title text-center">Delivered This Order?</h5>
+                            <hr>
+                            <div>
+                                <div class="form-group">
+                                    <label for="">Bukti Terima Barang</label>
+                                    <label style="float: right">(Min: 1) (Max: 3)</label>
+                                    <div class="clearfix"></div>
+                                    @for ($i = 0; $i < 3; $i++)
+                                        <div class="col-xs-12 col-sm-6 col-md-4 form-group imgUp"
+                                            style="padding: 15px; float: left;">
+                                            <label>Image {{ $i + 1 }}</label>
+                                            <div class="imagePreview"
+                                                style="background-image: url({{ asset('sources/dashboard/no-img-banner.jpg') }});">
+                                            </div>
+                                            <label class="file-upload-browse btn btn-gradient-primary"
+                                                style="margin-top: 15px; padding: 10px">
+                                                Upload
+                                                <input name="images_{{ $i }}"
+                                                    type="file"
+                                                    accept=".jpg,.jpeg,.png"
+                                                    class="uploadFile img"
+                                                    value="Upload Photo"
+                                                    style="width: 0px; height: 0px; overflow: hidden; border: none !important;"
+                                                    @if($i == 0) required @endif />
+                                            </label>
+                                            <i class="mdi mdi-window-close del"></i>
+                                        </div>
+                                    @endfor
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="orderId" id="order-id">
+                            <input type="hidden" name="status_order" id="order-status" value="delivered">
+                            <input type="hidden" name="order_code" id="order-code">
+                            <input type="hidden" name="order_delivered_image" id="order-delivered-image">
+                            <button type="button" 
+                                id="btn-proof-upload"
+                                class="btn btn-gradient-primary mr-2">
+                                Yes
+                            </button>
+                            <button class="btn btn-light"
+                                data-dismiss="modal"
+                                aria-label="Close">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <!-- End Modal Upload Proof -->
+    <!-- Error modal -->
+    <div class="modal fade"
+        id="error-modal"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="error-modal-desc"></div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal View -->
 </div>
 @endsection
 
@@ -2639,5 +2756,147 @@ $('input[type=radio][name=reschedule_template]').change(function() {
         $('#reschedule_desc').addClass('d-none').val(this.value)
     }
 });
+
+    // callback for find waki-indonesia 0ffline (local or ngrok)
+    var urlOffline = "{{ env('OFFLINE_URL_2') }}"
+    $.ajax({
+        url:'https://waki-indonesia-offline.office/cms-admin/login',
+        error: function(){
+            urlOffline = "{{ env('OFFLINE_URL_2') }}"
+        },
+        success: function(){
+            urlOffline = "{{ env('OFFLINE_URL') }}"
+        }
+    });
+    function uploadProofOfDelivery(orderID, orderCode, orderDeliveredImage){
+        $('#order-id').val(orderID)
+        $('#order-code').val(orderCode)
+        $('#order-delivered-image').val(orderDeliveredImage)
+        $('#uploadProofOfDeliveryModal').modal('show')
+    }
+    $(document).ready(function(){
+        var networkValue
+        function testNetwork(networkValue, response){
+            // response();
+            $.ajax({
+                method: "post",
+                url: `${urlOffline}/api/end-point-for-check-status-network`,
+                dataType: 'json',
+                contentType: 'application/json',
+                processData: false,
+                headers: {
+                    "api-key": "{{ env('API_KEY') }}",
+                },
+                success: response,
+                error: function(xhr, status, error) {
+                    var modal = `
+                        <div class="modal-body">
+                            <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                            <hr>
+                            <p class="text-center">${xhr.responseJSON.message}</p>
+                        </div>
+                    `
+                    $('#error-modal-desc').html(modal)
+                    $('#error-modal').modal("show")
+                }
+            });
+        };
+        $('#btn-proof-upload').on('click', function() {
+            if ($("#proofUploadForm [required]:not(:disabled)").filter(function() { return $(this).val() == "" }).length > 0) {
+                return alert('Input Field can\'t be empty');
+            }
+            testNetwork(networkValue, function(val){
+                var formSerialize = $('#proofUploadForm').serializeArray()
+                var order = {
+                    'code':$('#order-code').val(),
+                    'status':$('#order-status').val(),
+                    'delivered_image':$('#order-delivered-image').val(),
+                    'user_id':'{{Auth::user()->code}}'
+                }
+                for(var i = 0; i < order.delivered_image.length; i++){
+                    order['delivered_image_file_'+i] = `{{ asset('sources/order/${order.delivered_image[i]}') }}`;
+                }
+                $.ajax({
+                    method: "post",
+                    url: `${urlOffline}/api/replicate-order-data`,
+                    data: order,
+                    beforeSend: function() {
+                        $('#btn-proof-upload').html('loading...');
+                        $('#btn-proof-upload').attr('disabled', true);
+                    },
+                    success: function(res){
+                        if(res.status == 'success'){
+                            $('#proofUploadForm').submit();
+                        }else{
+                            var modal = `
+                                <div class="modal-body">
+                                    <h5 class="modal-title text-center">${res.status}</h5>
+                                    <hr>
+                                    <p class="text-center">${res.message}</p>
+                                </div>
+                            `
+                            $('#error-modal-desc').html(modal)
+                            $('#error-modal').modal("show")
+    
+                            $('#btn-proof-upload').html('Yes');
+                            $('#btn-proof-upload').attr('disabled', false);
+                        }
+                    },
+                    error: function(xhr){
+                        var modal = `
+                            <div class="modal-body">
+                                <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+                                <hr>
+                                <p class="text-center">${xhr.responseJSON.message}</p>
+                            </div>
+                        `
+                        $('#error-modal-desc').html(modal)
+                        $('#error-modal').modal("show")
+    
+                        $('#btn-proof-upload').html('Yes');
+                        $('#btn-proof-upload').attr('disabled', false);
+                    }
+    
+                })  
+            })
+            return false
+        })
+    })
+    $(function () {
+        $(document).on("change", ".uploadFile", function () {
+            const uploadFile = $(this);
+            const files = this.files ? this.files : [];
+
+            // no file selected, or no FileReader support
+            if (!files.length || !window.FileReader) {
+                return;
+            }
+
+            // only image file
+            if (/^image/.test(files[0].type)) {
+                // instance of the FileReader
+                const reader = new FileReader();
+                // read the local file
+                reader.readAsDataURL(files[0]);
+
+                // set image data as background of div
+                reader.onloadend = function () {
+                    uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+                };
+            }
+
+        });
+    });
+    $(document).on("click", "i.del", function () {
+        $(this).closest(".imgUp").find('.imagePreview').css("background-image", "");
+        $(this).closest(".imgUp").find('input[type=text]').removeAttr("required");
+        $(this).closest(".imgUp").find('.btn').find('.img').val("");
+        $(this).closest(".imgUp").find('.form-control').val("");
+        const inputImage = $(this).closest(".imgUp").find(".img");
+        const inputImageId = inputImage.attr("id").split("-")[2];
+        if (inputImageId == "0") {
+            inputImage.attr("required", "");
+        }        
+    });
 </script>
 @endsection

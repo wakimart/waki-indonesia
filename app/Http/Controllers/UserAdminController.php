@@ -235,6 +235,21 @@ class UserAdminController extends Controller
 
             $userpermiss = json_decode($user->permissions, true);
 
+            // add new permission
+            $getPermissionFromForm = [];
+            $input = $request->all();
+            foreach ($input as $key => $value) {
+                if($value == 'true' || $value == 'false'){
+                    $getPermissionFromForm[$key] = $value;
+                }
+            }
+            // find new permission
+            $result = array_diff_key($getPermissionFromForm, $userpermiss);
+            // insert new permission to user permission
+            foreach($result as $key => $value){
+                $userpermiss[$key] = $value;
+            }
+
             foreach ($userpermiss as $key => $value) {
                 $userpermiss[$key] = true;
                 if ($request->get($key) == "true") {
@@ -243,6 +258,7 @@ class UserAdminController extends Controller
                     $userpermiss[$key] = false;
                 }
             }
+
             $data['permissions'] = json_encode($userpermiss);
 
             $data['birth_date'] = $request->get('birth_date');
