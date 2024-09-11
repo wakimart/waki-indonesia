@@ -30,7 +30,7 @@ class WakimartController extends Controller
     public function __construct()
     {
         $this->client = new Client([
-            'base_uri'  => 'https://wakimart.co.id/',
+            'base_uri'  => 'https://wakilife.co.id/',
             'headers'   => [
                 'api-key' => env('API_KEY')
             ]

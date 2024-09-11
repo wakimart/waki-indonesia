@@ -478,7 +478,7 @@ $menu_item_second = "detail_upgrade_form";
                                 <h2>Upgrade Status</h2>
                             </div>
                             <div class="row justify-content-center">
-                                <form id="actionAdd"
+                                <form id="actionAdd_stockDR"
                                     class="forms-sample"
                                     method="POST"
                                     action="<?php echo route("update_upgrade_status"); ?>">
@@ -486,18 +486,20 @@ $menu_item_second = "detail_upgrade_form";
                                     <input type="hidden"
                                         name="id"
                                         value="<?php echo $upgrade->id; ?>" />
-                                    <button id="upgradeProcess"
-                                        type="submit"
-                                        class="btn btn-gradient-primary btn-lg"
+                                    <input type="hidden"
+                                    	id="status_stock" 
                                         name="status"
-                                        value="Display">
+                                        value="" />
+                                    <button id="stockToDisplay"
+                                        type="button"
+                                        class="btn btn-gradient-primary btn-lg"
+                                        data-stock="Display">
                                         Display
                                     </button>
-                                    <button id="upgradeProcess"
-                                        type="submit"
+                                    <button id="stockToReady"
+                                        type="button"
                                         class="btn btn-gradient-success btn-lg"
-                                        name="status"
-                                        value="Ready">
+                                        data-stock="Ready">
                                         Ready
                                     </button>
                                 </form>
@@ -509,4 +511,148 @@ $menu_item_second = "detail_upgrade_form";
         <?php endif; ?>
 	</div>
 </div>
+
+<!-- Error modal -->
+<div class="modal fade"
+    id="error-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div id="error-modal-desc"></div>
+        </div>
+    </div>
+</div>
+<!-- End Modal View -->
+@endsection
+
+@section('script')
+	@if($upgrade->acceptance['oldproduct_id'] != null)
+		<script>
+			var urlOffline = "{{ env('OFFLINE_URL_2') }}"
+			$(document).ready(function () {
+				var networkValue;
+		        function testNetwork(networkValue, response){
+		            // response();
+		            $.ajax({
+		                method: "post",
+		                url: `${urlOffline}/api/end-point-for-check-status-network`,
+		                dataType: 'json',
+		                contentType: 'application/json',
+		                processData: false,
+		                headers: {
+		                    "api-key": "{{ env('API_KEY') }}",
+		                },
+		                success: response,
+		                error: function(xhr, status, error) {
+		                    var modal = `
+		                        <div class="modal-body">
+		                            <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+		                            <hr>
+		                            <p class="text-center">${xhr.responseJSON.message}</p>
+		                        </div>
+		                    `;
+		                    $('#error-modal-desc').html(modal);
+		                    $('#error-modal').modal("show");
+		                }
+		            });
+		        };
+
+		        $('#stockToDisplay, #stockToReady').click(function (e) {
+		        	$('#status_stock').val($(this).data("stock"));
+		        	if( $(this).data("stock") == "Ready" ){
+			        	$('#stockToReady').attr('disabled', true);
+			        	$('#stockToReady').html('Loading...');
+			        	testNetwork(networkValue, function (val) {
+			        		@php
+				        		$from_warehouse_id = null; // from warehouse display
+				        		$to_warehouse_id = null; // to warehouse ready
+			        			if($upgrade->acceptance['area'] == 'jakarta'){
+					        		$from_warehouse_id = 32;
+					        		$to_warehouse_id = 29;
+			        			}
+			        			elseif($upgrade->acceptance['area'] == 'surabaya'){
+					        		$from_warehouse_id = 35;
+					        		$to_warehouse_id = 4;
+			        			}
+			        		@endphp
+			                var dataPost = {
+			                	"acc_upgrade_id": "{{ $upgrade->acceptance['id'] }}",
+							    "date": "{{ date('Y-m-d') }}",
+							    "type": "out",
+							    "from_warehouse_id": {{ $from_warehouse_id }},
+							    "to_warehouse_id": {{ $to_warehouse_id }},
+							    "product_id": {{ $upgrade->acceptance['oldproduct_id'] }},
+							    "qty": 1,
+							    "warehouse_type": "warehouse"
+			                };
+
+			                $.ajax({
+		                        method: "post",
+		                        url: `${urlOffline}/api/store_stock_api/add`,
+		                        data: dataPost,
+		                        beforeSend: function() {
+						        	$('#stockToReady').attr('disabled', true);
+						        	$('#stockToReady').html('Loading...');
+		                        },
+		                        success: function(res){
+		                            if(res.status == 'success'){
+		                            	var modal = `
+		                                    <div class="modal-body">
+		                                        <h5 class="modal-title text-center">${res.status}</h5>
+		                                        <hr>
+		                                        <p class="text-center">${res.message}</p>
+		                                    </div>
+		                                `
+		                                $('#error-modal-desc').html(modal)
+		                                $('#error-modal').modal("show")
+		                                
+		                                $('#actionAdd_stockDR').submit();
+		                            }else{
+		                                var modal = `
+		                                    <div class="modal-body">
+		                                        <h5 class="modal-title text-center">${res.status}</h5>
+		                                        <hr>
+		                                        <p class="text-center">${res.message}</p>
+		                                    </div>
+		                                `
+		                                $('#error-modal-desc').html(modal)
+		                                $('#error-modal').modal("show")
+			                            $('#stockToReady').removeAttr('disabled');
+							        	$('#stockToReady').html('Ready');
+		                            }
+		                        },
+		                        error: function(xhr){
+		                            var modal = `
+		                                <div class="modal-body">
+		                                    <h5 class="modal-title text-center">${xhr.responseJSON.status}</h5>
+		                                    <hr>
+		                                    <p class="text-center">${Object.values(xhr.responseJSON.message)[0]}</p>
+		                                </div>
+		                            `
+		                            $('#error-modal-desc').html(modal)
+		                            $('#error-modal').modal("show")
+		                            $('#stockToReady').removeAttr('disabled');
+						        	$('#stockToReady').html('Ready');
+		                        }
+
+		                    });
+			        	});
+		        	}
+		        	else{
+                        $('#actionAdd_stockDR').submit();
+		        	}
+		        });
+			})
+		</script>
+	@endif
 @endsection
