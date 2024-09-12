@@ -276,6 +276,24 @@
 </li>
 @endif
 
+{{-- Recondition Feature --}}
+{{-- @if(Gate::check('master_report-provit_loss')) --}}
+<li class="{{isset($menu_item_page) && $menu_item_page == 'recondition'? 'active': '' }} nav-item">
+  <a class="nav-link" data-toggle="collapse" href="#recondition-dd" aria-expanded="false" aria-controls="recondition-dd">
+    <span class="menu-title">Re-Condition</span>
+    <i class="menu-arrow"></i>
+    <i class="mdi mdi-table-edit menu-icon"></i>
+  </a>
+  <div class="collapse {{isset($menu_item_page) && $menu_item_page == 'recondition'? 'show': '' }}" id="recondition-dd">
+    <ul class="nav flex-column sub-menu">
+      {{-- @if(Gate::check('master_report-provit_loss')) --}}
+      <li class="nav-item"> <a class="nav-link {{isset($menu_item_second) && $menu_item_second == 'add_recondition'? 'active': '' }}" href="{{route('list_provit_and_loss')}}">Add Re-Condition</a></li>
+      {{-- @endif --}}
+    </ul>
+  </div>
+</li>
+{{-- @endif --}}
+
 {{-- MASTER REPORT --}}
 @if(Gate::check('master_report-provit_loss'))
 <li class="{{isset($menu_item_page) && $menu_item_page == 'report'? 'active': '' }} nav-item">
