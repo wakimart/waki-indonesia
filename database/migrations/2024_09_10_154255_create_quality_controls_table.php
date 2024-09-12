@@ -18,7 +18,7 @@ class CreateQualityControlsTable extends Migration
             $table->string('serial_number');
             $table->json('condition')->nullable();
             $table->json('accessories')->nullable();
-            $table->text('image')->nullable();
+            $table->json('evidence')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();
         });
@@ -40,7 +40,7 @@ class CreateQualityControlsTable extends Migration
             $table->dropForeign(['quality_control_id']);
             $table->dropColumn('quality_control_id');
         });
-        
+
         Schema::dropIfExists('quality_controls');
     }
 }
