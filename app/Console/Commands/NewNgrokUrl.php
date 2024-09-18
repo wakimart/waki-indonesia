@@ -40,7 +40,7 @@ class NewNgrokUrl extends Command
         $ch = curl_init('https://api.ngrok.com/tunnels');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET"); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization:"."Bearer 2R6F8Zbzsy9wCspLUZcyxZymDOc_2zYPzgNMw6vfg2U5Eq8Mf", "Ngrok-Version:2"));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Authorization:"."Bearer 2m0n6L1gr3x6CBGCAmgVTNLZYfu_6rZoBdHApap5mc5sBAxUq", "Ngrok-Version:2"));
         $response = curl_exec($ch);
         curl_close($ch);
 
