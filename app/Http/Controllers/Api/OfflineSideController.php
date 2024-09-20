@@ -130,6 +130,7 @@ class OfflineSideController extends Controller
                     $order->update();
                     
                     $user = User::where('code', $request->user_id)->first();
+                    $user = $user != null ? $user : User::find(3);
                     $historyUpdate['type_menu'] = "Order";
                     $historyUpdate['method'] = "Update Status";
                     $historyUpdate['meta'] = json_encode([
