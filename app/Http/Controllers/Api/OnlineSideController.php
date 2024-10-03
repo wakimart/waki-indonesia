@@ -141,4 +141,31 @@ class OnlineSideController extends Controller
             ]);
         }
     }
+
+    public function getOrderIsDirectUpgrade(Request $request)
+    {
+        if($request->header('api-key') == env('API_KEY')) {
+            $orderNya = Order::where('code', $request->order_code)->first();
+            if($orderNya){
+                $result = $orderNya['order_id'] != null ? true : false;
+                return response()->json([
+                    'status' => 'success',
+                    'result' => $result
+                ]);
+            }
+            else{
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'data order not found'
+                ]);
+            }
+        }
+        else 
+        {
+            return response()->json([
+                "status" => "unauthenticated",
+                "message" => "you don't have access"
+            ], 401);
+        }
+    }
 }

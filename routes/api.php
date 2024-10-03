@@ -21,3 +21,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::middleware('cors')->post('/wakimart-member', 'Api\WakimartController@storeMember');
 Route::middleware('cors')->post('/update-order-status', 'Api\OnlineSideController@updateOrderStatus');
+Route::middleware('cors')->post('/getOrderIsDirectUpgrade', 'Api\OnlineSideController@getOrderIsDirectUpgrade');
