@@ -544,7 +544,7 @@ class StockInOutController extends Controller
                 $res = $clientNya->request('POST', env('OFFLINE_URL_2', 'https://waki-indonesia.co.id') . '/api/getOrderIsDirectUpgrade', [
                     'headers' => [
                         'Accept' => 'application/json',
-                        'API_KEY' => '3b4e6cea6ea0e524e84ba6b57bb86b0b07fc561d832bc3fe2e79ed978aba75f0'
+                        'API_KEY' => 'd5f1f1810d26bd5bd6ad2d346ec9d68cd29d15904f73063edd26702014bf90b8'
                     ],
                     'form_params' => [
                         'order_code' => $request->code
