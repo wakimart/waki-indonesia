@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use PDF;
+use GuzzleHttp\Client;
 
 class StockInOutController extends Controller
 {
@@ -539,7 +540,24 @@ class StockInOutController extends Controller
             $outStockDate = isset($orderDetail->stock_id) ? $orderDetail->stockInOut['date'] : $order->orderDetail->where('stock_id', '!=', null)->sortByDesc(function($item) {return strtotime($item->stockInOut->date);})->first()->stockInOut['date'];
 
             if ($orderDetail->type == "upgrade") {
-                $status = "IN-UPGRADE**";
+                $clientNya = new Client();
+                $res = $clientNya->request('POST', env('OFFLINE_URL_2', 'https://waki-indonesia.co.id') . '/api/getOrderIsDirectUpgrade', [
+                    'headers' => [
+                        'Accept' => 'application/json',
+                        'API_KEY' => '3b4e6cea6ea0e524e84ba6b57bb86b0b07fc561d832bc3fe2e79ed978aba75f0'
+                    ],
+                    'form_params' => [
+                        'order_code' => $request->code
+                    ]
+                ]);
+
+                $status = "IN-UPGRADE";
+                if($res->getStatusCode() == "200"){
+                    $resultMsg = json_decode($res->getBody()->getContents());
+                    if(isset($resultMsg->result)){
+                        $status = $resultMsg->result == 'true' ? 'IN-UPGRADE**' : 'IN-UPGRADE';
+                    }
+                }
                 $outStockDate = $order->orderDetail->where('stock_id', '!=', null)->sortBy(function($item) {return strtotime($item->stockInOut->date);})->first()->stockInOut['date'];
                 $quantity = 1;
             }
