@@ -202,7 +202,7 @@ $menu_item_second = "list_stock";
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     @php 
                         $tabActive = request()->query('tabActive') ?? "in";
-                        $tabActive = isset($_GET['status']) ? 'In_Pending' : 'in';
+                        // $tabActive = isset($_GET['status']) ? 'In_Pending' : 'in';
                     @endphp
                     @foreach ($stockTypes as $keyType => $stockInOuts)
                     <li class="nav-item">
@@ -360,6 +360,9 @@ $menu_item_second = "list_stock";
                                                                     </td>
                                                                     <td rowspan="{{ $count_sioProduct }}">
                                                                         {{ $stockInOut->code }}
+                                                                        @if(isset($stockInOut->order))
+                                                                            <br>Order Temp No : <b>{{ $stockInOut->order['temp_no'] }}</b>
+                                                                        @endif
                                                                     </td>
                                                                     <td class="text-center" rowspan="{{ $count_sioProduct }}">
                                                                         <b>{{ $stockInOut->warehouseFrom['code'] }}</b>
