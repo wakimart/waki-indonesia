@@ -33,6 +33,11 @@ class CommissionTypeController extends Controller
                 });
             }
         }
+        if($request->has('filter_commision_name')){
+            $datas->where(function($q) use($request) {
+                $q->where('name', "like", "%" . $request->filter_commision_name . "%");
+            });
+        }
         $datas = $datas->paginate(10);
 
         return view("admin.list_commission_type", compact("datas", "url"))->with("i", (request()->input("page", 1) - 1) * 10 + 1);

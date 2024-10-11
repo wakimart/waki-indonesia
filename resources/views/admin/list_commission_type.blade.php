@@ -29,7 +29,7 @@ $menu_item_second = "list_commstype";
 
 		<div class="row">
 			<div class="col-12 grid-margin stretch-card">
-				<div class="col-xs-6 col-sm-3" style="padding: 0;display: inline-block;">
+				<div class="col-xs-6 col-sm-3 mx-2" style="padding: 0;display: inline-block;">
 					<div class="form-group">
 						<label for="">Filter By Type</label>
 						<select class="form-control" id="filter_commision_type" name="filter_commision_type">
@@ -37,18 +37,27 @@ $menu_item_second = "list_commstype";
 							<option value="upgrade" {{ isset($_GET['filter_commision_type']) ? $_GET['filter_commision_type'] == 'upgrade' ? 'selected=""' : '' : '' }} >Upgrade</option>
 							<option value="takeaway" {{ isset($_GET['filter_commision_type']) ? $_GET['filter_commision_type'] == 'takeaway' ? 'selected=""' : '' : '' }} >Takeaway</option>
 						</select>
-						<div class="validation"></div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-sm-3 mx-2" style="padding: 0;display: inline-block;">
+					<div class="form-group">
+						<label for="">Filter By Name</label>
+						<input class="form-control"
+                            id="filter_commision_name"
+                            name="filter_commision_name"
+                            placeholder="Filter By Name"
+                            value="{{ isset($_GET['filter_commision_name']) ? $_GET['filter_commision_name'] : '' }}" />
 					</div>
 				</div>
 
-				  <div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
-  					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
-  						<label for=""></label>
-  						<div class="form-group">
-  						<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
-  					  </div>
-  					</div>
-				  </div>
+				<div class="col-xs-12 col-sm-12 row" style="margin: 0;padding: 0;">
+					<div class="col-xs-6 col-sm-6" style="padding: 0;display: inline-block;">
+						<label for=""></label>
+						<div class="form-group">
+							<button id="btn-filter" type="button" class="btn btn-gradient-primary m-1" name="filter" value="-"><span class="mdi mdi-filter"></span> Apply Filter</button>
+						</div>
+					</div>
+				</div>
 			</div>
 
   			<div class="col-12 grid-margin stretch-card">
@@ -140,6 +149,9 @@ $menu_item_second = "list_commstype";
 	  var urlParamStr = "";
 	  if($('#filter_commision_type').val() != ""){
 		urlParamArray.push("filter_commision_type=" + $('#filter_commision_type').val());
+	  }
+	  if($('#filter_commision_name').val() != ""){
+		urlParamArray.push("filter_commision_name=" + $('#filter_commision_name').val());
 	  }
 	  for (var i = 0; i < urlParamArray.length; i++) {
 		if (i === 0) {
