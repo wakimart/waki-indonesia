@@ -72,6 +72,9 @@ $menu_item_second = "list_product";
                                         <th class="center">Price</th>
                                         <th>Category</th>
                                         <th>Show</th>
+                                        @can('in-price-product')
+                                            <th>Cost Price</th>
+                                        @endcan
                                         <th class="center">Edit</th>
                                         <th class="center">Delete</th>
                                     </tr>
@@ -122,6 +125,11 @@ $menu_item_second = "list_product";
                                                 <span class="badge badge-secondary">Hide</span>
                                                 @endif
                                             </td>
+                                            @can('in-price-product')
+                                                <td class="right" {!! $product['in_price'] < 1 ? 'style="color: red;"' : '' !!}>
+                                                    Rp. {{ number_format($product['in_price']) }}
+                                                </td>
+                                            @endcan
                                             <td class="center">
                                                 <a href="{{ route('edit_product', ['id' => $product['id']]) }}">
                                                     <i class="mdi mdi-border-color" style="font-size: 24px; color:#fed713;"></i>
