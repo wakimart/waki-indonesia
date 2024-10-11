@@ -959,6 +959,9 @@
                                             ]) }}" class="btn btn-gradient-info">
                                             <span><i class="mdi mdi-file-document"></i></span> PDF
                                         </a>
+                                        <a href="{{route('view_quality_control', $oDStockGroupBy[0]->stockInOut['id'])}}" target="_blank" class="btn btn-gradient-warning ml-1">
+                                            <span><i class="mdi mdi-checkbox-multiple-marked"></i></span> QC
+                                        </a>
                                     </td>
                                 </tr>
                             </tbody>

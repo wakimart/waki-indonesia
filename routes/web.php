@@ -462,6 +462,12 @@ Route::group(['prefix' => 'cms-admin'], function () {
 
         // customer letter
         Route::match(['put', 'patch'], '/customer-letter', 'OrderController@customerLetter')->name('customer_letter');
+
+        // quality control
+        Route::group(['prefix' => 'quality_control'], function() {
+            Route::get('/{id}', 'OrderController@viewQualityControl')->name('view_quality_control');
+            Route::post('/save', 'OrderController@saveQualityControl')->name('save_quality_control');
+        });
     });
 
     Route::group(['prefix' => 'total_sale', 'middleware' => 'auth'], function() {

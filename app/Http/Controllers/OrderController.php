@@ -41,6 +41,9 @@ use App\CsoCommission;
 use ZipArchive;
 use Response;
 use PDF;
+use App\StockInOut;
+use App\StockInOutProduct;
+use App\QualityControl;
 
 class OrderController extends Controller
 {
@@ -2713,6 +2716,72 @@ class OrderController extends Controller
             // return view('admin.pdf_customer_letter', compact('orders'));
         }else{
             return Redirect::back()->withErrors('no data');
+        }
+    }
+
+    /**
+     * for quality control page (add new proof or view detail proof) by stock in out ID
+     *
+     * Undocumented function long description
+     *
+     * @param Type $var Description
+     * @return type
+     * @throws conditon
+     **/
+    public function viewQualityControl($id)
+    {
+        $stockInOut = StockInOut::find($id);
+        return view('admin.view_quality_control', compact('stockInOut'));
+    }
+
+    public function saveQualityControl(Request $request){
+        // Make sure one of the data is filled in
+        $allEmpty = true;
+        for($i=0; $i<$request->total; $i++){
+            if($request->input('serial_number_'.$i)){
+                $allEmpty = false;
+            }
+        }
+
+        if(!$allEmpty){
+            DB::beginTransaction();
+            try {
+                for($i=0; $i<$request->total; $i++){
+                    if($request->input('serial_number_'.$i)){
+                        // add new quality control
+                        $qc = new QualityControl();
+                        $qc->serial_number = $request->input('serial_number_'.$i);
+                        $qc->description = $request->input('description_'.$i);
+
+                        $path = public_path("sources/quality_control/".$request->input('siop_id_'.$i));
+                        if (!is_dir($path)) {
+                            File::makeDirectory($path, 0777, true, true);
+                        }
+                        $evidence = [];
+                        foreach($request->input('evidence_'.$i) as $value){
+                            $file = json_decode($value, true);
+                            $filedata = base64_decode($file['data']);
+                            array_push($evidence, "/sources/quality_control/".$request->input('siop_id_'.$i).'/'.$file['name']);
+                            file_put_contents($path.'/'.$file['name'], $filedata);
+                        }
+                        $qc->evidence = json_encode($evidence);
+                        $qc->save();
+
+                        // update qc id in stock in out product
+                        $siop = StockInOutProduct::find($request->input('siop_id_'.$i));
+                        $siop->quality_control_id = $qc->id;
+                        $siop->update();
+                    }
+                }
+                DB::commit();
+                return Redirect::back()->with('success', 'Data added successfully');
+            } catch (\Exception $ex) {
+                return response()->json($ex);
+                DB::rollBack();
+                return Redirect::back()->withErrors("Something wrong when add data, please call Team IT");
+            }
+        }else{
+            return Redirect::back()->withErrors('All data is empty');
         }
     }
 }

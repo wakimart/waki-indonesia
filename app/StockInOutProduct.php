@@ -9,7 +9,7 @@ class StockInOutProduct extends Model
     protected $fillable = [
         'stock_in_out_id', 'stock_from_id', 'stock_to_id', 
         'product_id', 'quantity',
-        'koli', 'active', 'order_detail_id',
+        'koli', 'active', 'order_detail_id', 'quality_control_id'
     ];
 
     public function orderDetail()
@@ -35,5 +35,10 @@ class StockInOutProduct extends Model
     public function product()
     {
         return $this->belongsTo('App\Product', 'product_id', 'id');
+    }
+
+    public function qualityControl()
+    {
+        return $this->belongsTo('App\QualityControl');
     }
 }
