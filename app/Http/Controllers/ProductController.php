@@ -99,8 +99,11 @@ class ProductController extends Controller
         if($request->has('filter_can_buy')){
             $products->orderBy('can_buy', $request->filter_can_buy);
         }
-        if(!$request->has('filter_show') && !$request->has('filter_can_buy')){
-            $products->orderBy('show', 'desc')->orderBy('can_buy', 'desc');
+        if($request->has('filter_sort_code')){
+            $products->orderBy('code', $request->filter_sort_code);
+        }
+        if(!$request->has('filter_show') && !$request->has('filter_can_buy') && !$request->has('filter_sort_code')){
+            $products->orderBy('show', 'desc')->orderBy('can_buy', 'desc')->orderBy('code', 'asc');
         }
 
         $countProduct = $products->count();

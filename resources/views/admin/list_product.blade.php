@@ -63,6 +63,15 @@ $menu_item_second = "list_product";
                             </select>
                         </div>
                     </div>
+                    <div class="col-xs-6 col-sm-3" style="margin-bottom: 0; padding: 0; display: inline-block">
+                        <div class="form-group">
+                            <label for="">Sort By Code</label>
+                            <select class="form-control" id="filter_sort_code" name="filter_sort_code">
+                                <option value="asc" {{ isset($_GET['filter_sort_code']) ? $_GET['filter_sort_code'] == 'asc' ? 'selected=""' : '' : '' }}>Ascending</option>
+                                <option value="desc" {{ isset($_GET['filter_sort_code']) ? $_GET['filter_sort_code'] == 'desc' ? 'selected=""' : '' : '' }}>Descending</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
                         <label for=""></label>
                         <div class="form-group">
@@ -242,6 +251,9 @@ $(document).ready(function (e) {
         }
         if($('#filter_can_buy').val() != ""){
             urlParamArray.push("filter_can_buy=" + $('#filter_can_buy').val());
+        }
+        if($('#filter_sort_code').val() != ""){
+            urlParamArray.push("filter_sort_code=" + $('#filter_sort_code').val());
         }
         for (var i = 0; i < urlParamArray.length; i++) {
             if (i === 0) {
