@@ -93,6 +93,16 @@ class ProductController extends Controller
                 ->orWhere('code', 'LIKE', '%' . $request->search . '%');
         }
 
+        if($request->has('filter_show')){
+            $products->orderBy('show', $request->filter_show);
+        }
+        if($request->has('filter_can_buy')){
+            $products->orderBy('can_buy', $request->filter_can_buy);
+        }
+        if(!$request->has('filter_show') && !$request->has('filter_can_buy')){
+            $products->orderBy('show', 'desc')->orderBy('can_buy', 'desc');
+        }
+
         $countProduct = $products->count();
         $products = $products->paginate(10);
 

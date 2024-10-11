@@ -39,11 +39,28 @@ $menu_item_second = "list_product";
         <div class="row">
 
             <div class="col-12" style="margin-bottom: 0;">
-                    <div class="col-xs-6 col-sm-4" style="margin-bottom: 0; padding: 0; display: inline-block">
+                    <div class="col-xs-6 col-sm-3" style="margin-bottom: 0; padding: 0; display: inline-block">
                         <div class="form-group">
                             <label for="">Search By Name and Code</label>
                             <input class="form-control" id="search" name="search" placeholder="Search By Name and Code">
-                            <div class="validation"></div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-3" style="margin-bottom: 0; padding: 0; display: inline-block">
+                        <div class="form-group">
+                            <label for="">Sort By Show</label>
+                            <select class="form-control" id="filter_show" name="filter_show">
+                                <option value="desc" {{ isset($_GET['filter_show']) ? $_GET['filter_show'] == 'desc' ? 'selected=""' : '' : '' }}>Descending</option>
+                                <option value="asc" {{ isset($_GET['filter_show']) ? $_GET['filter_show'] == 'asc' ? 'selected=""' : '' : '' }}>Ascending</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-3" style="margin-bottom: 0; padding: 0; display: inline-block">
+                        <div class="form-group">
+                            <label for="">Sort By Can Buy</label>
+                            <select class="form-control" id="filter_can_buy" name="filter_can_buy">
+                                <option value="desc" {{ isset($_GET['filter_can_buy']) ? $_GET['filter_can_buy'] == 'desc' ? 'selected=""' : '' : '' }}>Descending</option>
+                                <option value="asc" {{ isset($_GET['filter_can_buy']) ? $_GET['filter_can_buy'] == 'asc' ? 'selected=""' : '' : '' }}>Ascending</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-6" style="padding: 0; display: inline-block">
@@ -72,6 +89,7 @@ $menu_item_second = "list_product";
                                         <th class="center">Price</th>
                                         <th>Category</th>
                                         <th>Show</th>
+                                        <th>Can Buy</th>
                                         @can('in-price-product')
                                             <th>Cost Price</th>
                                         @endcan
@@ -123,6 +141,13 @@ $menu_item_second = "list_product";
                                                 <span class="badge badge-primary">Show</span>
                                                 @else
                                                 <span class="badge badge-secondary">Hide</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($product->can_buy == true)
+                                                <span class="badge badge-success">Yes</span>
+                                                @else
+                                                <span class="badge badge-warning">No</span>
                                                 @endif
                                             </td>
                                             @can('in-price-product')
@@ -211,6 +236,12 @@ $(document).ready(function (e) {
         var urlParamStr = "";
         if($('#search').val() != ""){
             urlParamArray.push("search=" + $('#search').val());
+        }
+        if($('#filter_show').val() != ""){
+            urlParamArray.push("filter_show=" + $('#filter_show').val());
+        }
+        if($('#filter_can_buy').val() != ""){
+            urlParamArray.push("filter_can_buy=" + $('#filter_can_buy').val());
         }
         for (var i = 0; i < urlParamArray.length; i++) {
             if (i === 0) {

@@ -48,6 +48,12 @@ class OrderExport implements FromView, ShouldAutoSize
             }
         }
         if($this->type == "non-komisi"){
+            $order = Order::from('orders as o')
+                ->leftJoin('order_payments as op', 'op.order_id', 'o.id')
+                ->select('o.*')
+                ->whereBetween('op.payment_date', [$this->start_date, $this->end_date])
+                ->where('o.active', true)
+                ->where('o.remaining_payment', 0);
             return view('admin.exports.order_export_non_komisi', [
                 'order' => $order->orderBy('orderDate', 'ASC')->get(),
             ]);
