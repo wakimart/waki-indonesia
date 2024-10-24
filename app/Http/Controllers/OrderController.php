@@ -2658,6 +2658,7 @@ class OrderController extends Controller
             foreach ($orderNya as $perOrder) {
                 foreach (json_decode($perOrder->delivered_image, true) as $orderDeliveredImage){
                     try {
+                        dd(public_path("sources\\order\\".$orderDeliveredImage));
                         $files = File::get(public_path("sources\\order\\".$orderDeliveredImage));
                         $zip->addFile(public_path("sources\\order\\".$orderDeliveredImage), $orderDeliveredImage);
                     } catch (\Exception $e) {
